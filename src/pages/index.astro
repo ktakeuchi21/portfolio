@@ -1,0 +1,26 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Hero from '../components/Hero.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import WorkCard from '../components/WorkCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import LinkButton from '../components/LinkButton.astro';
+import { getWork, getProjects } from '../lib/content';
+const work = (await getWork()).filter(entry => entry.data.featured);
+const projects = (await getProjects()).filter(entry => entry.data.featured);
+---
+<SiteLayout>
+  <Hero />
+  <section class="home-section page-width" aria-label="Selected professional work">
+    <SectionHeader number="01" title="Selected professional work"><LinkButton href="/work/">View work</LinkButton></SectionHeader>
+    {work.map((entry, index) => <WorkCard entry={entry} index={index} />)}
+  </section>
+  <section class="home-section page-width" aria-label="Selected personal product projects">
+    <SectionHeader number="02" title="Selected Personal Product Projects"><LinkButton href="/projects/">All projects</LinkButton></SectionHeader>
+    <div class="projects-grid">{projects.map(entry => <ProjectCard entry={entry} />)}</div>
+  </section>
+  <section class="about-strip page-width" aria-labelledby="about-title">
+    <div><span class="eyebrow">A little about me</span><h2 id="about-title">Curiosity, made concrete.</h2></div>
+    <div><p>My background spans economics, healthcare administration, and product development. I’m interested in how better tools can make complex work easier for the people doing it.</p><p>Outside work, I keep building—sometimes an AI prototype, sometimes a small app for the things I cook.</p><LinkButton href="/about/">More about me</LinkButton></div>
+  </section>
+</SiteLayout>

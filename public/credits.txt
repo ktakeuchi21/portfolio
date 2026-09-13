@@ -1,0 +1,185 @@
+Portfolio image sources and credits
+Reviewed 2026-09-13
+
+Screenshots by Kai Takeuchi; reused at his request, without pixel modifications.
+Pathway: https://github.com/ktakeuchi21/case-resolution-agent/blob/main/docs/screenshots/pathway-workspace.png
+Patient Access Orchestration: https://patient-access-orchestration.ktakeuchi.chatgpt.site/assets/workflow-overview-Ch28Rs4H.png
+What I Made: https://github.com/ktakeuchi21/what-i-made/blob/main/docs/assets/readme/map.png
+
+The What I Made screenshot includes its fictional public sample. The source app credits the following photographs; included here to preserve the attribution chain. The map screenshot does not show all of these photographs. Original modifications below refer to the app’s media, not edits by this portfolio.
+
+Mul naengmyeon by Kuruman in Seoul.jpg
+Creator: Kuruman
+Source: https://commons.wikimedia.org/wiki/File:Mul_naengmyeon_by_Kuruman_in_Seoul.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Chicken Adobo with Potatoes.jpg
+Creator: Kabu Sawsaw
+Source: https://commons.wikimedia.org/wiki/File:Chicken_Adobo_with_Potatoes.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Jollof rice with boiled egg and fried chicken.jpg
+Creator: daSupremo
+Source: https://commons.wikimedia.org/wiki/File:Jollof_rice_with_boiled_egg_and_fried_chicken.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Shakshuka by Calliopejen1.jpg
+Creator: Calliopejen1
+Source: https://commons.wikimedia.org/wiki/File:Shakshuka_by_Calliopejen1.jpg
+License: CC BY-SA 3.0 — https://creativecommons.org/licenses/by-sa/3.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Gyoza dumplings (53726549642).jpg
+Creator: pelican from Tokyo, Japan
+Source: https://commons.wikimedia.org/wiki/File:Gyoza_dumplings_(53726549642).jpg
+License: CC BY-SA 2.0 — https://creativecommons.org/licenses/by-sa/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Chana masala gravy.JPG
+Creator: Seena.ge
+Source: https://commons.wikimedia.org/wiki/File:Chana_masala_gravy.JPG
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Fish tacos from Pezcow - April 2023 - Sarah Stierch.jpg
+Creator: Missvain
+Source: https://commons.wikimedia.org/wiki/File:Fish_tacos_from_Pezcow_-_April_2023_-_Sarah_Stierch.jpg
+License: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Tagliatelle all'amatriciana a un restaurant de Xàbia.jpg
+Creator: Joanbanjo
+Source: https://commons.wikimedia.org/wiki/File:Tagliatelle_all%27amatriciana_a_un_restaurant_de_X%C3%A0bia.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Poutine from Windsor, ON.jpg
+Creator: Antonydstevens
+Source: https://commons.wikimedia.org/wiki/File:Poutine_from_Windsor,_ON.jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Shepherds pie - The Kew Greenhouse Cafe 2025-05-14.jpg
+Creator: Andy Li
+Source: https://commons.wikimedia.org/wiki/File:Shepherds_pie_-_The_Kew_Greenhouse_Cafe_2025-05-14.jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Moqueca vegana, farofa de cebola, e arroz.jpg
+Creator: Melsj
+Source: https://commons.wikimedia.org/wiki/File:Moqueca_vegana,_farofa_de_cebola,_e_arroz.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Pavlova dessert.JPG
+Creator: Hazel Fowler
+Source: https://commons.wikimedia.org/wiki/File:Pavlova_dessert.JPG
+License: Public domain — https://creativecommons.org/publicdomain/mark/1.0/
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Lamingtons and a cup of tea.jpg
+Creator: Coastal.culture.vulture
+Source: https://commons.wikimedia.org/wiki/File:Lamingtons_and_a_cup_of_tea.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Jamaican Jerk Chicken - Hyatt Hyderabad Gachibowli - Hyderabad 2023-04-29 8516.jpg
+Creator: Biswarup Ganguly
+Source: https://commons.wikimedia.org/wiki/File:Jamaican_Jerk_Chicken_-_Hyatt_Hyderabad_Gachibowli_-_Hyderabad_2023-04-29_8516.jpg
+License: CC BY 3.0 — https://creativecommons.org/licenses/by/3.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+'PLOV' at National Food restaurant..jpg
+Creator: Rudolph.A.Furtado
+Source: https://commons.wikimedia.org/wiki/File:%27PLOV%27_at_National_Food_restaurant..jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Chicken and Sausage Gumbo- Cooking with stock, meat, and spices.jpg
+Creator: Jens Ohlig
+Source: https://commons.wikimedia.org/wiki/File:Chicken_and_Sausage_Gumbo-_Cooking_with_stock,_meat,_and_spices.jpg
+License: CC BY-SA 2.0 — https://creativecommons.org/licenses/by-sa/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Arepa de chocolo.jpg
+Creator: Nelson Fernando Sotelo Castro
+Source: https://commons.wikimedia.org/wiki/File:Arepa_de_chocolo.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Ratatouille, Mazatlán, 21 de junio de 2023.jpg
+Creator: El Nuevo Doge
+Source: https://commons.wikimedia.org/wiki/File:Ratatouille,_Mazatl%C3%A1n,_21_de_junio_de_2023.jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Spanakopita (15878501828).jpg
+Creator: Jaume Escofet from London, UK
+Source: https://commons.wikimedia.org/wiki/File:Spanakopita_(15878501828).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Polish pierogi in a dish.jpg
+Creator: Piotrus
+Source: https://commons.wikimedia.org/wiki/File:Polish_pierogi_in_a_dish.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Moroccan food-Chicken tagine with preserved lemons and olives-01.jpg
+Creator: Foodista
+Source: https://commons.wikimedia.org/wiki/File:Moroccan_food-Chicken_tagine_with_preserved_lemons_and_olives-01.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Baba ghannouj, mujadara, hoummos, and tabbouleh - Cambridge, MA.jpg
+Creator: Daderot
+Source: https://commons.wikimedia.org/wiki/File:Baba_ghannouj,_mujadara,_hoummos,_and_tabbouleh_-_Cambridge,_MA.jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Egusi Soup. Egusi is the indegenious soup of Nigerians. This soup is named after the thickener -Egusi;Egusi is gotten from Fluted Pumpkin or Melon seeds..jpg
+Creator: Okache Ruthie
+Source: https://commons.wikimedia.org/wiki/File:Egusi_Soup._Egusi_is_the_indegenious_soup_of_Nigerians._This_soup_is_named_after_the_thickener_-Egusi;Egusi_is_gotten_from_Fluted_Pumpkin_or_Melon_seeds..jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Masala dosa 01.jpg
+Creator: Marajozkee
+Source: https://commons.wikimedia.org/wiki/File:Masala_dosa_01.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Nakau Oyakodon (TYPE-00 ver.) set.jpg
+Creator: Tokumeigakarinoaoshima
+Source: https://commons.wikimedia.org/wiki/File:Nakau_Oyakodon_(TYPE-00_ver.)_set.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Japanese curry rice.jpg
+Creator: 김동헌, Donghun Kim
+Source: https://commons.wikimedia.org/wiki/File:Japanese_curry_rice.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+OK Chicken and Khao Soi, Portland, Oregon - 9.jpg
+Creator: Another Believer
+Source: https://commons.wikimedia.org/wiki/File:OK_Chicken_and_Khao_Soi,_Portland,_Oregon_-_9.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Kao Rad Pad Kra-pao with chicken and fried egg - Unithai 2025-07-30.jpg
+Creator: Andy Li
+Source: https://commons.wikimedia.org/wiki/File:Kao_Rad_Pad_Kra-pao_with_chicken_and_fried_egg_-_Unithai_2025-07-30.jpg
+License: CC0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Simple vegetable soup 2009.jpg
+Creator: Scott Teresi
+Source: https://commons.wikimedia.org/wiki/File:Simple_vegetable_soup_2009.jpg
+License: CC BY-SA 2.0 — https://creativecommons.org/licenses/by-sa/2.0
+Original app modifications: Cropped, resized, and converted to WebP; metadata removed.
+
+Fonts: Inter by Rasmus Andersson; Newsreader by Production Type. Both distributed under the SIL Open Font License through Fontsource. Font licenses are retained in the installed packages and recorded in docs/sources.md.

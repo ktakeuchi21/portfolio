@@ -1,0 +1,26 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import LinkButton from '../components/LinkButton.astro';
+---
+<SiteLayout title="About" description="Meet Kai Takeuchi: a healthcare and AI product leader with a background in economics, healthcare administration, and hands-on product building.">
+  <div class="page-width">
+    <header class="page-intro"><p class="eyebrow">About Kai</p><h1>A product builder.<br />A healthcare perspective.</h1><p>I care about the places where better products can make healthcare work more human.</p></header>
+    <div class="about-layout">
+      <div class="body-copy">
+        <h2>Following the work.</h2>
+        <p>My career has moved from healthcare operations and claims data into digital health, patient–clinician matching, and AI-enabled products. Across those settings, the work has meant understanding what people need, where a workflow breaks down, and what a product can meaningfully change.</p>
+        <p>At Optum, I founded Optum Match and worked on virtual care and digital acquisition. Today, I’m a Principal Product Manager at Syneos Health. My experience there includes early strategy and prototyping for pharmaceutical patient-support orchestration.</p>
+        <p>I work across product, engineering, data, design, clinical, and business teams. I’m especially interested in the decisions that shape a new product: which problem to start with, what to build first, and how to know whether it helps.</p>
+        <h2>Making room to explore.</h2>
+        <p>Hands-on prototyping is part of how I work through product questions. My personal projects explore AI assistance, exception handling, and the boundaries between automated work and human judgment.</p>
+        <p>I also enjoy cooking and exploring new cuisines. What I Made grew from that interest: a small cooking journal for remembering dishes, revisiting past attempts, and seeing where that curiosity takes me.</p>
+        <LinkButton href="/projects/">Explore the personal projects</LinkButton>
+      </div>
+      <aside class="about-facts" aria-label="Background">
+        <section><h2>Currently</h2><dl><dt>Principal Product Manager</dt><dd>Syneos Health</dd><dt>Based in</dt><dd>Salt Lake City, Utah</dd></dl></section>
+        <section><h2>Education</h2><dl><dt>Master of Healthcare Administration</dt><dd>University of Utah</dd><dt>BS, Economics</dt><dd>Brigham Young University</dd></dl></section>
+        <section><h2>Areas of interest</h2><dl><dt>Healthcare workflows</dt><dd>Patient access, clinician experience, and enterprise data.</dd><dt>Applied AI</dt><dd>Orchestration, grounded assistance, and human oversight.</dd></dl></section>
+      </aside>
+    </div>
+  </div>
+</SiteLayout>

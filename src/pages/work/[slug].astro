@@ -1,0 +1,11 @@
+---
+import { render } from 'astro:content';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
+import { getWork } from '../../lib/content';
+export const getStaticPaths = (async () => (await getWork()).filter(entry => !entry.data.draft).map(entry => ({params: {slug: entry.data.slug}, props: {entry}}))) satisfies GetStaticPaths;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<CaseStudyLayout entry={entry}><Content /></CaseStudyLayout>

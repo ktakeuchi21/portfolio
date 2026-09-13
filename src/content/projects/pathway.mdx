@@ -1,0 +1,85 @@
+---
+title: Pathway
+slug: pathway
+type: personal
+label: Personal project · Synthetic demonstration
+summary: "An AI case-resolution assistant that keeps case context, supporting evidence, and human review close to every answer."
+featured: true
+order: 2
+draft: false
+image:
+  src: /images/pathway-workspace.png
+  alt: "Pathway’s public workspace: a fictional case snapshot beside a sourced answer about a missing document."
+  width: 1440
+  height: 900
+  caption: "The public Pathway workspace, with a fictional documentation-support case and a saved synthetic answer."
+liveDemo: https://case-resolution-frontend.onrender.com/
+github: https://github.com/ktakeuchi21/case-resolution-agent
+tags: [Grounded AI, Human oversight]
+---
+
+## The product question
+
+When a patient-support case stalls, the next useful step depends on more than finding an answer. Which document is missing? Does this guidance apply to this case? What can the person reviewing it actually do?
+
+Pathway explores how an AI assistant can help with non-clinical pharmaceutical access work while keeping those distinctions visible. It gives someone a case to work from, evidence they can inspect, and a draft they can review.
+
+## Who it is for
+
+The demonstration models three roles: an HCP office access coordinator requesting documentation, a field reimbursement manager working through a coverage blocker, and a patient-support case manager coordinating fulfillment. Each role has a fictional case, a recorded blocker, and a bounded collection of reference documents.
+
+This is an independent personal project. My role spans product framing and hands-on prototyping of the assistant and its workspace. All people, organizations, plans, cases, and documents in the demonstration are synthetic.
+
+## Approach
+
+The workspace keeps the case snapshot on one side and the conversation on the other. A person can ask what is missing, follow up on why it matters, and prepare an office email or case briefing without losing the original context.
+
+Sources are part of the interaction. An answer can be inspected alongside exact passages, document versions, and the retrieved material used to prepare it. On smaller screens, the case context moves into an accessible drawer so the conversation remains usable.
+
+## Four product decisions
+
+### 1. Keep the case separate from the conversation
+
+The sidebar shows the recorded case snapshot. A message in the chat does not silently change its status or establish a new event. Conversation history helps resolve follow-up questions; it does not become new evidence about the patient or case.
+
+### 2. Make evidence inspectable
+
+The selected Knowledge Pack sets the boundary for an answer. Retrieval filters by the current pack and case, then uses both lexical and vector search. Superseded and unrelated documents can be inspected in the knowledge browser, but cannot support a new answer.
+
+The distinction matters: a document can look relevant without being applicable to the work in front of someone.
+
+### 3. Draft for review
+
+The assistant can prepare emails, administrative status messages, and case briefings. It does not send them. The person stays responsible for reviewing the wording and deciding whether it is appropriate to use.
+
+### 4. Show the work in progress
+
+The interface exposes knowledge search, answer preparation, and source-reference checks. Completed activity and source snapshots remain attached to the answer, including after a reload within the browser session. This makes the interaction easier to inspect and revisit.
+
+## System design
+
+The system connects a semantic HTML, CSS, and JavaScript interface to a Node.js and TypeScript service. PostgreSQL with pgvector supports hybrid retrieval. A language model prepares structured answers using retrieved evidence and explicit scenario context.
+
+The core sequence is:
+
+1. Establish the selected case and Knowledge Pack.
+2. Filter for current, applicable material and retrieve supporting passages.
+3. Prepare an answer or draft using that evidence.
+4. Validate response structure and cited source membership.
+5. Preserve the answer, sources, and activity for inspection.
+
+These checks constrain the interaction, but citation membership alone does not establish that every generated statement is fully supported. That limitation remains part of evaluating the product.
+
+## What the prototype demonstrates
+
+The public demo makes it possible to explore a blocked synthetic case, ask follow-up questions, review exact sources, and prepare a draft for human review. It demonstrates a product approach to grounded assistance and inspectable evidence; it does not establish improved real-world patient outcomes.
+
+Pathway provides no clinical advice, makes no payer or eligibility decisions, and performs no real outreach. Evaluation findings and their limitations are documented in the [public repository](https://github.com/ktakeuchi21/case-resolution-agent).
+
+## Personal reflection
+
+> **Reflection in progress.** Kai’s firsthand account of the hardest tradeoff, what changed during development, and what he would test next will be added here. The product description above is grounded in the public implementation and documentation.
+
+## Explore the source
+
+The [Pathway README](https://github.com/ktakeuchi21/case-resolution-agent#readme) documents the workspace, scenarios, architecture, and demonstration boundaries. The [live demo](https://case-resolution-frontend.onrender.com/) is available separately from this portfolio.

@@ -1,0 +1,15 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ResumeLink from '../components/ResumeLink.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { profile } from '../lib/site';
+---
+<SiteLayout title="Resume" description="Kai Takeuchi’s professional background and profile links. A downloadable public résumé is coming soon.">
+  <div class="page-width">
+    <header class="page-intro"><p class="eyebrow">Professional background</p><h1>Resume</h1><p>Healthcare product leadership, from the first product question to the details of delivery.</p></header>
+    <div class="resume-layout">
+      <section class="resume-box"><h2>Kai Takeuchi</h2><p>Healthcare + AI Product Leader<br />Principal Product Manager, Syneos Health</p><ResumeLink download /></section>
+      <section class="resume-links"><h2>In the meantime</h2><p>Find my experience on LinkedIn and my personal product projects on GitHub.</p><nav aria-label="Professional profiles"><ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink><ExternalLink href={profile.github}>GitHub</ExternalLink></nav></section>
+    </div>
+  </div>
+</SiteLayout>

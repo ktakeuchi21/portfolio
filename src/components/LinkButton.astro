@@ -1,0 +1,9 @@
+---
+import Icon from './Icon.astro';
+import { withBase } from '../lib/site';
+interface Props { href: string; variant?: 'solid' | 'text'; external?: boolean; class?: string; }
+const { href, variant = 'text', external = false, class: className } = Astro.props;
+---
+<a href={withBase(href)} class:list={['link-button', `link-button--${variant}`, className]}>
+  <slot /><Icon kind={external ? 'external' : 'arrow'} />
+</a>

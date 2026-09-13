@@ -1,0 +1,15 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/content';
+import { withBase } from '../../lib/site';
+const projects = await getProjects();
+---
+<SiteLayout title="Personal projects" description="Independent product projects by Kai Takeuchi: Patient Access Orchestration, Pathway, and What I Made. Explore the product thinking and public demos.">
+  <div class="page-width">
+    <header class="page-intro"><p class="eyebrow">Selected Personal Product Projects</p><h1>Thinking through building.</h1><p>Independent projects that make a product question concrete enough to explore, test, and use. From healthcare orchestration to the everyday ritual of cooking.</p></header>
+    <div class="projects-list">{projects.map(entry => <ProjectCard entry={entry} headingLevel="h2" />)}</div>
+    <p class="page-note">The healthcare demonstrations use synthetic data and are independent of my employer work. What I Made links to a fictional public sample. <a href="#image-credits">Image sources and credits</a>.</p>
+    <details class="asset-credits" id="image-credits"><summary>Image sources and credits</summary><p>Product screenshots by Kai Takeuchi, reproduced from the <a href="https://patient-access-orchestration.ktakeuchi.chatgpt.site/">Patient Access Orchestration demo</a>, <a href="https://github.com/ktakeuchi21/case-resolution-agent">Pathway repository</a>, and <a href="https://github.com/ktakeuchi21/what-i-made">What I Made repository</a>. Screenshots are unmodified. What I Made’s source photography and license details are recorded in its <a href="https://github.com/ktakeuchi21/what-i-made/blob/main/prototypes/capture-flow/assets/demo/demo-content.json">public media manifest</a> and the <a href={withBase('/credits.txt')}>included attribution record</a>.</p></details>
+  </div>
+</SiteLayout>

@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import LinkButton from './LinkButton.astro';
+import { caseStudyPath } from '../lib/content';
+interface Props { entry: CollectionEntry<'work'>; index: number; headingLevel?: 'h2' | 'h3'; }
+const { entry, index, headingLevel: Heading = 'h3' } = Astro.props;
+const { title, summary, organization, role, tags } = entry.data;
+const href = caseStudyPath(entry);
+---
+<article class="work-card">
+  <span class="work-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+  <div class="work-name"><p class="eyebrow">{organization}</p><Heading class="card-title">{title}</Heading><p class="work-role">{role}</p></div>
+  <div class="work-summary"><p>{summary}</p><div class="work-concepts">{tags.join(' · ')}</div>{href ? <LinkButton href={href}>Read case study</LinkButton> : <span class="forthcoming">Case study forthcoming</span>}</div>
+</article>

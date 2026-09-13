@@ -1,0 +1,12 @@
+---
+import ExternalLink from './ExternalLink.astro';
+import ResumeLink from './ResumeLink.astro';
+import { profile, withBase } from '../lib/site';
+---
+<footer class="site-footer page-width">
+  <div class="footer-main">
+    <div><a class="footer-name" href={withBase('/')}>Kai Takeuchi</a><p>Healthcare, AI, and the people in between.</p></div>
+    <nav aria-label="Connect"><ExternalLink href={profile.linkedin}>LinkedIn</ExternalLink><ExternalLink href={profile.github}>GitHub</ExternalLink><ResumeLink /></nav>
+  </div>
+  <div class="footer-meta"><span>Based in {profile.location}.</span><span>© {new Date().getFullYear()} Kai Takeuchi</span></div>
+</footer>
