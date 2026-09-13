@@ -2,6 +2,12 @@
 
 Verified locally on September 13, 2026, with Node 24 and npm 11.
 
+## Launch preparation update
+
+The résumé page, résumé component, navigation entries, and unused styles were removed at Kai's request. The current site generates six pages. Astro checks passed for 24 files with zero errors, warnings, or hints, and the build verifier passed for six pages and 73 local targets. A test build using `SITE_URL=https://kaitakeuchi.com` passed; this does not activate the domain. The normal local build was restored afterward. Browser inspection confirmed only Work, Projects, and About in the main navigation, working LinkedIn and GitHub footer links, and zero résumé links.
+
+The sections below record the original foundation verification before that removal.
+
 ## Build and content
 
 - A clean `npm ci` completed successfully; npm reported zero dependency vulnerabilities at install time.

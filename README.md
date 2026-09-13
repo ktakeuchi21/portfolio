@@ -22,11 +22,11 @@ npm run verify:build
 npm run preview
 ```
 
-`check` validates Astro and TypeScript. `verify:build` checks generated pages, local links, images, font URLs, metadata, draft-route exclusion, and the résumé placeholder. If running inside a restricted sandbox, prefix Astro commands with `ASTRO_TELEMETRY_DISABLED=1` to avoid Astro trying to store telemetry preferences outside the project.
+`check` validates Astro and TypeScript. `verify:build` checks generated pages, local links, images, font URLs, metadata, draft-route exclusion, and removal of the résumé route. If running inside a restricted sandbox, prefix Astro commands with `ASTRO_TELEMETRY_DISABLED=1` to avoid Astro trying to store telemetry preferences outside the project.
 
 `npm run verify:content` temporarily adds a personal and professional MDX fixture, proves that both generate cards and detail routes, then removes them and restores the normal build. Use it when changing the content infrastructure, not for ordinary copy edits.
 
-The initial routes are `/`, `/work/`, `/projects/`, `/about/`, `/resume/`, `/projects/pathway/`, and `/404.html`.
+The initial routes are `/`, `/work/`, `/projects/`, `/about/`, `/projects/pathway/`, and `/404.html`.
 
 ## Add or update content
 
@@ -77,11 +77,11 @@ Use real, approved screenshots or the built-in neutral placeholder. Retain attri
 
 MDX body links to local pages/assets must also respect deployment subpaths. Import `withBase` from `../../lib/site` inside the MDX file and use `<a href={withBase('/projects/')}>Projects</a>` for a local link rather than hardcoding `/projects/`. Use external HTTPS links normally.
 
-### Résumé and profile links
+### Profile links and future résumé
 
-Edit `src/lib/site.ts` for profile URLs and site identity. The supplied application PDFs are reference-only and are not in this repository.
+Edit `src/lib/site.ts` for profile URLs and site identity. The résumé page and all résumé navigation links are intentionally removed for launch. The supplied application PDFs are reference-only and are not in this repository.
 
-To enable downloads, place a general, approved public PDF at `public/resume/kai-takeuchi.pdf`, then set `profile.resumePath` to `/resume/kai-takeuchi.pdf`. The shared component replaces “PDF coming soon” with “Download Resume” and respects the base path. Update the résumé page description and “In the meantime” copy when the PDF is ready.
+If a general public résumé is added later, restore a dedicated page or link, add an approved PDF under `public/`, and use `withBase()` for its download URL. Update the route verifier at the same time.
 
 ## GitHub Pages publishing — later step
 

@@ -10,7 +10,7 @@ The homepage, About page, three professional summaries, three project entries, a
 | Patient Access Orchestration | Links to existing public case study and synthetic demo | Optional local narrative; omit GitHub while unavailable publicly |
 | Pathway | Published MDX case study grounded in public documentation | Clearly marked personal reflection needs Kai’s firsthand account |
 | What I Made | Summary, public fictional sample, and public repository | Local narrative and firsthand lessons |
-| Résumé | “PDF coming soon”; no download link or embedded document | General public PDF, then set `profile.resumePath` |
+| Résumé | Page, component, and navigation links removed for launch | Optionally restore with an approved public PDF later |
 | Headshot | Not included | Optional approved portrait |
 | Hosting | Local preview and GitHub Pages workflow | Choose remote, publish, then configure domain when ready |
 

@@ -7,7 +7,7 @@ Reviewed September 13, 2026. The sources below provide facts and assets, not dev
 - Kai’s supplied résumé and cover letter, read locally for background; reference-only and excluded from the repository.
 - [Public LinkedIn profile](https://www.linkedin.com/in/kai-takeuchi/): role, background, Optum Match description and $6M funding, virtual-care experience. The profile was inspected in the browser during the planning conversation on the same day.
 - [GitHub profile](https://github.com/ktakeuchi21): public repositories and project identity.
-- Explicit user decision: describe Syneos as early strategy and prototyping; leave the public résumé as a placeholder.
+- Explicit user decision: describe Syneos as early strategy and prototyping; remove the résumé page and its navigation links before launch.
 
 ## Personal projects
 

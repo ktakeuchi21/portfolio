@@ -14,7 +14,7 @@ async function walk(directory) {
 
 const files = await walk(root);
 const pages = files.filter(file => file.endsWith('.html'));
-for (const route of ['index.html', 'work/index.html', 'projects/index.html', 'about/index.html', 'resume/index.html', 'projects/pathway/index.html', '404.html']) {
+for (const route of ['index.html', 'work/index.html', 'projects/index.html', 'about/index.html', 'projects/pathway/index.html', '404.html']) {
   assert(files.includes(path.join(root, route)), `Missing required page: ${route}`);
 }
 
@@ -86,7 +86,6 @@ for (const collection of ['projects', 'work']) {
   }
 }
 
-const resume = await readFile(path.join(root, 'resume/index.html'), 'utf8');
-if (resume.includes('PDF coming soon')) assert(!/<a[^>]+download/.test(resume), 'Placeholder must not have a download action');
+assert(!files.includes(path.join(root, 'resume/index.html')), 'The résumé page is intentionally removed');
 assert(files.every(file => !/Amgen.*\.pdf$/i.test(file)), 'An application PDF must not be published');
-console.log(`Verified ${pages.length} pages and ${checked} local asset/link targets at ${base || '/'}. Metadata, images, drafts, and résumé state passed.`);
+console.log(`Verified ${pages.length} pages and ${checked} local asset/link targets at ${base || '/'}. Metadata, images, drafts, and résumé removal passed.`);
