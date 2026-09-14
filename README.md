@@ -83,14 +83,15 @@ Edit `src/lib/site.ts` for profile URLs and site identity. The résumé page and
 
 If a general public résumé is added later, restore a dedicated page or link, add an approved PDF under `public/`, and use `withBase()` for its download URL. Update the route verifier at the same time.
 
-## GitHub Pages publishing — later step
+## GitHub Pages publishing
 
-No remote or deployment is created by this foundation. Once ready to publish:
+The public source repository is [ktakeuchi21/portfolio](https://github.com/ktakeuchi21/portfolio). GitHub Pages uses **GitHub Actions** and the custom domain `kaitakeuchi.com`. See `docs/deployment.md` for the domain configuration and verification status.
 
-1. Create or select the intended GitHub repository. Review all visible content and assets before pushing.
-2. Push this project to its `main` branch. Keep the lockfile tracked.
-3. In repository **Settings → Pages**, choose **GitHub Actions** as the build source.
-4. Run **Validate and deploy portfolio** from Actions (or push a later change to `main`). Pull requests run validation only.
+To publish an update:
+
+1. Review the content, run the checks below, and commit the intended changes with the lockfile tracked.
+2. Push to `main`. **Validate and deploy portfolio** builds and publishes automatically. Pull requests run validation only.
+3. Confirm that the Actions run succeeds and inspect the changed page at the public domain. The workflow can also be run manually from Actions.
 
 The workflow installs from the lockfile, checks the source, builds, verifies the output, reads the repository’s actual Pages settings, and builds again for that destination. It uploads only `dist/` and deploys that validated artifact. Permissions are scoped per job. It does not create a repository or automatically enable Pages.
 
@@ -113,11 +114,11 @@ npm run build
 
 Use the same environment when starting preview as when building. `withBase()` handles local navigation and public assets; Vite handles bundled stylesheet and font paths. GitHub Pages uses the generated `404.html`, whose home link also respects the subpath.
 
-### Later custom domain: kaitakeuchi.com
+### Custom domain: kaitakeuchi.com
 
-The domain is intentionally inactive in this project: no `CNAME`, active domain URL, or DNS change is included.
+The domain is registered and managed at Cloudflare, verified under Kai's GitHub account, and assigned in this repository's Pages settings. The apex A records and `www` CNAME point directly to GitHub Pages with Cloudflare proxying disabled. Keep the GitHub verification TXT record in place.
 
-When the domain is ready, verify ownership and configure it in the repository’s Pages settings, then add the DNS records required by GitHub’s current documentation. Configure the apex domain and any desired `www` redirect, wait for DNS/certificate provisioning, and enable HTTPS. The Pages action will then provide the custom origin and an empty base path on the next deployment. Rebuild and check canonical URLs, all assets, nested pages, and the 404 link before sharing.
+The Pages action reads the custom origin and empty base path from GitHub's settings. After a domain or HTTPS setting changes, rebuild and check canonical URLs, assets, nested pages, and the 404 link. Local development still omits canonical metadata unless `SITE_URL` is supplied.
 
 For custom Actions deployments, GitHub’s Pages setting is authoritative; a source `CNAME` is not needed for this workflow. Consult the official instructions rather than reusing potentially stale DNS addresses:
 

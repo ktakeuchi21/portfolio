@@ -12,7 +12,7 @@ The homepage, About page, three professional summaries, three project entries, a
 | What I Made | Summary, public fictional sample, and public repository | Local narrative and firsthand lessons |
 | Résumé | Page, component, and navigation links removed for launch | Optionally restore with an approved public PDF later |
 | Headshot | Not included | Optional approved portrait |
-| Hosting | Local preview and GitHub Pages workflow | Choose remote, publish, then configure domain when ready |
+| Hosting | Published on GitHub Pages at `https://kaitakeuchi.com`; HTTPS enabled and `www` redirects | See `deployment.md` for maintenance and domain configuration |
 
 ## Content boundaries
 
