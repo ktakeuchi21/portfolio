@@ -1,0 +1,164 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { favoriteEpisodeShows } from '../data/favoriteEpisodes';
+const total = favoriteEpisodeShows.reduce((sum, show) => sum + show.episodes.length, 0);
+---
+<section class="favorite-episodes" aria-labelledby="learning-episodes" data-episode-browser>
+  <header class="episodes-heading">
+    <h2 id="learning-episodes" tabindex="-1">Favorite episodes.</h2>
+    <span class="episodes-count">{total} picks, {favoriteEpisodeShows.length} shows</span>
+  </header>
+  <div class="episode-tabs" role="tablist" aria-label="Favorite episodes by show" data-episode-tabs hidden>
+    {favoriteEpisodeShows.map((show, index) => <button type="button" role="tab" id={`episode-tab-${show.id}`} aria-controls={`episodes-${show.id}`} aria-selected={index === 0 ? 'true' : 'false'} tabindex={index === 0 ? 0 : -1}>{show.title}<span>{show.episodes.length}</span></button>)}
+  </div>
+  {favoriteEpisodeShows.map(show => <section class="episode-panel" id={`episodes-${show.id}`} aria-labelledby={`episode-heading-${show.id}`} data-episode-panel>
+    <h3 class="episode-show-heading" id={`episode-heading-${show.id}`}>{show.title}</h3>
+    <ol class="episode-list" role="list" data-episode-list>
+      {show.episodes.map((episode, index) => <li>
+        <a class="episode-link" href={episode.href}>
+          <div class="episode-art">
+            <Image src={episode.image} alt={`${show.title} episode artwork`} width={96} widths={[96, 192]} sizes="60px" format="webp" quality={85} loading="lazy" decoding="async" />
+            <span class="episode-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          </div>
+          <div class="episode-copy">
+            <p class="episode-guest">With {episode.guest}</p>
+            <h4>{episode.title}</h4>
+            <span class="episode-open">Explore episode <Icon kind="external" /></span>
+          </div>
+        </a>
+      </li>)}
+    </ol>
+    <div class="episode-browse" data-episode-controls hidden>
+      <p class="episode-position" data-episode-position aria-live="polite" aria-atomic="true"></p>
+      <div class="episode-arrows">
+        <button type="button" data-episode-step="-1" aria-label={`Previous ${show.title} episodes`} aria-controls={`episodes-${show.id}`}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
+        <button type="button" data-episode-step="1" aria-label={`Next ${show.title} episodes`} aria-controls={`episodes-${show.id}`}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
+      </div>
+    </div>
+  </section>)}
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-episode-browser]').forEach(root => {
+    const tabList = root.querySelector<HTMLElement>('[data-episode-tabs]')!;
+    const tabs = [...tabList.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-episode-panel]')];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const refresh: (() => void)[] = [];
+
+    panels.forEach((panel, panelIndex) => {
+      const list = panel.querySelector<HTMLOListElement>('[data-episode-list]')!;
+      const cards = [...list.querySelectorAll<HTMLLIElement>('li')];
+      const links = cards.map(card => card.querySelector<HTMLAnchorElement>('a')!);
+      const buttons = [...panel.querySelectorAll<HTMLButtonElement>('[data-episode-step]')];
+      const position = panel.querySelector<HTMLElement>('[data-episode-position]')!;
+      let timer: ReturnType<typeof setTimeout>;
+      const update = () => {
+        if (panel.hidden) return;
+        const left = list.scrollLeft, right = left + list.clientWidth;
+        const visible = cards.map((card, i) => ({ card, i })).filter(({card}) => card.offsetLeft + card.offsetWidth > left + 18 && card.offsetLeft < right - 18);
+        const first = (visible[0]?.i ?? 0) + 1, last = (visible.at(-1)?.i ?? 0) + 1;
+        position.textContent = `${first === last ? first : `${first} to ${last}`} of ${cards.length} episodes`;
+        buttons[0].setAttribute('aria-disabled', String(left <= 2));
+        buttons[1].setAttribute('aria-disabled', String(left >= list.scrollWidth - list.clientWidth - 2));
+      };
+      const scrollToCard = (index: number, instant = false) => {
+        list.scrollTo({left: cards[index].offsetLeft - 6, behavior: instant || reduced.matches ? 'instant' : 'smooth'});
+      };
+      buttons.forEach(button => button.addEventListener('click', () => {
+        if (button.getAttribute('aria-disabled') === 'true') return;
+        const first = cards.findIndex(card => card.offsetLeft + card.offsetWidth / 2 > list.scrollLeft);
+        const pageSize = Math.max(1, Math.floor((list.clientWidth - 12 + 16) / (cards[0].getBoundingClientRect().width + 16) + .01));
+        const next = Math.max(0, Math.min(cards.length - 1, first + Number(button.dataset.episodeStep) * pageSize));
+        scrollToCard(next);
+      }));
+      links.forEach((link, index) => {
+        link.addEventListener('focus', () => {
+          const card = cards[index];
+          if (card.offsetLeft < list.scrollLeft + 6 || card.offsetLeft + card.offsetWidth > list.scrollLeft + list.clientWidth - 6) scrollToCard(index, true);
+        });
+        link.addEventListener('keydown', event => {
+          if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+          event.preventDefault();
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? links.length - 1 : Math.max(0, Math.min(links.length - 1, index + (event.key === 'ArrowRight' ? 1 : -1)));
+          scrollToCard(next, true);links[next].focus({preventScroll:true});
+        });
+      });
+      list.addEventListener('scroll', () => { clearTimeout(timer);timer = setTimeout(update,100); }, {passive:true});
+      new ResizeObserver(update).observe(list);
+      panel.setAttribute('role','tabpanel');
+      panel.setAttribute('aria-labelledby',tabs[panelIndex].id);
+      panel.querySelector<HTMLElement>('[data-episode-controls]')!.hidden = false;
+      refresh.push(update);
+    });
+
+    const activate = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {tab.setAttribute('aria-selected',String(i === index));tab.tabIndex = i === index ? 0 : -1;panels[i].hidden = i !== index;});
+      if (focus) tabs[index].focus({preventScroll:true});
+      refresh[index]();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click',() => activate(index));
+      tab.addEventListener('keydown',event => {
+        if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+        event.preventDefault();
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        activate(next,true);
+      });
+    });
+    const syncHash = () => {
+      const index = panels.findIndex(panel => `#${panel.id}` === location.hash);
+      if (index >= 0) activate(index,panels.some(panel => panel.contains(document.activeElement)));
+    };
+    root.classList.add('episodes-ready');
+    tabList.hidden = false;
+    activate(0);syncHash();
+    window.addEventListener('hashchange',syncHash);
+  });
+</script>
+
+<style>
+  .favorite-episodes { margin-top: 48px; padding-top: 36px; border-top: 1px solid var(--color-line); }
+  .favorite-episodes [hidden] { display: none !important; }
+  .episodes-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 18px; }
+  .episodes-heading h2 { font: 400 2rem/1.15 var(--font-display); letter-spacing: -.025em; }
+  .episodes-count { flex-shrink: 0; font-size: .6875rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: .08em; }
+  .episode-tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--color-line); margin-bottom: 18px; }
+  .episode-tabs button { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 8px 0 12px; border-bottom: 2px solid transparent; color: var(--color-muted); font-size: .875rem; cursor: pointer; }
+  .episode-tabs button span { font-size: .6875rem; font-variant-numeric: tabular-nums; }
+  .episode-tabs button[aria-selected="true"] { border-bottom-color: var(--color-accent); color: var(--color-accent); font-weight: 600; }
+  .episode-show-heading { font: 400 1.5rem var(--font-display); margin: 24px 0 12px; }
+  .episodes-ready .episode-show-heading { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .episode-list { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 3); gap: 16px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: 6px; list-style: none; padding: 6px 6px 12px; margin: 0 -6px; scrollbar-width: thin; scrollbar-color: var(--color-line) transparent; }
+  .episode-list li { min-width: 0; scroll-snap-align: start; }
+  .episode-link { display: flex; gap: 16px; align-items: start; min-height: 208px; height: 100%; padding: 20px; border: 1px solid var(--color-line); border-radius: 8px; background: #f3f3eb; color: inherit; text-decoration: none; }
+  .episode-art { flex: 0 0 60px; }
+  .episode-art :global(img) { width: 60px; height: 60px; border-radius: 4px; object-fit: contain; }
+  .episode-number { display: block; margin-top: 12px; font-size: .625rem; letter-spacing: .1em; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+  .episode-copy { min-width: 0; display: flex; flex-direction: column; align-self: stretch; }
+  .episode-guest { font-size: .75rem; line-height: 1.4; color: var(--color-muted); margin-bottom: 9px; }
+  .episode-copy h4 { font: 400 1.3rem/1.18 var(--font-display); letter-spacing: -.015em; overflow-wrap: anywhere; }
+  .episode-open { display: inline-flex; align-items: center; gap: 8px; padding-top: 18px; margin-top: auto; font-size: .6875rem; color: var(--color-accent); }
+  .episode-open :global(svg) { width: 12px; height: 12px; }
+  .episode-link:hover { border-color: var(--color-accent); }
+  .episode-link:hover h4 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .episode-link:focus-visible, .favorite-episodes button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  .episode-browse { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 10px; }
+  .episode-position { font-size: .6875rem; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+  .episode-arrows { display: flex; gap: 10px; }
+  .episode-arrows button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--color-line); border-radius: 50%; color: var(--color-accent); cursor: pointer; }
+  .episode-arrows button:hover { background: #e5e9df; }
+  .episode-arrows button[aria-disabled="true"] { opacity: .4; cursor: default; }
+  @media (max-width: 1000px) { .episode-list { grid-auto-columns: calc((100% - 16px) / 2); } }
+  @media (max-width: 640px) {
+    .favorite-episodes { margin-top: 36px; padding-top: 28px; }
+    .episodes-heading h2 { font-size: 1.8rem; }
+    .episodes-count { display: none; }
+    .episode-tabs { gap: 26px; margin-bottom: 14px; }
+    .episode-list { grid-auto-columns: calc(100% - 28px); }
+    .episode-link { padding: 18px; gap: 14px; min-height: 216px; }
+    .episode-copy h4 { font-size: 1.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .episode-list { scroll-behavior: auto; } }
+</style>

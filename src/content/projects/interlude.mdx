@@ -1,0 +1,67 @@
+---
+title: Interlude
+slug: interlude
+category: personal
+ownership: independent
+status: private-app
+role: Product direction & prototyping
+audience: A learner using short reading and listening sessions
+summary: "A personal learning companion that connects short, source-based lessons, saved narration, and practice into a learning history."
+featured: false
+order: 4
+draft: false
+image:
+  src: /images/interlude-today.jpg
+  alt: "Interlude’s Today view, with a lesson ready to resume, a saved audio position, and a learning-progress summary."
+  width: 1280
+  height: 720
+  caption: "The Today view uses a synthetic Demo profile and learning history."
+tags: [React, Cloudflare D1/R2, Saved narration]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## The product question
+
+A spare five minutes is easy to spend choosing what to learn. Articles, videos, and podcasts offer more material than a small moment can hold. Interlude starts with a narrower question: how can a learning app offer one useful next step and connect those moments over time?
+
+This is a private product exploration, with my role spanning product direction and prototyping. The intended experience moves between an iPhone for everyday listening and a laptop for reading, notes, and course management. A clear stopping point matters as much as an easy start.
+
+## The experience
+
+A learner can resume a short lesson, read or listen, inspect its sources, and try an optional recall question or practical reflection. Courses provide continuity; saved topics leave room to explore. A selected listening queue supports a longer session without turning the library into an endless feed.
+
+Positions, notes, and learning history belong to the lesson version actually used. Revised teaching can become current without erasing an earlier completion or moving a note onto different wording. Publisher video and podcast embeds supplement the original lessons; they remain separate from the saved narration and learning record.
+
+## How it works
+
+<ArchitectureFlow label="A versioned lesson, from publication to practice" steps={[
+  { title: 'Prepare and review teaching', detail: 'Source-based lesson content is reviewed and released as an explicit version.' },
+  { title: 'Keep content and media durable', detail: 'D1 records lessons and learning state; private R2 storage holds generated narration.' },
+  { title: 'Read, listen, and return', detail: 'The authenticated PWA loads the selected version and saves progress, notes, and practice against it.' }
+]} note="New narration is generated separately from playback. Replaying saved audio does not repeat synthesis." />
+
+The app separates research, lesson preparation, publication, and audio generation. Each operation can preserve completed output when another step fails. Current narration uses Google Chirp 3 HD; previously saved OpenAI audio remains available. Runtime questions and other AI-assisted features have their own bounded provider paths.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Experience', tools: 'React · TypeScript · vinext/Vite · Tailwind', purpose: 'Support the reader, persistent player, course controls, and practice in one PWA.' },
+  { layer: 'State and storage', tools: 'Cloudflare Workers · D1 · R2 · Drizzle', purpose: 'Keep private learning records, version history, and saved audio durable.' },
+  { layer: 'Assistance and narration', tools: 'OpenAI APIs · Google Chirp 3 HD', purpose: 'Separate source-based assistance from reusable speech generation.' }
+]} />
+
+## Decisions and design lessons
+
+**Content changes should preserve the learner’s history.** A new lesson version can improve the teaching without silently changing what someone previously completed. Notes, practice, and narration need that same version boundary.
+
+**Listening and generation are different experiences.** Saved audio makes returning to a lesson predictable. An interrupted provider request should be recoverable without automatically generating and charging for the same material again.
+
+**Activity is not proof of understanding.** Reading, completing a supplement, answering a recall question, and applying an idea are different signals. Keeping them separate gives progress a more useful meaning than an undifferentiated completion count.
+
+## Current state and next step
+
+Interlude has a private deployed version with saved narration, and the current source contains three foundation courses. Implementation records document hosted playback checks and provider integration. The broader experience is still evolving; those checks do not establish improved learning outcomes.
+
+I currently prepare and publish new content through a separate research workflow. The app handles runtime AI requests independently of that process. The next evaluation is whether learners can resume after interruptions and retain a concept later, beyond simply finishing a lesson.

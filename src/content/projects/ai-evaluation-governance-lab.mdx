@@ -1,0 +1,70 @@
+---
+title: AI Evaluation & Governance Lab
+slug: ai-evaluation-governance-lab
+category: professional
+ownership: independent
+status: in-development
+role: Product framing, architecture & prototyping
+audience: Teams exploring AI agents for healthcare operations
+summary: "A synthetic healthcare sandbox for exploring how AI agents should be tested and governed, starting with persistent cases and independent simulator services."
+featured: false
+order: 2
+draft: false
+image:
+  src: /images/ai-evaluation-workspace.png
+  alt: "AI Evaluation Lab’s Demo Alpha workspace, with synthetic case details, documents, and manual eligibility and message actions."
+  width: 1152
+  height: 1094
+  caption: "The local case workspace uses authored synthetic fixtures. Messages are recorded in the simulator and never delivered."
+github: https://github.com/ktakeuchi21/ai-evaluation-governance-lab
+tags: [Next.js, FastAPI, PostgreSQL]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## The product question
+
+How do you evaluate an AI agent when success depends on several systems, incomplete information, and actions that change a case? A convincing final answer says little about whether the workflow followed the right rules or handled a failed dependency correctly.
+
+AI Evaluation & Governance Lab is my independent exploration of that problem, with prior authorization as the first planned use case. The current build establishes the environment in which an agent could eventually work: persistent synthetic cases, separate service APIs, and explicit manual actions. Agent execution and evaluation are future milestones.
+
+## The experience
+
+The case workspace brings a fictional patient, supporting documents, and available simulator actions into one view. A person can inspect a referral, request an authored eligibility result, or record a synthetic message. The message receipt confirms storage without implying delivery, and the eligibility result does not change the case status.
+
+Six baseline cases cover differences such as missing documents, ineligible fixtures, and unknown eligibility. The interface distinguishes an empty result from an unavailable service, so a failed request cannot quietly become a reassuring answer. Stored cases and messages survive service restarts.
+
+## How it works
+
+<ArchitectureFlow label="From a synthetic case to an inspectable service interaction" steps={[
+  { title: 'Open the case workspace', detail: 'Next.js loads typed case data through a server-only HTTP proxy.' },
+  { title: 'Coordinate explicit actions', detail: 'FastAPI owns case records and calls the EHR, document, payer, and communications simulators through HTTP.' },
+  { title: 'Keep service state separate', detail: 'Each simulator stores its own records in a dedicated PostgreSQL schema and returns a defined response.' },
+  { title: 'Prepare for independent evaluation', detail: 'The architecture reserves separate execution, review, and evaluation boundaries for later milestones.' }
+]} note="The current workspace runs no model inference or autonomous workflow. Evaluation, durable human approval, and analytical exports are planned." />
+
+The services share one local PostgreSQL instance, but runtime code accesses only its own schema. The orchestrator cannot bypass a simulator by reading its tables. Generated OpenAPI contracts connect the Python services to the TypeScript interface.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Workspace', tools: 'Next.js · React · TypeScript · Tailwind', purpose: 'Make case context, explicit actions, and failure states visible in one interface.' },
+  { layer: 'Orchestration and simulators', tools: 'Python · FastAPI · Pydantic · HTTPX', purpose: 'Exercise real HTTP boundaries with bounded requests and validated responses.' },
+  { layer: 'Persistence', tools: 'PostgreSQL · Versioned SQL migrations', purpose: 'Preserve case state and reproducible fixtures across service restarts.' },
+  { layer: 'Local development and checks', tools: 'Docker Compose · pytest · Playwright', purpose: 'Run isolated services and verify their contracts against disposable test data.' }
+]} />
+
+## Decisions and design lessons
+
+**Build the environment before judging the agent.** Stable fixtures and explicit service contracts make it possible to distinguish a reasoning problem from a broken tool or inconsistent starting state.
+
+**Unknown and unavailable mean different things.** An authored unknown result, a missing record, and a failed service call should remain distinguishable. Collapsing them hides the evidence a reviewer needs.
+
+**A retry needs an identity.** A timeout can occur after a message has been stored. Reusing the same request ID returns the original receipt; different content with that ID is rejected. This makes recovery deliberate before autonomous actions are introduced.
+
+## Current state and next step
+
+The local build supports persistent cases, document inspection, manual eligibility checks, and recorded synthetic messages. The repository documents unit, integration, and browser checks. Runs, Evaluations, and Governance are still placeholders, and no live demo is deployed.
+
+The next milestone is controlled agent execution with tool-call records and durable human review. Independent evaluation and comparisons can then assess what happened across the workflow, using the same synthetic starting conditions. The [repository and roadmap](https://github.com/ktakeuchi21/ai-evaluation-governance-lab) document those boundaries.

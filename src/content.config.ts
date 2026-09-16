@@ -30,14 +30,18 @@ const work = defineCollection({
     type: z.literal('professional'),
     organization: z.string(),
     role: z.string(),
+    website: z.url().optional(),
   }),
 });
 
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
   schema: shared.extend({
-    type: z.literal('personal'),
-    label: z.string(),
+    category: z.enum(['professional', 'personal']),
+    ownership: z.literal('independent'),
+    status: z.enum(['public-demo', 'private-app', 'in-development']),
+    role: z.string().min(1),
+    audience: z.string().min(1),
   }),
 });
 

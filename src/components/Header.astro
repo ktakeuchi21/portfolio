@@ -3,7 +3,7 @@ import { navigation, withBase } from '../lib/site';
 const current = Astro.url.pathname;
 ---
 <header class="site-header page-width">
-  <a class="identity" href={withBase('/')} aria-label="Kai Takeuchi — home"><span class="identity-mark" aria-hidden="true">kt.</span><span>Kai Takeuchi</span></a>
+  <a class="identity" href={withBase('/')} aria-label="Kai Takeuchi, home"><span class="identity-mark" aria-hidden="true">kt.</span><span>Kai Takeuchi</span></a>
   <nav aria-label="Main navigation">
     {navigation.map(({label, path}) => <a href={withBase(path)} aria-current={current.startsWith(withBase(path)) ? 'page' : undefined}>{label}</a>)}
   </nav>

@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/kai-takeuchi.jpg';
+
+interface Props { loading?: 'eager' | 'lazy'; }
+const { loading = 'lazy' } = Astro.props;
+---
+<div class="portrait-frame">
+  <Image
+    src={portrait}
+    alt="Kai Takeuchi outdoors"
+    width={960}
+    widths={[640, 960, 1280]}
+    sizes="(max-width: 640px) 525px, (max-width: 900px) 540px, 640px"
+    format="webp"
+    quality={85}
+    loading={loading}
+    decoding="async"
+  />
+</div>
+
+<style>
+  .portrait-frame {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-wash);
+    border-radius: 3px;
+  }
+  .portrait-frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  @media (max-width: 640px) {
+    .portrait-frame { max-width: 280px; }
+  }
+</style>

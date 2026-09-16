@@ -1,15 +1,82 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { getProjects } from '../../lib/content';
-import { withBase } from '../../lib/site';
+import { getProjects, projectCategories } from '../../lib/content';
 const projects = await getProjects();
 ---
-<SiteLayout title="Personal projects" description="Independent product projects by Kai Takeuchi: Patient Access Orchestration, Pathway, and What I Made. Explore the product thinking and public demos.">
+<SiteLayout title="Projects" description="Independent projects by Kai Takeuchi, exploring healthcare workflows and everyday life through concise case studies.">
   <div class="page-width">
-    <header class="page-intro"><p class="eyebrow">Selected Personal Product Projects</p><h1>Thinking through building.</h1><p>Independent projects that make a product question concrete enough to explore, test, and use. From healthcare orchestration to the everyday ritual of cooking.</p></header>
-    <div class="projects-list">{projects.map(entry => <ProjectCard entry={entry} headingLevel="h2" />)}</div>
-    <p class="page-note">The healthcare demonstrations use synthetic data and are independent of my employer work. What I Made links to a fictional public sample. <a href="#image-credits">Image sources and credits</a>.</p>
-    <details class="asset-credits" id="image-credits"><summary>Image sources and credits</summary><p>Product screenshots by Kai Takeuchi, reproduced from the <a href="https://patient-access-orchestration.ktakeuchi.chatgpt.site/">Patient Access Orchestration demo</a>, <a href="https://github.com/ktakeuchi21/case-resolution-agent">Pathway repository</a>, and <a href="https://github.com/ktakeuchi21/what-i-made">What I Made repository</a>. Screenshots are unmodified. What I Made’s source photography and license details are recorded in its <a href="https://github.com/ktakeuchi21/what-i-made/blob/main/prototypes/capture-flow/assets/demo/demo-content.json">public media manifest</a> and the <a href={withBase('/credits.txt')}>included attribution record</a>.</p></details>
+    <header class="page-intro"><p class="eyebrow">Projects</p><h1>Thinking through building.</h1><p>Independent projects I’ve built, exploring healthcare workflows and everyday needs.</p></header>
+    <div data-project-tabs>
+      <nav class="project-jump-links" aria-label="Project categories" data-project-fallback>{projectCategories.map(category => <a href={`#${category.id}`}>{category.title}<span aria-hidden="true">↘</span></a>)}</nav>
+      <div class="project-tabs" role="tablist" aria-label="Project categories" hidden>
+        {projectCategories.map((category, index) => <button type="button" role="tab" id={`project-tab-${category.id}`} aria-controls={category.id} aria-selected={index === 0 ? 'true' : 'false'} tabindex={index === 0 ? 0 : -1}>{category.title}</button>)}
+      </div>
+      {projectCategories.map(category => <section class="project-group" id={category.id} aria-labelledby={`${category.id}-title`}>
+        <header class="project-group-intro"><h2 id={`${category.id}-title`}>{category.title}</h2><p>{category.description}</p></header>
+        <div class="projects-list">{projects.filter(entry => entry.data.category === category.id).map(entry => <ProjectCard entry={entry} />)}</div>
+      </section>)}
+    </div>
   </div>
 </SiteLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-project-tabs]');
+
+  if (root) {
+    const fallback = root.querySelector<HTMLElement>('[data-project-fallback]')!;
+    const tabList = root.querySelector<HTMLElement>('[role="tablist"]')!;
+    const tabs = Array.from(tabList.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')!)!);
+
+    function activate(index: number, userInitiated = false) {
+      // Never leave focus inside content that is about to be hidden.
+      const moveFocus = userInitiated || tabList.contains(document.activeElement) ||
+        panels.some((panel, panelIndex) => panelIndex !== index && panel.contains(document.activeElement));
+
+      tabs.forEach((tab, tabIndex) => {
+        const selected = tabIndex === index;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        panels[tabIndex].hidden = !selected;
+      });
+
+      if (moveFocus) tabs[index].focus({ preventScroll: true });
+      const hash = `#${panels[index].id}`;
+      if (userInitiated && location.hash !== hash) history.pushState(null, '', hash);
+    }
+
+    function syncFromLocation() {
+      const index = panels.findIndex(panel => `#${panel.id}` === location.hash);
+      if (index >= 0) activate(index);
+      else if (!location.hash) activate(0);
+      // Unrecognized page anchors keep the current category.
+    }
+
+    tabs.forEach((tab, index) => {
+      panels[index].setAttribute('role', 'tabpanel');
+      panels[index].setAttribute('aria-labelledby', tab.id);
+      panels[index].tabIndex = 0;
+      tab.addEventListener('click', () => activate(index, true));
+      tab.addEventListener('keydown', event => {
+        let next: number;
+        switch (event.key) {
+          case 'ArrowRight': next = (index + 1) % tabs.length; break;
+          case 'ArrowLeft': next = (index - 1 + tabs.length) % tabs.length; break;
+          case 'Home': next = 0; break;
+          case 'End': next = tabs.length - 1; break;
+          default: return;
+        }
+        event.preventDefault();
+        activate(next, true);
+      });
+    });
+
+    activate(Math.max(0, panels.findIndex(panel => `#${panel.id}` === location.hash)));
+    root.classList.add('project-tabs-ready');
+    fallback.hidden = true;
+    tabList.hidden = false;
+    window.addEventListener('popstate', syncFromLocation);
+    window.addEventListener('hashchange', syncFromLocation);
+  }
+</script>

@@ -1,0 +1,6 @@
+---
+import BookCarousel from '../BookCarousel.astro';
+interface Props { variant: 'overlap' | 'turn' | 'pocket' | 'lean'; }
+const { variant } = Astro.props;
+---
+<BookCarousel variant={variant} />

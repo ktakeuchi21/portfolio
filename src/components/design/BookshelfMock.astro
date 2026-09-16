@@ -1,0 +1,326 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import { learningResources } from '../../data/learning';
+interface Props { variant: 'wall' | 'desk' | 'spotlight' | 'accordion' | 'mosaic' | 'folio'; }
+const { variant } = Astro.props;
+// Preserve the original comparison set and its hand-authored bindings.
+const books = learningResources.filter(item => item.kind === 'book').slice(0, 11);
+const bindings = [
+  ['#eceae3', '#293b33', 'AI Engineering'], ['#d98230', '#231e19', 'Obviously Awesome'],
+  ['#e6ddc7', '#38382e', 'Supercommunicators'], ['#d2dce2', '#273c4b', 'Product Management in Practice'],
+  ['#f2f0e9', '#252925', 'Build'], ['#efca39', '#292918', 'Hooked'], ['#dbded6', '#343a32', 'Grit'],
+  ['#efe8d9', '#7b2d32', 'The Lean Product Playbook'], ['#d7b461', '#342c1c', 'Inspired'],
+  ['#ba4e2e', '#fff9eb', 'Thinking in Bets'], ['#80304f', '#fff7ed', 'Strategy for Healthcare'],
+];
+const tilts = [-5, 4, -3, 5, 3, -4, 5, -3, -5, 4, -2];
+const hint = { wall: 'A small collection, always close by.', desk: 'A few books within reach.', spotlight: 'A closer look at the collection.', accordion: 'Pull up a favorite.', mosaic: 'A collection of familiar covers.', folio: 'The personal library of Kai Takeuchi' };
+---
+<div class:list={['book-demo', variant]} data-book-demo={variant} role="group" aria-label={`${variant} bookshelf preview`}>
+  <header class="book-demo-heading"><p class="micro">{variant === 'folio' ? 'A personal catalog' : 'The reading collection'} <span>/ 11</span></p><h3>Favorites on<br class="folio-break" /> my shelf.</h3><p class="demo-hint">{hint[variant]}</p></header>
+  <div class="book-stage" data-book-stage>
+    {books.map((book, index) => <a class:list={['book-item', { 'is-current': index === 0 }]} href={book.href} data-book={index} data-title={book.title} data-author={book.creator} data-near={index < 3 ? 'true' : 'false'} aria-label={`${book.title}, by ${book.creator}`} style={`--binding:${bindings[index][0]};--binding-ink:${bindings[index][1]};--ratio:${book.image.width / book.image.height};--tilt:${tilts[index]}deg;--offset:${index};--depth:${index};--height:${240 + (index % 3) * 10}px;`}>
+      <span class="book-object">
+        <span class="spine" aria-hidden="true"><span>{bindings[index][2]}</span><small>{String(index + 1).padStart(2, '0')}</small></span>
+        <span class="front"><Image src={book.image} alt={`${book.title} book cover`} width={240} widths={[120, 240, 480]} sizes="(max-width: 640px) 160px, 240px" format="webp" quality={90} loading="lazy" decoding="async" /></span>
+      </span>
+      <span class="book-mini-title">{bindings[index][2]}</span>
+    </a>)}
+  </div>
+  <div class="book-index" data-book-index hidden role="group" aria-label="Choose a book">
+    {books.map((book, index) => <button type="button" data-book-pick={index} aria-label={`Select ${book.title}`} aria-pressed={index === 0 ? 'true' : 'false'}>
+      <span class="index-number">{String(index + 1).padStart(2, '0')}</span>
+      <Image src={book.image} alt={`${book.title} book cover`} width={60} widths={[60, 120]} sizes="48px" format="webp" quality={90} loading="lazy" decoding="async" />
+      <span class="index-title">{bindings[index][2]}</span><span class="index-mark" aria-hidden="true">↗</span>
+    </button>)}
+  </div>
+  <div class="book-info" aria-live="polite" aria-atomic="true">
+    <p class="micro book-count" data-book-count>01 / {String(books.length).padStart(2, '0')}</p>
+    <h4 data-book-title>{books[0].title}</h4>
+    <p class="book-author" data-book-author>{books[0].creator}</p>
+    <a class="book-destination" data-book-open href={books[0].href}>Explore book <Icon kind="external" /></a>
+  </div>
+  <div class="book-controls" data-book-controls hidden>
+    <button type="button" data-book-step="-1" aria-label="Previous book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
+    <span class="control-note">Browse the shelf</span>
+    <button type="button" data-book-step="1" aria-label="Next book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-book-demo]').forEach(demo => {
+    const books = [...demo.querySelectorAll<HTMLAnchorElement>('[data-book]')];
+    const picks = [...demo.querySelectorAll<HTMLButtonElement>('[data-book-pick]')];
+    const stage = demo.querySelector<HTMLElement>('[data-book-stage]')!;
+    const index = demo.querySelector<HTMLElement>('[data-book-index]')!;
+    const variant = demo.dataset.bookDemo;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const hover = matchMedia('(hover: hover) and (pointer: fine)');
+    let selected = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    let scrollTimer: ReturnType<typeof setTimeout>;
+    let origin: { x: number; y: number } | undefined;
+    let dragged = false;
+    const scrollWithin = (viewport: HTMLElement, target: HTMLElement) => {
+      const outer = viewport.getBoundingClientRect(), inner = target.getBoundingClientRect();
+      const delta = inner.left < outer.left + 16 ? inner.left - outer.left - 16 : inner.right > outer.right - 16 ? inner.right - outer.right + 16 : 0;
+      if (delta) viewport.scrollBy({left:delta,behavior:reduced.matches ? 'instant' : 'smooth'});
+    };
+    const select = (value: number, reveal = true) => {
+      selected = (value + books.length) % books.length;
+      books.forEach((book, i) => {
+        let offset = (i - selected + books.length) % books.length;
+        if (offset > Math.floor(books.length / 2)) offset -= books.length;
+        book.style.setProperty('--offset', String(offset));
+        book.style.setProperty('--depth', String(Math.abs(offset)));
+        book.style.zIndex = String(20 - Math.abs(offset));
+        book.dataset.near = String(Math.abs(offset) <= 2);
+        book.classList.toggle('is-current', i === selected);
+        book.setAttribute('aria-pressed', String(i === selected));
+        // In layouts with a separate index, only the index is keyboard-selectable.
+        book.tabIndex = ['spotlight','folio'].includes(variant!) ? -1 : i === selected ? 0 : -1;
+      });
+      picks.forEach((pick, i) => pick.setAttribute('aria-pressed', String(i === selected)));
+      demo.querySelector<HTMLElement>('[data-book-count]')!.textContent = `${String(selected + 1).padStart(2,'0')} / ${String(books.length).padStart(2,'0')}`;
+      demo.querySelector<HTMLElement>('[data-book-title]')!.textContent = books[selected].dataset.title!;
+      demo.querySelector<HTMLElement>('[data-book-author]')!.textContent = books[selected].dataset.author!;
+      const link = demo.querySelector<HTMLAnchorElement>('[data-book-open]')!;
+      link.href = books[selected].href;
+      link.setAttribute('aria-label', `Explore ${books[selected].dataset.title}`);
+      clearTimeout(scrollTimer);
+      if (reveal && variant === 'accordion') scrollTimer = setTimeout(() => scrollWithin(stage,books[selected]), reduced.matches ? 0 : 350);
+      if (reveal && variant === 'spotlight') scrollWithin(index,picks[selected]);
+    };
+    demo.classList.add('books-ready');
+    demo.querySelector<HTMLElement>('[data-book-controls]')!.hidden = false;
+    if (variant === 'folio' || variant === 'spotlight') index.hidden = false;
+    books.forEach((book, i) => {
+      book.setAttribute('role','button');
+      book.setAttribute('aria-label',`Select ${book.dataset.title}`);
+      book.addEventListener('click', event => { event.preventDefault(); if (!dragged) select(i); });
+      book.addEventListener('keydown',event => { if(event.key===' ') {event.preventDefault();select(i);} });
+      if (variant === 'accordion') {
+        book.addEventListener('pointerenter',()=>{ if(hover.matches) timer=setTimeout(()=>select(i,false),140); });
+        book.addEventListener('pointerleave',()=>clearTimeout(timer));
+      }
+    });
+    picks.forEach((pick,i)=>pick.addEventListener('click',()=>select(i)));
+    demo.querySelectorAll<HTMLButtonElement>('[data-book-step]').forEach(button=>button.addEventListener('click',()=>select(selected+Number(button.dataset.bookStep))));
+    demo.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();
+      select(event.key==='Home'?0:event.key==='End'?books.length-1:selected+(event.key==='ArrowRight'?1:-1));
+      if ((event.target as HTMLElement).closest('[data-book]')) books[selected].focus({preventScroll:true});
+      if ((event.target as HTMLElement).closest('[data-book-pick]')) picks[selected].focus({preventScroll:true});
+    });
+    if(variant==='desk') {
+      stage.style.touchAction='pan-y';
+      stage.addEventListener('pointerdown',event=>{if(event.button===0){origin={x:event.clientX,y:event.clientY};dragged=false;}});
+      stage.addEventListener('pointermove',event=>{if(origin && Math.abs(event.clientX-origin.x)>8){stage.setPointerCapture(event.pointerId);}});
+      stage.addEventListener('pointerup',event=>{
+        if(!origin)return;const dx=event.clientX-origin.x,dy=event.clientY-origin.y;
+        if(Math.abs(dx)>36 && Math.abs(dx)>Math.abs(dy)){dragged=true;select(selected+(dx<0?1:-1));setTimeout(()=>{dragged=false;},0);}origin=undefined;
+      });
+      stage.addEventListener('pointercancel',()=>{origin=undefined;});
+      stage.addEventListener('dragstart',event=>event.preventDefault());
+    }
+    select(0,false);
+  });
+</script>
+
+<style>
+  .book-demo { --muted: #6b6e62; --rule: #d7d8c9; --cover-width: 130px; position: relative; isolation: isolate; color: #29372d; padding: 32px; border-radius: 10px; background: #efefe5; border: 1px solid #dcded2; }
+  .book-demo [hidden] { display: none !important; }
+  .micro { font-size: .625rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+  .micro > span { margin-left: 10px; }
+  .book-demo h3 { font: 400 2.2rem/1.08 var(--font-display); letter-spacing: -.025em; margin-top: 12px; }
+  .folio-break { display: none; }
+  .demo-hint { font-size: .75rem; color: var(--muted); margin-top: 10px; }
+  .book-stage { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 28px; align-items: end; margin-top: 32px; }
+  .book-item { display: flex; justify-content: center; align-items: end; flex-direction: column; min-width: 0; position: relative; cursor: pointer; }
+  .book-object { display: block; position: relative; width: min(100%,var(--cover-width)); aspect-ratio: var(--ratio); margin-inline: auto; transition: transform 300ms cubic-bezier(.2,.7,.2,1), filter 250ms ease; }
+  .front { display: block; position: relative; width: 100%; height: 100%; border-radius: 1px 3px 3px 1px; box-shadow: 3px 5px 9px #2c35222d; }
+  .front :global(img) { width: 100%; height: 100%; object-fit: contain; border-radius: inherit; pointer-events: none; }
+  .spine { display: none; }
+  .book-mini-title { display: block; font-size: .6875rem; margin-top: 14px; width: 100%; text-align: center; line-height: 1.4; }
+  .book-item:hover .book-object { transform: translateY(-8px); }
+  .books-ready .book-mini-title { display: none; }
+  .book-item:focus-visible { outline: none; }
+  .book-item:focus-visible .front { outline: 2px solid currentColor; outline-offset: 7px; }
+  .book-demo button:focus-visible, .book-demo .book-destination:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .book-info { border-top: 1px solid var(--rule); padding-top: 24px; margin-top: 28px; max-width: 100%; min-width: 0; }
+  .book-info h4 { font: 400 1.65rem/1.15 var(--font-display); letter-spacing: -.02em; margin: 10px 0 6px; max-width: 30ch; overflow-wrap: anywhere; text-wrap: balance; }
+  .book-author { font-size: .8rem; color: var(--muted); }
+  .book-destination { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: .75rem; margin-top: 10px; text-decoration: underline; }
+  .book-destination :global(svg) { width: 14px; height: 14px; }
+  .book-controls { display: flex; align-items: center; gap: 12px; justify-content: end; margin-top: 18px; }
+  .book-controls button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--rule); border-radius: 50%; cursor: pointer; color: inherit; transition: background 180ms ease; }
+  .book-controls button:hover { background: #7d907019; }
+  .control-note { color: var(--muted); font-size: .6rem; }
+  .book-index button { color: inherit; cursor: pointer; }
+
+  /* 01: Covers stand on continuous oak rails, inside a softly lit wall niche. */
+  .wall { background: linear-gradient(115deg,#eeede3,#f8f6ef 65%,#edece1); box-shadow: inset 0 3px 14px #62502d0d; }
+  .wall .book-demo-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .wall .book-demo-heading .micro { order: 1; }
+  .wall .book-demo-heading h3 { margin: 0; }
+  .wall .demo-hint { display: none; }
+  .wall .book-stage { gap: 34px 24px; padding: 0 14px; }
+  .wall .book-item { height: 212px; padding-bottom: 14px; }
+  .wall .book-object { width: min(100%,calc(180px * var(--ratio))); }
+  .wall .book-item::after { content: ''; position: absolute; bottom: 0; left: -12px; right: -12px; height: 12px; z-index: -1; background: linear-gradient(#d7c19f 0 4px,#b49369 4px 6px,#c3a77e 6px 10px,#9e8159 10px); box-shadow: 0 9px 10px -4px #67513445; }
+  .wall .book-stage::after { content: ''; display: block; height: 12px; margin-inline: -12px; background: linear-gradient(#d7c19f 0 4px,#b49369 4px 6px,#c3a77e 6px 10px,#9e8159 10px); box-shadow: 0 9px 10px -4px #67513445; }
+  .wall .book-item.is-current .book-object { transform: translateY(-10px) rotate(-3deg); }
+  .wall .book-info { border-top: 0; margin-top: 12px; padding-top: 20px; }
+  .wall .book-controls { position: absolute; bottom: 32px; right: 32px; }
+  .wall .book-info { padding-right: 210px; min-height: 158px; }
+
+  /* 02: A spread of real covers, with gesture-driven selection. */
+  .desk { background: radial-gradient(ellipse at 50% 45%,#faf7ed,#e5e1d5); }
+  .desk .book-demo-heading { text-align: center; }
+  .desk.books-ready .book-stage { display: block; position: relative; height: 340px; margin-inline: -32px; overflow: clip; cursor: grab; }
+  .desk.books-ready .book-item { position: absolute; width: 190px; left: calc(50% - 95px); top: 22px; transform: translateX(calc(var(--offset) * 150px)) translateY(calc(var(--depth) * 16px)) rotate(calc(var(--offset) * -9deg)) scale(calc(1 - var(--depth) * .08)); transition: transform 420ms cubic-bezier(.2,.7,.2,1), opacity 250ms ease; }
+  .desk.books-ready .book-item[data-near='false'] { visibility: hidden; opacity: 0; pointer-events: none; }
+  .desk.books-ready .book-object { width: min(190px,calc(275px * var(--ratio))); }
+  .desk .front { box-shadow: 10px 17px 18px -5px #39342145; }
+  .desk.books-ready .book-item:hover .book-object { transform: translateY(-5px); }
+  .desk .book-info { text-align: center; border: 0; margin-top: 0; padding-top: 0; min-height: 145px; }
+  .desk .book-info h4 { margin-inline: auto; }
+  .desk .book-controls { justify-content: center; }
+
+  /* 03: One book as a sculptural object, plus a complete thumbnail strip. */
+  .spotlight.books-ready { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-areas: 'header header' 'info stage' 'controls stage' 'index index'; gap: 24px 50px; background: #f4f3eb; padding: 36px; }
+  .spotlight .book-demo-heading { grid-area: header; }
+  .spotlight.books-ready .book-stage { grid-area: stage; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; min-height: 350px; margin: 0; background: radial-gradient(ellipse at 50% 70%,#d6dcce,#e9ecdf 66%); border-radius: 50% 50% 4px 4px; padding: 30px; perspective: 1000px; }
+  .spotlight.books-ready .book-item:not(.is-current) { display: none; }
+  .spotlight.books-ready .book-item, .folio.books-ready .book-item { width: 100%; align-items: center; }
+  .spotlight.books-ready .book-object { width: min(220px,calc(295px * var(--ratio))); transform: rotateY(-18deg) rotateZ(-5deg); transform-style: preserve-3d; }
+  .spotlight .book-object::after { content: ''; position: absolute; width: 12px; top: 3px; bottom: 2px; right: -12px; transform-origin: left; transform: rotateY(55deg); background: repeating-linear-gradient(90deg,#f4f0e4 0 2px,#d1cbbf 2px 3px); }
+  .spotlight .front { box-shadow: 17px 23px 20px -12px #2d392355; }
+  .spotlight .book-info { grid-area: info; align-self: end; margin: 0; border: 0; padding: 16px 0 0; }
+  .spotlight .book-info h4 { font-size: clamp(1.5rem,3.8vw,3rem); line-height: 1.08; max-width: 18ch; margin-block: 18px 16px; }
+  .spotlight .book-controls { grid-area: controls; justify-content: start; margin: 0; align-self: start; }
+  .spotlight .control-note { display: none; }
+  .spotlight .book-index { grid-area: index; display: flex; gap: 14px; padding: 22px 6px 8px; border-top: 1px solid var(--rule); overflow-x: auto; scrollbar-width: thin; scrollbar-color: #9daa8e transparent; }
+  .spotlight .book-index button { position: relative; flex: 0 0 58px; width: 58px; height: 88px; padding: 6px; border-bottom: 2px solid transparent; }
+  .spotlight .book-index button[aria-pressed='true'] { border-color: #3b594c; background: #e0e5d7; }
+  .spotlight .book-index :global(img) { width: 100%; height: 100%; object-fit: contain; }
+  .spotlight .index-number, .spotlight .index-title, .spotlight .index-mark { display: none; }
+
+  /* 04: A compact spine library unfolds into a full cover. */
+  .accordion { --muted: #b9c3b1; --rule: #4f604d; background: radial-gradient(ellipse at 50% 30%,#3c503c,#223126 80%); color: #f4f3e9; }
+  .accordion.books-ready .book-stage { display: flex; gap: 8px; align-items: end; overflow-x: auto; padding: 30px 24px 28px; margin-inline: -8px; scrollbar-width: thin; scrollbar-color: #869774 transparent; background: linear-gradient(transparent calc(100% - 19px),#9ea587 calc(100% - 19px),#646f54 calc(100% - 14px),#313e2c calc(100% - 4px),transparent calc(100% - 4px)); }
+  .accordion.books-ready .book-item { flex: 0 0 44px; width: 44px; height: var(--height); transition: width 320ms ease,flex-basis 320ms ease; }
+  .accordion.books-ready .book-item.is-current { width: 192px; flex-basis: 192px; }
+  .accordion.books-ready .book-object { width: 100%; height: 100%; aspect-ratio: auto; }
+  .accordion.books-ready .spine { position: absolute; inset: 0 auto 0 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; writing-mode: vertical-rl; width: 44px; padding: 16px 7px; color: var(--binding-ink); background: linear-gradient(90deg,#0002,transparent 30%,#fff2 75%,#0002),var(--binding); border-radius: 3px 1px 1px 3px; box-shadow: 3px 4px 7px #0004; font: 500 15px/1.05 var(--font-display); }
+  .accordion .spine small { font: 400 9px var(--font-sans); letter-spacing: .1em; }
+  .accordion.books-ready .front { position: absolute; inset: auto 0 0 26px; width: 166px; height: 100%; opacity: 0; transform: perspective(800px) rotateY(85deg); transform-origin: left; transition: transform 320ms ease,opacity 200ms ease; box-shadow: none; }
+  .accordion.books-ready .front :global(img) { object-position: left bottom; }
+  .accordion.books-ready .book-item.is-current .front { opacity: 1; transform: perspective(800px) rotateY(-8deg); }
+  .accordion .book-item:hover .book-object { transform: none; }
+  .accordion .book-item:focus-visible { outline: 2px solid #f4f3e9; outline-offset: 5px; }
+  .accordion .book-item:focus-visible .front { outline: 0; }
+  .accordion .book-info { padding-right: 200px; min-height: 180px; }
+  .accordion .book-controls { position: absolute; bottom: 32px; right: 32px; }
+
+  /* 05: A staggered composition, with every cover kept visible. */
+  .mosaic { --muted: #bac6b5; --rule: #475c48; background: radial-gradient(ellipse at 35% 40%,#415844,#233529 70%); color: #f5f5e9; }
+  .mosaic .book-demo-heading { text-align: center; }
+  .mosaic .book-stage { grid-template-columns: repeat(12,minmax(0,1fr)); gap: 38px 24px; padding: 12px 18px 28px; align-items: center; }
+  .mosaic .book-item { grid-column: span 3; justify-self: center; width: 100%; align-items: center; }
+  .mosaic .book-object { width: min(100%,calc(160px * var(--ratio))); transform: rotate(var(--tilt)); filter: brightness(.85); }
+  .mosaic .book-item:nth-child(3n) .book-object { width: min(100%,calc(185px * var(--ratio))); }
+  .mosaic .book-item:nth-child(9) { grid-column: 2 / span 3; }
+  .mosaic .book-item:nth-child(10) { grid-column: 5 / span 3; }
+  .mosaic .book-item:nth-child(11) { grid-column: 8 / span 3; }
+  .mosaic .front { box-shadow: 12px 18px 22px -12px #000b; }
+  .mosaic .book-item:hover .book-object, .mosaic .book-item.is-current .book-object { transform: translateY(-6px) rotate(0deg) scale(1.07); filter: brightness(1); }
+  .mosaic .book-info { text-align: center; min-height: 170px; }
+  .mosaic .book-info h4 { margin-inline: auto; }
+  .mosaic .book-controls { justify-content: center; margin-top: 8px; }
+
+  /* 06: A bound catalog with real covers, rather than invented book content. */
+  .folio { padding: 42px; background: linear-gradient(90deg,#eee9dc,#fcfaf2 46%,#e8e1d1 49.8%,#bfb5a0 50%,#f8f4e9 51%,#faf7ee 97%,#e9e2d3); border: 1px solid #cdc5b3; border-radius: 8px 14px 14px 8px; box-shadow: 0 4px 0 #d5cfbe,0 7px 0 #f0ecdf,0 10px 0 #b5ac98,0 23px 28px -18px #3c392c66; }
+  .folio.books-ready { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-areas: 'header stage' 'index stage' 'index info' 'controls controls'; gap: 18px 70px; }
+  .folio .book-demo-heading { grid-area: header; padding-top: 6px; }
+  .folio .book-demo-heading h3 { font-size: 2.7rem; }
+  .folio .folio-break { display: block; }
+  .folio .demo-hint { font-size: .6875rem; margin-top: 16px; }
+  .folio.books-ready .book-stage { grid-area: stage; display: grid; grid-template-columns: minmax(0,1fr); place-items: center; margin: 0; padding: 10px 24px; min-height: 275px; }
+  .folio.books-ready .book-item:not(.is-current) { display: none; }
+  .folio.books-ready .book-object { width: min(180px,calc(255px * var(--ratio))); animation: page-appear 360ms ease both; }
+  .folio .front { box-shadow: 6px 10px 16px -5px #4d443b50; }
+  .folio .book-info { grid-area: info; text-align: center; margin-top: 0; border-top: 0; padding-top: 0; min-height: 170px; }
+  .folio .book-info h4 { font-size: 1.55rem; margin-inline: auto; }
+  .folio .book-index { grid-area: index; display: flex; flex-direction: column; padding-top: 8px; }
+  .folio .book-index button { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 7px 0; border-bottom: 1px solid #d7cfbd; text-align: left; }
+  .folio .book-index :global(img) { display: none; }
+  .folio .index-number { font: 400 .7rem var(--font-display); color: var(--muted); }
+  .folio .index-title { flex: 1; font-size: .75rem; line-height: 1.35; }
+  .folio .index-mark { font-size: .8rem; opacity: 0; }
+  .folio .book-index button[aria-pressed='true'] { color: #754529; border-color: #8f7156; }
+  .folio .book-index button[aria-pressed='true'] .index-mark { opacity: 1; }
+  .folio .book-controls { grid-area: controls; justify-content: space-between; margin-top: 12px; padding-top: 20px; border-top: 1px solid #d3cbb9; }
+  @keyframes page-appear { from { opacity: .3; transform: perspective(600px) rotateY(-18deg) translateX(-8px); } to { opacity: 1; transform: perspective(600px) rotateY(0) translateX(0); } }
+
+  @media (max-width: 850px) {
+    .book-stage { gap: 24px 18px; }
+    .wall .book-stage { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    .wall .book-item { height: 195px; }
+    .wall .book-object { width: min(100%,calc(160px * var(--ratio))); }
+    .spotlight.books-ready { gap: 24px; padding: 28px; }
+    .spotlight.books-ready .book-stage { padding: 20px; min-height: 300px; }
+    .spotlight.books-ready .book-object { width: min(180px,calc(240px * var(--ratio))); }
+    .mosaic .book-stage { padding-inline: 0; gap: 30px 20px; }
+    .mosaic .book-object { width: min(100%,calc(145px * var(--ratio))); }
+    .folio { padding: 28px; }
+    .folio.books-ready { gap: 18px 48px; }
+    .folio .book-demo-heading h3 { font-size: 2.3rem; }
+    .folio.books-ready .book-stage { padding-inline: 10px; }
+  }
+  @media (max-width: 640px) {
+    .book-demo { padding: 24px 20px; }
+    .book-demo h3 { font-size: 1.85rem; }
+    .book-stage { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px 16px; }
+    .book-info h4 { font-size: 1.5rem; }
+    .book-controls { justify-content: center; }
+    .wall .book-demo-heading { display: block; }
+    .wall .book-demo-heading .micro { margin-bottom: 12px; }
+    .wall .book-stage { grid-template-columns: repeat(3,minmax(0,1fr)); padding: 0 6px; gap: 25px 14px; }
+    .wall .book-item { height: 140px; }
+    .wall .book-object { width: min(100%,calc(114px * var(--ratio))); }
+    .wall .book-item::after { left: -7px; right: -7px; height: 9px; }
+    .wall .book-stage::after { margin-inline: -7px; height: 9px; }
+    .wall .book-info { padding-right: 0; min-height: 160px; }
+    .wall .book-controls { position: static; margin-top: 8px; }
+    .desk.books-ready .book-stage { height: 295px; margin-inline: -20px; }
+    .desk.books-ready .book-item { width: 150px; left: calc(50% - 75px); transform: translateX(calc(var(--offset) * 91px)) translateY(calc(var(--depth) * 18px)) rotate(calc(var(--offset) * -10deg)) scale(calc(1 - var(--depth) * .1)); }
+    .desk.books-ready .book-object { width: min(150px,calc(230px * var(--ratio))); }
+    .desk .book-info { min-height: 160px; }
+    .spotlight.books-ready { grid-template-columns: 1fr; grid-template-areas: 'header' 'stage' 'info' 'controls' 'index'; padding: 24px 20px; gap: 24px; }
+    .spotlight.books-ready .book-stage { width: 100%; min-height: 290px; }
+    .spotlight .book-info { padding-top: 0; min-height: 180px; }
+    .spotlight .book-info h4 { font-size: clamp(1.5rem,7vw,2rem); max-width: 100%; }
+    .spotlight .book-controls { justify-content: start; }
+    .spotlight .book-index { padding-top: 20px; margin-top: -4px; }
+    .accordion.books-ready .book-stage { margin-inline: -8px; padding-inline: 12px; }
+    .accordion .book-info { padding-right: 0; min-height: 188px; }
+    .accordion .book-controls { position: static; margin-top: 4px; }
+    .mosaic .book-stage { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 30px 20px; padding: 8px 0 18px; }
+    .mosaic .book-item, .mosaic .book-item:nth-child(n) { grid-column: auto; }
+    .mosaic .book-object, .mosaic .book-item:nth-child(3n) .book-object { width: min(100%,calc(118px * var(--ratio))); }
+    .mosaic .book-info { min-height: 185px; }
+    .folio { background: linear-gradient(90deg,#eee9dc,#fbf8ef 7%,#fcfaf2 94%,#e8e1d1); box-shadow: 0 4px 0 #d5cfbe,0 7px 0 #f0ecdf,0 10px 0 #b5ac98; }
+    .folio.books-ready { grid-template-columns: 1fr; grid-template-areas: 'header' 'stage' 'info' 'controls' 'index'; gap: 20px; }
+    .folio .folio-break { display: none; }
+    .folio .book-demo-heading h3 { font-size: 2rem; }
+    .folio.books-ready .book-stage { min-height: 260px; padding-top: 12px; }
+    .folio .book-info { min-height: 160px; }
+    .folio .book-controls { padding-top: 16px; margin-top: 0; }
+    .folio .book-index { padding-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .book-demo *, .book-demo *::before, .book-demo *::after { transition: none !important; animation: none !important; }
+  }
+</style>
