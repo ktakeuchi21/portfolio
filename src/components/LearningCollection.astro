@@ -1,0 +1,21 @@
+---
+import ExternalLink from './ExternalLink.astro';
+import BookShelf from './BookShelf.astro';
+import PodcastPlayer from './PodcastPlayer.astro';
+import FavoriteEpisodes from './FavoriteEpisodes.astro';
+---
+<div class="learning-section" id="learning">
+  <BookShelf />
+  <PodcastPlayer />
+  <FavoriteEpisodes />
+  <div class="learning-more"><ExternalLink href="https://github.com/ktakeuchi21/healthcare-product-learning">More in my learning collection</ExternalLink></div>
+</div>
+
+<style>
+  .learning-section { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--color-line); }
+  .learning-more { margin-top: 24px; font-size: .875rem; color: var(--color-accent); }
+  .learning-more :global(a) { min-height: 44px; }
+  @media (max-width: 640px) {
+    .learning-section { margin-top: 40px; padding-top: 30px; }
+  }
+</style>

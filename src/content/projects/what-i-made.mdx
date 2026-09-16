@@ -1,21 +1,71 @@
 ---
 title: What I Made
 slug: what-i-made
-type: personal
-label: Personal project · Fictional public sample
+category: personal
+ownership: independent
+status: private-app
+role: Product design & prototyping
+audience: Home cooks building a personal cooking archive
 summary: "A photo-first cooking journal and culinary map. A small product question: how can you preserve a meal’s details without letting the food go cold?"
 featured: true
 order: 3
-draft: true
+draft: false
 image:
   src: /images/what-i-made-map.png
-  alt: "What I Made’s mobile public sample, displaying a culinary world map and fictional cooking history."
+  alt: "What I Made’s mobile Map view, showing country cook density across a world map in the fictional sample archive."
   width: 390
   height: 844
-  caption: "The public sample uses a fictional cooking archive."
+  caption: "The refreshed Map view shows country cook density using the fictional public sample archive."
 liveDemo: https://main.dk27yiqjy46kx.amplifyapp.com/?demo=1
 github: https://github.com/ktakeuchi21/what-i-made
-tags: [Voice-assisted capture, Personal archives]
+tags: [JavaScript PWA, IndexedDB, AWS]
 ---
 
-Draft: expand the product story using the public README and product requirements. Ask Kai for personal reflection and learning; do not invent usability-study findings or adoption metrics.
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## The product question
+
+A meal can leave a photograph behind while losing the details that would make it worth revisiting: what went into it, how it tasted, and what to change next time. Recording everything in a form adds effort at the moment someone wants to eat.
+
+What I Made explores a lighter approach to keeping a cooking history. My role is product design and hands-on prototyping. It is built for home cooks who want to remember individual attempts and discover patterns across the dishes they make.
+
+## The experience
+
+Capture starts with a photograph and dish name. A cook can add a natural voice note, review the suggested fields, and save without accepting every suggestion. One occasion can contain several dishes and photographs.
+
+The same archive supports three perspectives: a chronological Journal, a photographic Year view, and a culinary Map. Dish histories connect repeat attempts; filters help rediscover a meal. Recipe Ideas can be imported or researched when requested, then saved as editable snapshots. Backup and restore give the owner a way to retain the archive outside the browser.
+
+## How it works
+
+<ArchitectureFlow label="From a meal to a personal archive" steps={[
+  { title: 'Capture on the device', detail: 'The PWA processes photographs locally and accepts a dish name, typed notes, or speech.' },
+  { title: 'Request help when useful', detail: 'Authenticated cloud services transcribe speech or propose structured details from submitted text.' },
+  { title: 'Review and save locally', detail: 'The cook confirms the entry; IndexedDB stores the occasion, dishes, attempts, and photographs.' },
+  { title: 'Rediscover the history', detail: 'Journal, Year, and Map derive their views from the same account-scoped archive.' }
+]} note="Cloud assistance is optional. The public sample reads a separate fictional dataset and does not open a private archive." />
+
+Cognito establishes who may enter the private app; it does not store the cooking archive. Network services receive the bounded inputs needed for a requested action. Personal photographs stay on the device. A separate metadata analytics path can record allowlisted activity without receiving meal records or images.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'App and archive', tools: 'JavaScript PWA · IndexedDB', purpose: 'Keep capture, photo processing, and the source-of-truth archive on the device.' },
+  { layer: 'Access and services', tools: 'Cognito · API Gateway · Lambda', purpose: 'Separate invitation-only membership from bounded cloud assistance.' },
+  { layer: 'Assistance', tools: 'Amazon Transcribe · Bedrock', purpose: 'Turn speech into text and propose editable capture or recipe details.' },
+  { layer: 'Delivery', tools: 'AWS Amplify · Service worker', purpose: 'Deliver the installable app and preserve useful local access when connectivity drops.' }
+]} />
+
+## Decisions and design lessons
+
+**Capture effort is a product constraint.** Photo and name form a minimal path. More capable assistance is useful only if it reduces effort without making the cook correct a long, unexpected form.
+
+**Suggestions should remain suggestions.** The person can inspect and edit AI-proposed details. Deterministic local matching and country resolution handle tasks that do not need a model’s judgment.
+
+**Local ownership comes with responsibilities.** Device-local storage protects the archive from routine cloud upload, but sign-in alone does not provide cross-device backup. Export and validated restore are part of the product, not an afterthought.
+
+## Current state and next step
+
+The invitation-only PWA has a publicly accessible fictional sample. Repository records describe owner iPhone validation and client/service checks, with remaining device checks documented separately. A public sample demonstrates the experience without exposing a private cooking history.
+
+A useful next question is whether repeat cooks can recover a specific past attempt quickly, especially as dish names and occasions accumulate. The [public repository](https://github.com/ktakeuchi21/what-i-made) includes the product requirements, architecture, and media attribution.

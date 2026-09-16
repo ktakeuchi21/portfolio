@@ -1,0 +1,15 @@
+---
+interface Props {
+  label: string;
+  steps: { title: string; detail: string }[];
+  note?: string;
+}
+const { label, steps, note } = Astro.props;
+---
+<figure class="architecture-flow" aria-label={label}>
+  <figcaption>{label}</figcaption>
+  <ol>
+    {steps.map((step, index) => <li><span class="flow-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><strong>{step.title}</strong><p>{step.detail}</p></div></li>)}
+  </ol>
+  {note && <p class="flow-note">{note}</p>}
+</figure>

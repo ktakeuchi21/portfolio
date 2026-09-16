@@ -1,0 +1,321 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { learningResources } from '../data/learning';
+interface Props { variant?: 'fan' | 'coverflow' | 'rail' | 'sleeves'; headingId?: string; headingLevel?: 2 | 3; }
+const { variant = 'coverflow', headingId, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+const ShowHeading = headingLevel === 2 ? 'h3' : 'h4';
+const podcasts = learningResources.filter(item => item.kind === 'podcast');
+const totalLabel = String(podcasts.length).padStart(2, '0');
+const colors = ['#f4c8a1', '#9261dc', '#e4a34b', '#acc176', '#6590b4'];
+const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotation', sleeves: 'From my collection' };
+---
+<div class:list={['crate', `crate-${variant}`]} data-crate={variant}>
+  <div class="crate-heading">
+    <div>{labels[variant] && <p class="small-label">{labels[variant]}</p>}<Heading id={headingId} tabindex={headingId ? -1 : undefined}>What I tune into.</Heading></div>
+    <span class="collection-count">{totalLabel} <span>favorites</span></span>
+  </div>
+  <div class="crate-reel" data-crate-reel>
+    <div class="crate-track">
+      {podcasts.map((podcast, index) => <a class="record" href={podcast.href} data-record={index} data-title={podcast.title} data-creator={podcast.creator} aria-label={podcast.title} style={`--disc-label:${colors[index % colors.length]}`}>
+        <span class="album">
+          {variant === 'sleeves' && <span class="vinyl" aria-hidden="true"><span></span></span>}
+          <span class="jacket"><Image src={podcast.image} alt={`${podcast.title} podcast artwork`} width={320} widths={[180, 260, 520]} sizes="(max-width: 640px) 176px, 240px" format="webp" quality={90} loading="lazy" decoding="async" /></span>
+        </span>
+        <span class="tile-caption"><span>{String(index + 1).padStart(2, '0')}</span><span>{podcast.title}</span></span>
+      </a>)}
+    </div>
+  </div>
+  <div class="crate-bottom" data-crate-display hidden>
+    <div class="current-show" aria-live="polite" aria-atomic="true">
+      <ShowHeading data-crate-title>{podcasts[0].title}</ShowHeading>
+      <div class="show-meta"><p class="show-creator" data-crate-creator>{podcasts[0].creator}</p><p class="show-count" data-crate-count>01 / {totalLabel}</p></div>
+    </div>
+    <div class="crate-actions">
+      <a class="open-show" data-crate-open href={podcasts[0].href}>Open podcast <Icon kind="external" /></a>
+      <div class="crate-transport">
+        <button type="button" data-crate-step="-1" aria-label="Previous podcast"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
+        <button type="button" data-crate-step="1" aria-label="Next podcast"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-crate]').forEach(crate => {
+    const reel = crate.querySelector<HTMLElement>('[data-crate-reel]')!;
+    const track = reel.querySelector<HTMLElement>('.crate-track')!;
+    const originals = [...track.querySelectorAll<HTMLAnchorElement>('[data-record]')];
+    const total = originals.length;
+    if (!total) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const title = crate.querySelector<HTMLElement>('[data-crate-title]')!;
+    const creator = crate.querySelector<HTMLElement>('[data-crate-creator]')!;
+    const count = crate.querySelector<HTMLElement>('[data-crate-count]')!;
+    const open = crate.querySelector<HTMLAnchorElement>('[data-crate-open]')!;
+    let active = total;
+    let requested = total;
+    let selected = -1;
+    let moving = false;
+    let raf = 0;
+    let settleTimer: ReturnType<typeof setTimeout>;
+    let drag: { x: number; left: number; pointer: number } | undefined;
+    let didDrag = false;
+
+    // Inert buffers allow native scrolling across either end of the collection.
+    const copy = (record: HTMLAnchorElement) => {
+      const clone = document.createElement('div');
+      for (const attribute of record.attributes) {
+        if (attribute.name === 'class' || attribute.name === 'style' || attribute.name === 'data-record' || attribute.name.startsWith('data-astro-cid-')) clone.setAttribute(attribute.name, attribute.value);
+      }
+      clone.dataset.copy = '';
+      clone.setAttribute('aria-hidden', 'true');
+      clone.innerHTML = record.innerHTML;
+      return clone;
+    };
+    track.prepend(...originals.map(copy));
+    track.append(...originals.map(copy));
+    const records = [...track.querySelectorAll<HTMLElement>('[data-record]')];
+    const logical = (index: number) => (index % total + total) % total;
+    let positions: number[] = [];
+    const measure = () => { positions = records.map(record => record.offsetLeft - (reel.clientWidth - record.offsetWidth) / 2); };
+    const position = (index: number) => positions[index];
+    const nearest = () => records.reduce((best, _, index) => Math.abs(position(index) - reel.scrollLeft) < Math.abs(position(best) - reel.scrollLeft) ? index : best, 0);
+    const metadata = (index: number) => {
+      active = index;
+      const next = logical(index);
+      originals.forEach((record, i) => {
+        record.tabIndex = i === next ? 0 : -1;
+        record.setAttribute('aria-pressed', String(i === next));
+      });
+      if (next === selected) return;
+      selected = next;
+      title.textContent = originals[next].dataset.title!;
+      creator.textContent = originals[next].dataset.creator!;
+      count.textContent = `${String(next + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      open.href = originals[next].href;
+      open.setAttribute('aria-label', `Open ${originals[next].dataset.title} on Apple Podcasts`);
+    };
+    const paint = () => {
+      const closest = nearest();
+      const stride = position(1) - position(0);
+      records.forEach((record, index) => {
+        const distance = Math.max(-3, Math.min(3, (position(index) - reel.scrollLeft) / stride));
+        record.style.setProperty('--distance', String(distance));
+        record.style.setProperty('--depth', String(Math.abs(distance)));
+        record.style.setProperty('--turn', `${Math.max(-1, Math.min(1, distance)) * -48}deg`);
+        record.style.zIndex = String(10 - Math.round(Math.abs(distance) * 2));
+        record.classList.toggle('is-current', index === closest);
+      });
+      if (!moving) metadata(closest);
+    };
+    const go = (index: number, instant = false) => {
+      if (index < 1 || index >= records.length - 1) index = total + logical(index);
+      requested = index;
+      moving = !(instant || reduced.matches);
+      clearTimeout(settleTimer);
+      // Cancel an in-flight native snap before an explicit navigation command.
+      reel.classList.toggle('is-moving', moving);
+      reel.scrollTo({ left: reel.scrollLeft, behavior: 'instant' });
+      metadata(index);
+      reel.scrollTo({ left: position(index), behavior: moving ? 'smooth' : 'instant' });
+      if (!moving) paint();
+    };
+    const settle = () => {
+      if (drag) return;
+      moving = false;
+      reel.classList.remove('is-moving');
+      const index = nearest();
+      metadata(index);
+      if (index < total || index >= total * 2) go(total + logical(index), true);
+      paint();
+    };
+    const step = (amount: number) => go((moving ? requested : active) + amount);
+    crate.classList.add('crate-ready');
+    crate.setAttribute('role', 'group');
+    crate.setAttribute('aria-roledescription', 'carousel');
+    crate.setAttribute('aria-label', 'Favorite podcasts');
+    originals.forEach((record, index) => {
+      record.setAttribute('role', 'button');
+      record.setAttribute('aria-label', `Select ${record.dataset.title}`);
+      record.addEventListener('keydown', event => { if (event.key === ' ') { event.preventDefault(); go(total + index); } });
+      record.addEventListener('focus', () => { if (logical(active) !== index) go(total + index); });
+    });
+    crate.querySelector<HTMLElement>('[data-crate-display]')!.hidden = false;
+    crate.querySelectorAll<HTMLButtonElement>('[data-crate-step]').forEach(button => button.addEventListener('click', () => step(Number(button.dataset.crateStep))));
+    crate.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? total - 1 : logical((moving ? requested : active) + (event.key === 'ArrowRight' ? 1 : -1));
+      if ((event.target as HTMLElement).closest('[data-record]')) {
+        go(total + next, true);
+        originals[next].focus({ preventScroll: true });
+      } else go(total + next);
+    });
+    track.addEventListener('click', event => {
+      const record = (event.target as HTMLElement).closest<HTMLElement>('[data-record]');
+      if (!record) return;
+      event.preventDefault();
+      if (didDrag) { didDrag = false; return; }
+      go(records.indexOf(record));
+    });
+    reel.addEventListener('scroll', () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(paint);
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 160);
+    }, { passive: true });
+    reel.addEventListener('wheel', () => { moving = false; reel.classList.remove('is-moving'); }, { passive: true });
+    reel.addEventListener('pointerdown', event => {
+      moving = false;
+      reel.classList.remove('is-moving');
+      didDrag = false;
+      if (event.pointerType === 'mouse' && event.button === 0) drag = { x: event.clientX, left: reel.scrollLeft, pointer: event.pointerId };
+    });
+    reel.addEventListener('pointermove', event => {
+      if (!drag || Math.abs(event.clientX - drag.x) < 6) return;
+      didDrag = true;
+      reel.classList.add('is-dragging');
+      reel.setPointerCapture(drag.pointer);
+      reel.scrollLeft = drag.left - (event.clientX - drag.x);
+    });
+    const endDrag = () => {
+      if (!drag) return;
+      drag = undefined;
+      reel.classList.remove('is-dragging');
+      if (didDrag) { go(nearest()); setTimeout(() => { didDrag = false; }, 0); }
+    };
+    reel.addEventListener('pointerup', endDrag);
+    reel.addEventListener('pointercancel', endDrag);
+    reel.addEventListener('dragstart', event => event.preventDefault());
+    new ResizeObserver(() => {
+      crate.style.setProperty('--reel-width', `${reel.clientWidth}px`);
+      measure();
+      go(total + logical(active), true);
+    }).observe(reel);
+    reduced.addEventListener('change', () => go(total + logical(active), true));
+    crate.style.setProperty('--reel-width', `${reel.clientWidth}px`);
+    measure();
+    go(total, true);
+  });
+</script>
+
+<style>
+  .crate { --cover: 240px; --gap: -74px; --text: #f2f3e8; --subtle: #bcc6b6; --rule: #53604f; color: var(--text); background: radial-gradient(ellipse at 50% 33%, #3b4939, #202d25 74%); border: 1px solid #344437; border-radius: 12px; overflow: hidden; }
+  .crate [hidden] { display: none; }
+  .crate-heading { display: flex; justify-content: space-between; align-items: center; padding: 28px 32px 0; gap: 20px; }
+  .small-label { color: var(--subtle); font-size: .625rem; text-transform: uppercase; letter-spacing: .13em; margin-bottom: 10px; }
+  .crate-heading :is(h2, h3) { font: 400 2rem/1.15 var(--font-display); letter-spacing: -.025em; }
+  .collection-count { font: 400 1.7rem/1 var(--font-display); }
+  .collection-count > span { display: block; color: var(--subtle); font: 400 .6rem var(--font-sans); text-transform: uppercase; letter-spacing: .09em; margin-top: 9px; }
+  .crate-reel { position: relative; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-color: #87987e transparent; scrollbar-width: thin; }
+  .crate-track { position: relative; display: flex; width: max-content; min-width: 100%; gap: 24px; align-items: center; padding: 44px 32px; }
+  .record { position: relative; display: block; flex: 0 0 var(--cover); width: var(--cover); scroll-snap-align: center; outline-offset: 6px; }
+  .album { position: relative; display: block; aspect-ratio: 1; transform-origin: center bottom; }
+  .jacket { position: relative; display: block; width: 100%; aspect-ratio: 1; border-radius: 4px; box-shadow: 0 16px 28px -12px #000b; }
+  .jacket :global(img) { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; user-select: none; pointer-events: none; }
+  .tile-caption { display: flex; gap: 10px; padding-top: 16px; font-size: .8125rem; line-height: 1.4; }
+  .tile-caption > :first-child { color: var(--subtle); font-size: .625rem; padding-top: 2px; }
+  .crate-ready .crate-reel { scrollbar-width: none; cursor: grab; user-select: none; }
+  .crate-ready .crate-reel::-webkit-scrollbar { display: none; }
+  .crate-ready .crate-track { gap: 0; padding-inline: calc((var(--reel-width, 1040px) - var(--cover)) / 2); padding-block: 58px 42px; }
+  .crate-ready .record:not(:last-child) { margin-right: var(--gap); }
+  .crate-ready .record { cursor: pointer; }
+  .crate-ready .record:focus-visible { outline: none; }
+  .crate-ready .record:focus-visible .jacket { outline: 2px solid #f2f3e8; outline-offset: 5px; }
+  .crate-ready .tile-caption { display: none; }
+  .crate-ready .album { will-change: transform; }
+  .crate-reel.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+  .crate-reel.is-moving { scroll-snap-type: none; }
+  .crate-reel.is-dragging .record { cursor: grabbing; }
+  .crate-bottom { display: flex; justify-content: space-between; align-items: end; gap: 28px; padding: 14px 32px 28px; }
+  .current-show { min-width: 0; }
+  .show-count { color: var(--subtle); font-size: .625rem; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+  .current-show :is(h3, h4) { font: 400 2.2rem/1.05 var(--font-display); letter-spacing: -.025em; margin: 12px 0 8px; }
+  .show-creator { color: var(--subtle); font-size: .8125rem; }
+  .crate-actions { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+  .open-show { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; gap: 14px; font-size: .75rem; border-bottom: 1px solid #89997e; }
+  .open-show:hover { color: #fff; border-color: white; }
+  .open-show :global(svg) { width: 15px; height: 15px; }
+  .crate-transport { display: flex; gap: 10px; }
+  .crate-transport button { display: grid; place-items: center; width: 48px; height: 48px; color: inherit; border: 1px solid var(--rule); border-radius: 50%; cursor: pointer; transition: background 180ms ease; }
+  .crate-transport button:hover { background: #ffffff12; }
+  .crate a:focus-visible, .crate button:focus-visible, .crate h2:focus-visible { outline: 2px solid #f2f3e8; outline-offset: 5px; }
+
+  .crate-fan.crate-ready .album { transform: translateY(calc(var(--depth, 0) * 16px)) rotate(calc(var(--distance, 0) * 6deg)) scale(calc(1 - var(--depth, 0) * .075)); filter: brightness(calc(1 - var(--depth, 0) * .14)); }
+  .crate-fan.crate-ready .crate-track { padding-top: 48px; padding-bottom: 66px; }
+  .crate-fan .crate-bottom { padding-top: 0; }
+
+  .crate-coverflow { --cover: 208px; --gap: -58px; --rule: #4d5656; --subtle: #bac4bf; background: radial-gradient(ellipse at 50% 48%, #384743, #1d2927 68%); }
+  .crate-coverflow .crate-heading { text-align: center; justify-content: center; padding-top: 22px; }
+  .crate-coverflow .collection-count { display: none; }
+  .crate-coverflow.crate-ready .crate-track { padding-block: 28px 40px; }
+  .crate-coverflow.crate-ready .album { transform: perspective(900px) rotateY(var(--turn, 0deg)) scale(calc(1 - var(--depth, 0) * .10)); filter: brightness(calc(1 - var(--depth, 0) * .16)); }
+  .crate-coverflow.crate-ready .jacket { -webkit-box-reflect: below 9px linear-gradient(transparent 72%, #fff2); }
+  .crate-coverflow .crate-bottom { align-items: center; text-align: left; padding: 8px 32px 22px; gap: 22px; }
+  .crate-coverflow .crate-actions { gap: 24px; }
+  .crate-coverflow .current-show { min-height: 0; max-width: min(100%, 680px); }
+  .crate-coverflow .current-show :is(h3,h4) { font-size: 1.65rem; margin: 0 0 7px; }
+  .show-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 16px; }
+  .show-meta .show-count { white-space: nowrap; }
+  .crate-coverflow .crate-transport button { width: 44px; height: 44px; }
+
+  .crate-rail { --cover: 204px; --gap: 26px; background: #233129; }
+  .crate-rail.crate-ready .crate-track { padding-block: 38px 30px; }
+  .crate-rail.crate-ready .tile-caption { display: flex; }
+  .crate-rail .jacket { box-shadow: 0 10px 20px -13px #000b; border-radius: 2px; }
+  .crate-rail.crate-ready .record { opacity: .65; transition: opacity 200ms ease; }
+  .crate-rail.crate-ready .record.is-current { opacity: 1; }
+  .crate-rail.crate-ready .record.is-current .jacket::after { content: ''; position: absolute; inset: -7px; border: 1px solid #c8d2b5; pointer-events: none; }
+  .crate-rail .crate-bottom { margin-inline: 32px; padding: 24px 0; border-top: 1px solid var(--rule); }
+  .crate-rail .current-show :is(h3, h4) { font-size: 1.85rem; }
+  .crate-rail .show-count { display: none; }
+  .crate-rail .current-show :is(h3, h4) { margin-top: 0; }
+
+  .crate-sleeves { --cover: 208px; --gap: -18px; --subtle: #c4c5b6; --rule: #5a6050; background: radial-gradient(ellipse at 50% 35%, #434b39, #252f24 75%); }
+  .crate-sleeves .crate-reel { background: linear-gradient(transparent calc(100% - 36px), #7b775b calc(100% - 35px), #575a44 calc(100% - 31px), #303829 calc(100% - 20px), transparent calc(100% - 19px)); }
+  .crate-sleeves.crate-ready .crate-track { padding-block: 78px 36px; }
+  .crate-sleeves.crate-ready .album { transform: translateY(calc(min(var(--depth, 0), 1) * 26px - 24px)) rotate(calc(clamp(-1, var(--distance, 0), 1) * -4deg)); filter: brightness(calc(1 - var(--depth, 0) * .12)); }
+  .crate-sleeves .jacket { border: 5px solid #e6e4d6; border-radius: 1px; background: #e6e4d6; }
+  .vinyl { display: none; position: absolute; inset: 2px; border-radius: 50%; background: repeating-radial-gradient(circle, #171c19 0 2px, #2b302b 3px, #181d1a 4px 6px); box-shadow: 6px 4px 8px #0005; transition: transform 300ms ease; }
+  .vinyl::after { content: ''; position: absolute; inset: 34%; border-radius: 50%; background: var(--disc-label); border: 8px solid #0002; }
+  .vinyl > span { position: absolute; z-index: 1; width: 8px; height: 8px; top: calc(50% - 4px); left: calc(50% - 4px); background: #242c22; border-radius: 50%; }
+  .crate-ready .vinyl { display: block; }
+  .crate-ready .record.is-current .vinyl { transform: translateX(46px) rotate(25deg); }
+  .crate-sleeves .crate-bottom { padding-top: 20px; }
+
+  @media (max-width: 760px) {
+    .crate-bottom { align-items: start; flex-direction: column; gap: 22px; }
+    .crate-actions { width: 100%; justify-content: space-between; }
+    .crate-coverflow .crate-actions { justify-content: space-between; }
+    .crate-coverflow .crate-bottom { align-items: stretch; gap: 12px; }
+    .current-show :is(h3, h4) { font-size: 2rem; }
+  }
+  @media (max-width: 640px) {
+    .crate { --cover: 180px; --gap: -74px; }
+    .crate-heading { padding: 24px 20px 0; }
+    .crate-heading :is(h2, h3) { font-size: 1.7rem; }
+    .small-label { font-size: .5rem; margin-bottom: 8px; }
+    .collection-count { font-size: 1.3rem; }
+    .collection-count > span { font-size: .5rem; }
+    .crate-ready .crate-track { padding-block: 42px 36px; }
+    .crate-fan.crate-ready .crate-track { padding-bottom: 58px; }
+    .crate-bottom { padding-inline: 20px; padding-bottom: 24px; }
+    .crate-actions { gap: 12px; }
+    .crate-coverflow { --cover: 168px; --gap: -74px; }
+    .crate-coverflow.crate-ready .crate-track { padding-block: 24px 32px; }
+    .crate-coverflow .crate-bottom { padding: 8px 20px 18px; gap: 12px; }
+    .crate-coverflow .current-show { min-height: 0; }
+    .crate-coverflow .current-show :is(h3,h4) { font-size: 1.5rem; }
+    .crate-rail { --cover: 168px; --gap: 22px; }
+    .crate-rail .crate-bottom { margin-inline: 20px; }
+    .crate-rail .tile-caption { font-size: .75rem; }
+    .crate-sleeves { --cover: 172px; --gap: -16px; }
+    .crate-sleeves.crate-ready .crate-track { padding-block: 66px 36px; }
+    .crate-ready .record.is-current .vinyl { transform: translateX(36px) rotate(25deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .crate * { transition: none !important; }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PodcastMock from '../../components/design/PodcastMock.astro';
+import RecordCrateMock from '../../components/design/RecordCrateMock.astro';
+import BookshelfGallery from '../../components/design/BookshelfGallery.astro';
+import ShelfRailGallery from '../../components/design/ShelfRailGallery.astro';
+import { withBase } from '../../lib/site';
+
+// Explorations are opt-in, so ordinary production builds omit this route.
+export function getStaticPaths() {
+  return import.meta.env.DESIGN_PREVIEW === '1' ? ['podcasts', 'record-crates', 'bookshelves', 'book-ledges'].map(concept => ({ params: { concept } })) : [];
+}
+
+const isBookshelf = Astro.params.concept === 'bookshelves';
+const isLedge = Astro.params.concept === 'book-ledges';
+const isCrate = Astro.params.concept === 'record-crates';
+const originals = [
+  { id: 'analog', number: '01', name: 'The listening room', note: 'A warm, tactile console with five station presets. A natural companion to the bookshelf.', trait: 'Warm & playful', recommended: true },
+  { id: 'editorial', number: '02', name: 'The editorial', note: 'Generous typography, quiet rules, and a single cover in the spotlight.', trait: 'Calm & spacious' },
+  { id: 'gallery', number: '03', name: 'The record crate', note: 'A dark, immersive gallery. Swipe through a fan of covers that loops back to the beginning.', trait: 'Expressive & tactile' },
+  { id: 'playlist', number: '04', name: 'The daily queue', note: 'A compact player with the full collection in view. Browse the queue or skip between shows.', trait: 'Clear & compact' },
+] as const;
+const crates = [
+  { id: 'fan', variant: 'fan', number: '01', name: 'The curved fan', note: 'The original idea, with a softer arc. Covers overlap and rise into focus as you scroll.', trait: 'Layered & familiar' },
+  { id: 'coverflow', variant: 'coverflow', number: '02', name: 'The coverflow', note: 'A little more depth. Angled covers turn toward you, with a subtle reflection underneath.', trait: 'Dimensional & cinematic' },
+  { id: 'rail', variant: 'rail', number: '03', name: 'The gallery rail', note: 'A clean row of full covers. Every thumbnail has room to breathe, with titles always in view.', trait: 'Clear & easy to browse' },
+  { id: 'sleeves', variant: 'sleeves', number: '04', name: 'The vinyl sleeves', note: 'A more literal record collection. The selected sleeve lifts off the ledge and reveals a vinyl disc.', trait: 'Tactile & playful' },
+] as const;
+const concepts = isCrate ? crates : originals;
+---
+<SiteLayout title={isLedge ? 'Shelf and cover explorations' : isBookshelf ? 'Bookshelf explorations' : isCrate ? 'Record crate explorations' : 'Podcast design explorations'} description={isLedge ? 'Four compact, interactive shelves for Kai Takeuchi’s favorite books.' : isBookshelf ? 'Six interactive ways to explore Kai Takeuchi’s favorite books.' : 'Four interactive design directions for Kai Takeuchi’s podcast collection.'} noindex>
+  {isLedge ? <ShelfRailGallery /> : isBookshelf ? <BookshelfGallery /> : <div class="page-width design-page">
+    <header class="design-intro">
+      <a class="back-link" href={withBase(isCrate ? '/design/podcasts/#gallery' : '/about/#learning-listening')}>← {isCrate ? 'Back to the original record crate' : 'Back to About'}</a>
+      <p class="eyebrow">Design explorations / {isCrate ? 'Record crate collection' : 'September 2026'}</p>
+      <h1>{isCrate ? <>Four takes on the <em>record crate.</em></> : <>Four ways to <em>tune in.</em></>}</h1>
+      <p class="design-deck">{isCrate ? 'Same dark gallery. Four ways to flip through the collection.' : 'Same favorites. Four different ways to browse them.'}</p>
+      {!isCrate && <a class="next-round" href={withBase('/design/record-crates/')}>Explore four more record crate variations →</a>}
+      <nav class="concept-nav" aria-label="Design options">
+        {concepts.map(concept => <a href={`#${concept.id}`}><span>{concept.number}</span>{concept.name}</a>)}
+      </nav>
+    </header>
+    {concepts.map(concept => <section class="concept" id={concept.id} aria-labelledby={`${concept.id}-heading`}>
+      <div class="concept-caption">
+        <div class="concept-name"><span class="concept-number">{concept.number}</span><h2 id={`${concept.id}-heading`}>{concept.name}</h2>{'recommended' in concept && <span class="recommendation">My pick</span>}</div>
+        <p>{concept.note}</p>
+      </div>
+      {'variant' in concept ? <RecordCrateMock variant={concept.variant} /> : <PodcastMock variant={concept.id} />}
+      <div class="concept-footnote"><span>{concept.trait}</span><span>{isCrate ? 'Scroll, drag, or use the arrows.' : 'Try the covers, arrows, or keyboard.'}</span></div>
+    </section>)}
+    <aside class="design-notes" aria-label="Design references">
+      <p>Original mockups, informed by open-source interaction patterns from <a href="https://github.com/DIYgod/APlayer">APlayer</a>, <a href="https://www.embla-carousel.com/docs/v8/examples/predefined">Embla</a>, <a href="https://swiperjs.com/demos">Swiper</a>, and <a href="https://v3.shadcn.com/examples/music">shadcn’s music app</a>.</p>
+      <p>These are browsing previews. “Open podcast” takes you to the show on Apple Podcasts. Your current About page is unchanged.</p>
+    </aside>
+  </div>}
+</SiteLayout>
+
+<style>
+  .design-page { max-width: 1040px; }
+  .design-intro { padding: 34px 0 20px; }
+  .back-link { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; color: var(--color-muted); margin-bottom: 30px; }
+  .back-link:hover { text-decoration: underline; }
+  .design-intro .eyebrow { color: var(--color-muted); }
+  h1 { font: 400 clamp(3rem, 6.5vw, 5.2rem)/1.06 var(--font-display); letter-spacing: -.045em; margin: 20px 0 16px; }
+  h1 em { color: var(--color-accent); }
+  .design-deck { color: var(--color-muted); font-size: 1.05rem; }
+  .next-round { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; font-size: .8rem; color: var(--color-accent); text-decoration: underline; }
+  .concept-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+  .concept-nav a { display: flex; gap: 12px; align-items: center; min-height: 54px; padding: 12px 0; border-block: 1px solid var(--color-line); font-size: .8125rem; }
+  .concept-nav a:hover { border-color: var(--color-accent); }
+  .concept-nav span { color: var(--color-muted); font: 400 1.05rem var(--font-display); }
+  .concept { margin-top: 64px; scroll-margin-top: 32px; }
+  .concept-caption { margin-bottom: 24px; }
+  .concept-name { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .concept-number { font-size: .75rem; color: var(--color-muted); }
+  h2 { font: 400 2rem/1.2 var(--font-display); letter-spacing: -.02em; }
+  .recommendation { font-size: .65rem; background: #e5ebe1; color: var(--color-accent); padding: 3px 10px; border-radius: 20px; }
+  .concept-caption p { margin-top: 10px; max-width: 650px; color: var(--color-muted); font-size: .875rem; }
+  .concept-footnote { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; color: var(--color-muted); font-size: .7rem; }
+  .concept-footnote > :first-child { color: var(--color-accent); }
+  .design-notes { border-top: 1px solid var(--color-line); padding-top: 28px; margin-top: 60px; max-width: 800px; font-size: .8rem; color: var(--color-muted); }
+  .design-notes p + p { margin-top: 12px; }
+  .design-notes a { text-decoration: underline; }
+  @media (max-width: 640px) {
+    .design-intro { padding-top: 24px; }
+    .back-link { margin-bottom: 22px; }
+    .concept-nav { grid-template-columns: repeat(2, 1fr); gap: 10px 20px; }
+    .concept-nav a { font-size: .75rem; }
+    .concept { margin-top: 44px; }
+    h2 { font-size: 1.75rem; }
+    .concept-name { gap: 10px; }
+    .concept-footnote { font-size: .65rem; }
+  }
+</style>

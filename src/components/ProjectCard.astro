@@ -3,27 +3,30 @@ import type { CollectionEntry } from 'astro:content';
 import Tag from './Tag.astro';
 import LinkButton from './LinkButton.astro';
 import ExternalLink from './ExternalLink.astro';
-import { caseStudyPath } from '../lib/content';
+import { caseStudyPath, projectOwnershipLabel, projectStatuses } from '../lib/content';
 import { withBase } from '../lib/site';
 interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3'; }
 const { entry, headingLevel: Heading = 'h3' } = Astro.props;
-const { title, summary, image, tags, label, liveDemo, github, slug } = entry.data;
+const { title, summary, image, tags, liveDemo, github, slug, status, category } = entry.data;
 const caseStudy = caseStudyPath(entry);
 const primary = caseStudy || liveDemo || github;
 ---
-<article class:list={['project-card', `project-card--${slug}`]}>
-  <div class="project-image">
-    {image ? <img src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" /> : <div class="image-placeholder"><span>{title}</span><small>Project preview forthcoming</small></div>}
-  </div>
+<article class:list={['project-card', `project-card--${slug}`, { 'project-card--text': !image }]} data-project={slug} data-category={category}>
+  {image && <div class="project-image"><img src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" /></div>}
   <div class="project-copy">
-    <p class="eyebrow">{label}</p>
-    <Heading class="card-title">{primary ? <a href={withBase(primary)}>{title}</a> : title}</Heading>
+    <div class="project-heading">
+      <p class="eyebrow">{projectOwnershipLabel}</p>
+      <Heading class="card-title">{primary ? <a href={withBase(primary)}>{title}</a> : title}</Heading>
+      <p class="project-status">{projectStatuses[status]}</p>
+    </div>
+    <div class="project-detail">
     <p class="project-summary">{summary}</p>
     <div class="tags">{tags.map(tag => <Tag>{tag}</Tag>)}</div>
     <div class="project-actions">
       {caseStudy ? <LinkButton href={caseStudy} external={caseStudy.startsWith('https:')}>Case study</LinkButton> : <span class="forthcoming">Case study forthcoming</span>}
       {liveDemo && <ExternalLink href={liveDemo}>{slug === 'what-i-made' ? 'Public sample' : 'Live demo'}</ExternalLink>}
       {github && <ExternalLink href={github}>GitHub</ExternalLink>}
+    </div>
     </div>
   </div>
 </article>

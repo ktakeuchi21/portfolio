@@ -1,0 +1,307 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { bookCategories, learningResources } from '../data/learning';
+interface Props { variant?: 'overlap' | 'turn' | 'pocket' | 'lean'; headingId?: string; headingLevel?: 2 | 3; withCategories?: boolean; }
+const { variant = 'overlap', headingId, headingLevel = 3, withCategories = false } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+const BookHeading = headingLevel === 2 ? 'h3' : 'h4';
+const books = learningResources.filter(item => item.kind === 'book');
+const widestCover = Math.max(...books.map(book => book.image.width / book.image.height));
+const initial = Math.min(4, books.length - 1);
+const panelId = `${headingId || `books-${variant}`}-panel`;
+const categories = [{ id: 'all', label: 'All books' }, ...bookCategories];
+const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach', lean: 'Room for another favorite' };
+---
+<div class:list={['shelf-rail', `shelf-${variant}`]} data-shelf-rail={variant} data-initial={initial} style={`--widest-cover:${widestCover}`}>
+  <header class="rail-heading"><div>{labels[variant] && <p class="rail-eyebrow">{labels[variant]}</p>}<Heading id={headingId} tabindex={headingId ? -1 : undefined}>Favorites on my shelf.</Heading></div><p class="library-size"><strong data-library-size>{books.length}</strong> <span>books</span></p></header>
+  {withCategories && <div class="shelf-topics" data-shelf-topics role="tablist" aria-label="Book topics" hidden>
+    {categories.map(category => <button type="button" role="tab" id={`${panelId}-${category.id}`} data-shelf-category={category.id} aria-controls={panelId} aria-selected={category.id === 'all' ? 'true' : 'false'} tabindex={category.id === 'all' ? 0 : -1}>{category.label}<span>{category.id === 'all' ? books.length : books.filter(book => book.category === category.id).length}</span></button>)}
+  </div>}
+  <div id={withCategories ? panelId : undefined} data-shelf-panel>
+  <div class="shelf-scene">
+    <div class="shelf-viewport" data-shelf-viewport>
+      <div class="shelf-track" data-shelf-track>
+        {books.map((book, i) => <div class="shelf-slot" data-shelf-slot data-book-category={book.category} style={`--ratio:${book.image.width / book.image.height}`}>
+          <a class="shelf-item" data-shelf-book={i} data-title={book.title} data-creator={book.creator} href={book.href} aria-label={`${book.title}, by ${book.creator}`}>
+            <span class="shelf-jacket"><Image src={book.image} alt={`${book.title} book cover`} width={240} widths={[120,240,480]} sizes="(max-width: 640px) 140px, 180px" format="webp" quality={90} loading="lazy" decoding="async" /></span>
+          </a>
+        </div>)}
+      </div>
+    </div>
+    <div class="shelf-ledge" aria-hidden="true"></div>
+  </div>
+  <div class="rail-bottom" data-shelf-display hidden>
+    <div class="rail-selection" aria-live="polite" aria-atomic="true">
+      <BookHeading data-shelf-title>{books[initial].title}</BookHeading>
+      <div class="selection-meta"><p class="selection-author" data-shelf-creator>{books[initial].creator}</p><p class="selection-count" data-shelf-count>{String(initial + 1).padStart(2,'0')} / {String(books.length).padStart(2,'0')}</p></div>
+    </div>
+    <div class="rail-actions">
+      <a class="explore-book" data-shelf-open href={books[initial].href}>Explore book <Icon kind="external" /></a>
+      <div class="rail-controls">
+        <button type="button" data-shelf-step="-1" aria-label="Previous book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
+        <button type="button" data-shelf-step="1" aria-label="Next book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-shelf-rail]').forEach(shelf => {
+    const viewport = shelf.querySelector<HTMLElement>('[data-shelf-viewport]')!;
+    const allBooks = [...shelf.querySelectorAll<HTMLAnchorElement>('[data-shelf-book]')];
+    const allSlots = [...shelf.querySelectorAll<HTMLElement>('[data-shelf-slot]')];
+    let books = allBooks;
+    let slots = allSlots;
+    if (!books.length) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const canHover = matchMedia('(hover: hover) and (pointer: fine)');
+    const title = shelf.querySelector<HTMLElement>('[data-shelf-title]')!;
+    const creator = shelf.querySelector<HTMLElement>('[data-shelf-creator]')!;
+    const count = shelf.querySelector<HTMLElement>('[data-shelf-count]')!;
+    const destination = shelf.querySelector<HTMLAnchorElement>('[data-shelf-open]')!;
+    let selected = Number(shelf.dataset.initial) || 0;
+    let hoverTimer: ReturnType<typeof setTimeout>;
+    let lastPointer = { x: -1, y: -1 };
+    let hoverIndex = -1;
+    let pointerOver = false;
+    let lastScroll = 0;
+    let drag: { x: number; left: number; id: number } | undefined;
+    let dragged = false;
+    const show = (value: number, position: 'stay' | 'reveal' | 'center' = 'stay', instant = false) => {
+      selected = (value + books.length) % books.length;
+      slots.forEach((slot, i) => {
+        slot.style.setProperty('--after', String(i > selected ? 1 : 0));
+        slot.style.setProperty('--lean', `${i < selected ? 12 : -12}deg`);
+        slot.style.zIndex = String(i === selected ? books.length + 1 : i + 1);
+        books[i].classList.toggle('is-current', i === selected);
+        books[i].tabIndex = i === selected ? 0 : -1;
+        books[i].setAttribute('aria-pressed', String(i === selected));
+      });
+      title.textContent = books[selected].dataset.title!;
+      creator.textContent = books[selected].dataset.creator!;
+      count.textContent = `${String(selected + 1).padStart(2,'0')} / ${String(books.length).padStart(2,'0')}`;
+      destination.href = books[selected].href;
+      destination.setAttribute('aria-label', `Explore ${books[selected].dataset.title}`);
+      if (position === 'stay') return;
+      const left = slots[selected].offsetLeft;
+      const width = books[selected].offsetWidth;
+      let target = viewport.scrollLeft;
+      if (position === 'center') target = left - (viewport.clientWidth - width) / 2;
+      else if (left < target + 22) target = left - 22;
+      else if (left + width > target + viewport.clientWidth - 22) target = left + width - viewport.clientWidth + 22;
+      target = Math.max(0, Math.min(target, viewport.scrollWidth - viewport.clientWidth));
+      const smooth = !instant && !reduced.matches && Math.abs(target - viewport.scrollLeft) < viewport.clientWidth * 1.5;
+      viewport.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
+    };
+    shelf.classList.add('shelf-ready');
+    shelf.setAttribute('role','group');
+    shelf.setAttribute('aria-roledescription','carousel');
+    shelf.setAttribute('aria-label','Favorite books');
+    shelf.querySelector<HTMLElement>('[data-shelf-display]')!.hidden = false;
+    allBooks.forEach(book => {
+      book.setAttribute('role','button');
+      book.setAttribute('aria-label',`Reveal ${book.dataset.title}`);
+      book.addEventListener('click', event => { event.preventDefault(); if (!dragged) { show(books.indexOf(book),'reveal'); book.focus({preventScroll:true}); } });
+      book.addEventListener('focus', () => { const i = books.indexOf(book); if (i >= 0 && selected !== i) show(i,'reveal',true); });
+      book.addEventListener('keydown',event => { if (event.key === ' ') { event.preventDefault(); show(books.indexOf(book),'reveal'); } });
+    });
+    const topics = shelf.querySelector<HTMLElement>('[data-shelf-topics]');
+    if (topics) {
+      const tabs = [...topics.querySelectorAll<HTMLButtonElement>('[data-shelf-category]')];
+      const panel = shelf.querySelector<HTMLElement>('[data-shelf-panel]')!;
+      const selectCategory = (tab: HTMLButtonElement) => {
+        clearTimeout(hoverTimer);hoverIndex = -1;lastPointer = {x:-1,y:-1};
+        tabs.forEach(item => { item.setAttribute('aria-selected', String(item === tab)); item.tabIndex = item === tab ? 0 : -1; });
+        allSlots.forEach((slot, i) => {
+          slot.hidden = tab.dataset.shelfCategory !== 'all' && slot.dataset.bookCategory !== tab.dataset.shelfCategory;
+          allBooks[i].tabIndex = -1;
+          allBooks[i].classList.remove('is-current');
+          allBooks[i].setAttribute('aria-pressed','false');
+        });
+        slots = allSlots.filter(slot => !slot.hidden);
+        books = allBooks.filter(book => !book.parentElement!.hidden);
+        shelf.querySelector<HTMLElement>('[data-library-size]')!.textContent = String(books.length);
+        panel.setAttribute('aria-labelledby',tab.id);
+        show(0,'center',true);
+      };
+      topics.hidden = false;
+      panel.setAttribute('role','tabpanel');
+      panel.setAttribute('aria-labelledby',tabs[0].id);
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click',() => selectCategory(tab));
+        tab.addEventListener('keydown',event => {
+          if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+          event.preventDefault();event.stopPropagation();
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length-1 : (i + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+          selectCategory(tabs[next]);tabs[next].focus({preventScroll:true});
+        });
+      });
+    }
+    shelf.querySelectorAll<HTMLButtonElement>('[data-shelf-step]').forEach(button => button.addEventListener('click',() => {clearTimeout(hoverTimer);show(selected + Number(button.dataset.shelfStep),'center');}));
+    shelf.addEventListener('keydown',event => {
+      if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+      event.preventDefault();clearTimeout(hoverTimer);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? books.length - 1 : selected + (event.key === 'ArrowRight' ? 1 : -1);
+      show(next,'center',true);
+      if ((event.target as HTMLElement).closest('[data-shelf-book]')) books[selected].focus({preventScroll:true});
+    });
+    // React to actual pointer movement, so moving covers cannot retrigger hover.
+    viewport.addEventListener('pointermove',event => {
+      if (drag) {
+        if (Math.abs(event.clientX - drag.x) < 6) return;
+        dragged = true;clearTimeout(hoverTimer);viewport.setPointerCapture(drag.id);
+        viewport.classList.add('is-dragging');viewport.scrollLeft = drag.left - (event.clientX - drag.x);return;
+      }
+      if (!canHover.matches || Date.now() - lastScroll < 180 || Math.abs(event.clientX-lastPointer.x)+Math.abs(event.clientY-lastPointer.y)<2) return;
+      lastPointer = { x:event.clientX,y:event.clientY };
+      const book = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-shelf-book]');
+      const i = book ? books.indexOf(book) : -1;
+      if (i === hoverIndex) return;
+      clearTimeout(hoverTimer);hoverIndex = i;
+      if (i >= 0 && i !== selected) hoverTimer = setTimeout(() => {
+        // A focused book stays selected until keyboard focus leaves the shelf.
+        if (!books.some(item => item === document.activeElement && item.matches(':focus-visible'))) show(i,'reveal');
+      },120);
+    });
+    viewport.addEventListener('pointerenter',()=>{pointerOver=true;});
+    viewport.addEventListener('pointerleave',()=>{pointerOver=false;clearTimeout(hoverTimer);hoverIndex=-1;lastPointer={x:-1,y:-1};});
+    viewport.addEventListener('pointerdown',event=>{
+      clearTimeout(hoverTimer);dragged=false;
+      if (event.pointerType==='mouse' && event.button===0) { event.preventDefault(); drag={x:event.clientX,left:viewport.scrollLeft,id:event.pointerId}; }
+    });
+    const release = () => {drag=undefined;viewport.classList.remove('is-dragging');setTimeout(()=>{dragged=false;},0);};
+    viewport.addEventListener('pointerup',release);
+    viewport.addEventListener('pointercancel',release);
+    viewport.addEventListener('dragstart',event=>event.preventDefault());
+    viewport.addEventListener('scroll',()=>{lastScroll=Date.now();clearTimeout(hoverTimer);hoverIndex=-1;},{passive:true});
+    viewport.addEventListener('wheel',()=>{clearTimeout(hoverTimer);},{passive:true});
+    // Measure only on resize. Adding more data produces a longer row, never more rows.
+    let previousWidth = 0;
+    new ResizeObserver(()=>{
+      if (viewport.clientWidth === previousWidth) return;
+      previousWidth = viewport.clientWidth;show(selected,'center',true);
+    }).observe(viewport);
+    reduced.addEventListener('change',()=>show(selected,'reveal',true));
+    // Escape stops a pending hover and keeps the current cover open for reading.
+    shelf.addEventListener('keydown',event=>{if(event.key==='Escape'){clearTimeout(hoverTimer);if(pointerOver)hoverIndex=selected;}});
+    show(selected,'center',true);
+  });
+</script>
+
+<style>
+  .shelf-rail { --cover: 174px; --book-height: 244px; --stride: 88px; --opening: calc(var(--cover) - var(--stride) + 14px); --stage-height: 312px; --muted: #666b60; --rule: #d4d7c9; --lift: 25px; color: #29382e; background: linear-gradient(120deg,#eeeee4,#f7f5ed 60%,#efeee3); border: 1px solid #d9dccc; border-radius: 12px; overflow: hidden; }
+  .shelf-rail [hidden] { display: none !important; }
+  .rail-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 32px 0; }
+  .rail-eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: .13em; font-size: .625rem; margin-bottom: 10px; }
+  .rail-heading :is(h2,h3) { font: 400 2.1rem/1.12 var(--font-display); letter-spacing: -.025em; }
+  .library-size { text-align: right; font: 400 1.5rem/1 var(--font-display); }
+  .library-size strong { font-weight: 400; }
+  .library-size span { display: block; font: 400 .625rem var(--font-sans); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 8px; }
+  .shelf-topics { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 22px 32px 0; border-bottom: 1px solid var(--rule); }
+  .shelf-topics button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 0; border-bottom: 2px solid transparent; font-size: .75rem; color: var(--muted); cursor: pointer; }
+  .shelf-topics button span { font-size: .625rem; font-variant-numeric: tabular-nums; }
+  .shelf-topics button[aria-selected="true"] { color: #29382e; border-bottom-color: currentColor; font-weight: 600; }
+  .shelf-topics button:hover { color: #29382e; }
+  .shelf-scene { position: relative; }
+  .shelf-viewport { overflow-x: auto; overflow-y: hidden; position: relative; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #94a18a transparent; touch-action: pan-x pan-y; }
+  .shelf-track { display: flex; flex-wrap: nowrap; align-items: end; position: relative; width: max-content; min-width: 100%; height: var(--stage-height); padding: 0 38px 30px; gap: 22px; }
+  .shelf-slot { position: relative; flex: 0 0 var(--cover); width: var(--cover); }
+  .shelf-item { display: flex; align-items: end; position: relative; width: var(--cover); height: var(--book-height); }
+  .shelf-jacket { display: block; position: relative; width: min(100%,calc(var(--book-height) * var(--ratio))); aspect-ratio: var(--ratio); margin-inline: auto; transform-origin: center bottom; border-radius: 1px 3px 3px 1px; box-shadow: 5px 9px 13px -6px #2b302b66; }
+  .shelf-jacket :global(img) { width: 100%; height: 100%; object-fit: contain; border-radius: inherit; pointer-events: none; user-select: none; }
+  .shelf-ledge { position: absolute; bottom: 16px; height: 14px; left: 22px; right: 22px; background: linear-gradient(#d6c4a5 0 4px,#ad8b61 4px 6px,#c3a47a 6px 12px,#96774f 12px); box-shadow: 0 10px 13px -5px #69553345; pointer-events: none; z-index: 10000; }
+  .shelf-ready .shelf-track { gap: 0; }
+  .shelf-ready .shelf-track::after { content: ''; flex: 0 0 max(0px,calc(var(--cover) - var(--stride) + var(--opening))); }
+  .shelf-ready .shelf-slot { flex-basis: var(--stride); width: var(--stride); transform: translateX(calc(var(--after,0) * var(--opening))); transition: transform 300ms cubic-bezier(.2,.7,.2,1); }
+  .shelf-ready .shelf-item { cursor: pointer; }
+  .shelf-ready .shelf-jacket { transition: transform 300ms cubic-bezier(.2,.7,.2,1),filter 250ms ease,box-shadow 250ms ease; }
+  .shelf-ready .shelf-item.is-current .shelf-jacket { transform: translateY(calc(-1 * var(--lift))); box-shadow: 9px 18px 19px -10px #343b2966; }
+  .shelf-item:focus-visible { outline: none; }
+  .shelf-item:focus-visible .shelf-jacket { outline: 2px solid currentColor; outline-offset: 5px; }
+  .shelf-ready .shelf-viewport { cursor: grab; }
+  .shelf-viewport.is-dragging, .shelf-viewport.is-dragging .shelf-item { cursor: grabbing; }
+  .rail-bottom { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 25px 32px 18px; }
+  .rail-selection { min-width: 0; min-height: 128px; max-width: 650px; }
+  .selection-count { font-size: .625rem; font-variant-numeric: tabular-nums; letter-spacing: .1em; color: var(--muted); }
+  .rail-selection :is(h3,h4) { font: 400 1.85rem/1.12 var(--font-display); letter-spacing: -.02em; margin: 12px 0 8px; text-wrap: balance; overflow-wrap: anywhere; }
+  .selection-author { color: var(--muted); font-size: .8125rem; }
+  .rail-actions { display: flex; align-items: center; gap: 22px; flex-shrink: 0; }
+  .explore-book { display: inline-flex; gap: 12px; align-items: center; min-height: 44px; font-size: .75rem; text-decoration: underline; }
+  .explore-book :global(svg) { width: 14px; height: 14px; }
+  .rail-controls { display: flex; gap: 10px; }
+  .rail-controls button { width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: 50%; display: grid; place-items: center; color: inherit; cursor: pointer; }
+  .rail-controls button:hover { background: #7995731a; }
+  .shelf-rail button:focus-visible, .explore-book:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+  /* Overlap reveals the actual cover while its neighbors slide aside. */
+  .shelf-rail.shelf-overlap { --cover: calc(var(--book-height) * var(--widest-cover)); }
+  .shelf-overlap .shelf-jacket { width: calc(var(--book-height) * var(--ratio)); height: var(--book-height); max-width: none; flex-shrink: 0; }
+  .shelf-overlap .shelf-scene { background: radial-gradient(ellipse at 50% 85%,#d7dbc433,transparent 70%); }
+
+  .shelf-overlap { --book-height: 220px; --stage-height: 280px; --lift: 20px; }
+  .shelf-overlap .rail-heading { padding-top: 22px; }
+  .shelf-overlap .shelf-topics { margin-top: 12px; }
+  .shelf-overlap .rail-bottom { padding: 16px 32px 22px; align-items: center; gap: 22px; }
+  .shelf-overlap .rail-selection { min-height: 0; }
+  .shelf-overlap .rail-selection :is(h3,h4) { font-size: 1.55rem; margin: 0 0 7px; }
+  .selection-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 16px; }
+  .selection-meta .selection-count { white-space: nowrap; }
+
+  /* Turn the real front artwork in perspective. There is no invented spine. */
+  .shelf-turn { --cover: 186px; --stride: 95px; --book-height: 252px; --stage-height: 326px; --muted: #bdc8b6; --rule: #52614e; --lift: 18px; background: radial-gradient(ellipse at 50% 35%,#42533e,#223327 78%); color: #f5f4e9; border-color: #3b4b39; }
+  .shelf-turn.shelf-ready .shelf-jacket { transform: perspective(850px) rotateY(-48deg); transform-origin: left bottom; filter: brightness(.86); box-shadow: 9px 12px 12px -6px #0008; }
+  .shelf-turn.shelf-ready .is-current .shelf-jacket { transform: perspective(850px) translateY(calc(-1 * var(--lift))) rotateY(0); filter: brightness(1); }
+  .shelf-turn .shelf-ledge { background: linear-gradient(#a4ab8c 0 3px,#677556 3px 7px,#57674c 7px 12px,#283823 12px); box-shadow: 0 12px 15px -6px #0006; }
+  .shelf-turn .rail-heading { text-align: center; justify-content: center; }
+  .shelf-turn .library-size { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+  /* Lower covers rest behind a wooden pocket; the selected book rises out. */
+  .shelf-pocket { --cover: 158px; --stride: 178px; --opening: 0px; --book-height: 210px; --stage-height: 370px; --lift: 124px; background: linear-gradient(125deg,#f0e9dc,#faf6ed); }
+  .shelf-pocket .shelf-ledge { bottom: 16px; height: 122px; left: 0; right: 0; border-top: 5px solid #dac4a4; background: linear-gradient(90deg,#b7976d,#c9ad85 35%,#b5966c 70%,#c4a57c); box-shadow: inset 0 2px 2px #755d3440,0 10px 15px -9px #6b4e2c77; }
+  .shelf-pocket .shelf-ledge::after { content: ''; position: absolute; inset: 8px 0 0; background: repeating-linear-gradient(0deg,transparent 0 18px,#8e734b0d 19px,transparent 20px); }
+  .shelf-pocket.shelf-ready .shelf-jacket { filter: brightness(.93); }
+  .shelf-pocket.shelf-ready .is-current .shelf-jacket { filter: brightness(1); }
+  .shelf-pocket:not(.shelf-ready) { --stage-height: 285px; }
+  .shelf-pocket:not(.shelf-ready) .shelf-ledge { height: 14px; }
+
+  /* A compact leaning row, with the chosen cover pulled upright. */
+  .shelf-lean { --cover: 158px; --stride: 70px; --book-height: 224px; --stage-height: 307px; --lift: 27px; background: linear-gradient(110deg,#dde3d6,#f0f1e7 55%,#e2e7d9); }
+  .shelf-lean.shelf-ready .shelf-jacket { transform: rotate(var(--lean,-12deg)); transform-origin: center bottom; filter: brightness(.92); }
+  .shelf-lean.shelf-ready .is-current .shelf-jacket { transform: translateY(calc(-1 * var(--lift))) rotate(0); filter: brightness(1); }
+  .shelf-lean .shelf-ledge { background: linear-gradient(#9d8462 0 3px,#745638 3px 5px,#856445 5px 12px,#61452e 12px); }
+
+  @media (max-width: 850px) {
+    .rail-bottom { align-items: start; flex-direction: column; gap: 10px; }
+    .rail-selection { min-height: 126px; max-width: 100%; }
+    .rail-actions { width: 100%; justify-content: space-between; }
+    .shelf-overlap .rail-bottom { align-items: stretch; gap: 12px; }
+  }
+  @media (max-width: 640px) {
+    .shelf-rail { --cover: 142px; --book-height: 205px; --stride: 74px; --stage-height: 268px; --lift: 23px; }
+    .rail-heading { padding: 24px 20px 0; }
+    .rail-heading :is(h2,h3) { font-size: 1.8rem; }
+    .library-size { display: none; }
+    .shelf-topics { margin: 18px 20px 0; gap: 0 18px; }
+    .shelf-track { padding-inline: 24px; }
+    .shelf-ledge { left: 12px; right: 12px; }
+    .rail-bottom { padding: 22px 20px 16px; }
+    .rail-selection :is(h3,h4) { font-size: 1.5rem; }
+    .rail-selection { min-height: 152px; }
+    .shelf-rail.shelf-overlap { --book-height: 188px; --stage-height: 246px; --lift: 18px; }
+    .shelf-overlap .rail-heading { padding-top: 20px; }
+    .shelf-overlap .rail-bottom { padding: 14px 20px 18px; }
+    .shelf-overlap .rail-selection { min-height: 0; }
+    .shelf-overlap .rail-selection :is(h3,h4) { font-size: 1.35rem; }
+    .shelf-turn { --cover: 150px; --stride: 80px; --book-height: 214px; --stage-height: 278px; }
+    .shelf-turn .rail-heading { text-align: left; justify-content: start; }
+    .shelf-pocket { --cover: 140px; --stride: 158px; --book-height: 182px; --stage-height: 328px; --lift: 108px; }
+    .shelf-pocket .shelf-ledge { height: 106px; }
+    .shelf-pocket:not(.shelf-ready) { --stage-height: 250px; }
+    .shelf-lean { --cover: 140px; --stride: 67px; --book-height: 198px; --stage-height: 266px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shelf-rail *, .shelf-rail *::after { transition: none !important; animation: none !important; }
+  }
+</style>

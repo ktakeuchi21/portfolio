@@ -1,13 +1,20 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import WorkCard from '../../components/WorkCard.astro';
+import LinkButton from '../../components/LinkButton.astro';
 import { getWork } from '../../lib/content';
+import { profile } from '../../lib/site';
 const work = await getWork();
 ---
-<SiteLayout title="Selected work" description="Selected healthcare product work by Kai Takeuchi, spanning patient–clinician matching, virtual care, and early AI orchestration strategy.">
+<SiteLayout title="Selected work" description="Selected healthcare product work by Kai Takeuchi, spanning early AI orchestration strategy, patient–clinician matching, ACA digital acquisition, and virtual care.">
   <div class="page-width">
     <header class="page-intro"><p class="eyebrow">Professional work</p><h1>Complex problems.<br />Considered product decisions.</h1><p>Selected work across healthcare access, digital care, and enterprise products. Each starts with understanding the people and workflows involved.</p></header>
     <section aria-label="Professional work summaries">{work.map((entry, index) => <WorkCard entry={entry} index={index} headingLevel="h2" />)}</section>
     <p class="page-note">These are high-level summaries. Detailed case studies are forthcoming and will use public or approved material.</p>
+    <div class="work-contact"><LinkButton href={profile.linkedin} variant="solid" external>Connect with me on LinkedIn</LinkButton></div>
   </div>
 </SiteLayout>
+
+<style>
+  .work-contact { margin-top: 24px; }
+</style>

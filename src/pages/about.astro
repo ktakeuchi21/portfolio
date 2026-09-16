@@ -1,20 +1,51 @@
 ---
+import { Image } from 'astro:assets';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import LinkButton from '../components/LinkButton.astro';
+import Portrait from '../components/Portrait.astro';
+import LearningCollection from '../components/LearningCollection.astro';
+import { profile } from '../lib/site';
+import diving from '../assets/personal/diving.jpeg';
+import hiking from '../assets/personal/hiking.jpeg';
+import beachDog from '../assets/personal/beach-dog.jpeg';
+
+const personalPhotos = [
+  { src: diving, alt: 'A freediver below a pod of dolphins in clear blue water.' },
+  { src: hiking, alt: 'A steep staircase follows a green mountain ridge above a coastal town.' },
+  { src: beachDog, alt: 'A dog on a sandy beach in warm sunlight.' },
+];
 ---
 <SiteLayout title="About" description="Meet Kai Takeuchi: a healthcare and AI product leader with a background in economics, healthcare administration, and hands-on product building.">
   <div class="page-width">
-    <header class="page-intro"><p class="eyebrow">About Kai</p><h1>A product builder.<br />A healthcare perspective.</h1><p>I care about the places where better products can make healthcare work more human.</p></header>
+    <div class="about-intro">
+      <header class="page-intro">
+        <p class="eyebrow">About Kai</p>
+        <h1>A product builder.<br />A healthcare perspective.</h1>
+        <p>I care about the places where better products can make healthcare work more human.</p>
+        <div class="about-contact"><LinkButton href={profile.linkedin} external>Connect with me on LinkedIn</LinkButton></div>
+        <nav class="about-shortcuts" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ul role="list">
+            <li><a href="#background">Background</a></li>
+            <li><a href="#learning-books">Books</a></li>
+            <li><a href="#learning-listening">Listening</a></li>
+            <li><a href="#learning-episodes">Favorite episodes</a></li>
+            <li><a href="#outside-work-title">Outside of work</a></li>
+          </ul>
+        </nav>
+      </header>
+      <Portrait loading="eager" />
+    </div>
     <div class="about-layout">
       <div class="body-copy">
-        <h2>Following the work.</h2>
+        <h2 id="background" tabindex="-1">Following the work.</h2>
         <p>My career has moved from healthcare operations and claims data into digital health, patient–clinician matching, and AI-enabled products. Across those settings, the work has meant understanding what people need, where a workflow breaks down, and what a product can meaningfully change.</p>
         <p>At Optum, I founded Optum Match and worked on virtual care and digital acquisition. Today, I’m a Principal Product Manager at Syneos Health. My experience there includes early strategy and prototyping for pharmaceutical patient-support orchestration.</p>
         <p>I work across product, engineering, data, design, clinical, and business teams. I’m especially interested in the decisions that shape a new product: which problem to start with, what to build first, and how to know whether it helps.</p>
         <h2>Making room to explore.</h2>
         <p>Hands-on prototyping is part of how I work through product questions. My personal projects explore AI assistance, exception handling, and the boundaries between automated work and human judgment.</p>
         <p>I also enjoy cooking and exploring new cuisines. What I Made grew from that interest: a small cooking journal for remembering dishes, revisiting past attempts, and seeing where that curiosity takes me.</p>
-        <LinkButton href="/projects/">Explore the personal projects</LinkButton>
+        <LinkButton href="/projects/#personal">Explore everyday projects</LinkButton>
       </div>
       <aside class="about-facts" aria-label="Background">
         <section><h2>Currently</h2><dl><dt>Principal Product Manager</dt><dd>Syneos Health</dd><dt>Based in</dt><dd>Salt Lake City, Utah</dd></dl></section>
@@ -22,5 +53,61 @@ import LinkButton from '../components/LinkButton.astro';
         <section><h2>Areas of interest</h2><dl><dt>Healthcare workflows</dt><dd>Patient access, clinician experience, and enterprise data.</dd><dt>Applied AI</dt><dd>Orchestration, grounded assistance, and human oversight.</dd></dl></section>
       </aside>
     </div>
+    <LearningCollection />
+    <section class="personal-section" aria-labelledby="outside-work-title">
+      <div class="body-copy">
+        <h2 id="outside-work-title" tabindex="-1">Outside of work.</h2>
+        <p>I enjoy hiking, diving, and landscape photography. I also love spending time with my family. We’re frequent visitors to the Discovery Children’s Museum.</p>
+      </div>
+      <div class="personal-photos">
+        {personalPhotos.map(photo => <Image
+          src={photo.src}
+          alt={photo.alt}
+          width={720}
+          widths={[360, 540, 720]}
+          sizes="(max-width: 640px) min(360px, calc(100vw - 48px)), (max-width: 1216px) 33vw, 382px"
+          format="webp"
+          quality={85}
+          loading="lazy"
+          decoding="async"
+        />)}
+      </div>
+    </section>
   </div>
 </SiteLayout>
+
+<style>
+  .about-contact { margin-top: 18px; color: var(--color-accent); }
+  .about-shortcuts { margin-top: 26px; }
+  .about-shortcuts .eyebrow { color: var(--color-muted); }
+  .about-shortcuts ul { display: flex; flex-wrap: wrap; gap: 4px 28px; list-style: none; padding: 0; margin: 8px 0 0; }
+  .about-shortcuts a { display: flex; align-items: center; width: fit-content; min-height: 44px; color: var(--color-accent); font-size: .875rem; text-decoration: underline; }
+  .about-shortcuts a:hover { color: var(--color-ink); }
+
+  .personal-section {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .personal-photos {
+    display: grid;
+    /* Match the source proportions to keep full compositions at a shared height. */
+    grid-template-columns: .835fr 1fr 1fr;
+    align-items: start;
+    gap: 20px;
+    margin-top: 32px;
+  }
+
+  .personal-photos :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .about-shortcuts ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 20px; }
+    .personal-section { margin-top: 40px; padding-top: 30px; }
+    .personal-photos { grid-template-columns: minmax(0, 1fr); max-width: 360px; margin-inline: auto; gap: 20px; }
+  }
+</style>

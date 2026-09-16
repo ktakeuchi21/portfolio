@@ -1,12 +1,15 @@
 ---
 title: Patient Access Orchestration
 slug: patient-access-orchestration
-type: personal
-label: Personal project · Synthetic demonstration
+category: professional
+ownership: independent
+status: public-demo
+role: Product strategy, workflow design & prototyping
+audience: Patient-access operations and support teams
 summary: "An interactive model of patient-access work, exploring the decisions, exceptions, and human handoffs between a prescription and therapy initiation."
 featured: true
 order: 1
-draft: true
+draft: false
 image:
   src: /images/patient-access-workflow.png
   alt: "The synthetic patient-access demo, showing an orchestration workflow paused at a payer-response checkpoint."
@@ -15,7 +18,52 @@ image:
   caption: "Screenshot from the public synthetic demonstration."
 caseStudy: https://patient-access-orchestration.ktakeuchi.chatgpt.site/
 liveDemo: https://patient-access-orchestration.ktakeuchi.chatgpt.site/demo
-tags: [Workflow design, Exception handling]
+tags: [React, TypeScript, Python]
 ---
 
-The existing public site is the full case study. A local narrative is intentionally deferred. The repository is not publicly accessible, so the portfolio does not expose its GitHub link.
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## The product question
+
+How can patient-access work keep moving when the next useful action depends on incomplete information? A prescription can pass through enrollment, coverage checks, prior authorization, affordability support, and pharmacy coordination. Each handoff can lose the reason a case is waiting.
+
+Patient Access Orchestration makes those decisions visible through a synthetic demonstration. I framed the product strategy, designed the workflow and human-work model, and directed hands-on prototyping and evaluation. The intended users are the operations teams coordinating administrative access, rather than clinicians making treatment decisions.
+
+## The experience
+
+A case advances to a checkpoint. The viewer supplies a condition, such as a missing document, an unanswered inquiry, or a payer request. The platform then chooses a response. The workflow shows the selected channel, supporting evidence, recorded events, and the next uncertainty.
+
+Operations brings exceptions into a human queue, where someone reviews sources and records an accountable resolution. Measurement compares strategies across the same synthetic cases. An experience gallery lets a visitor revisit recorded scenes without creating another transaction. Together, these views connect individual decisions to their operational consequences.
+
+## How it works
+
+<ArchitectureFlow label="From policy definitions to a browser simulation" steps={[
+  { title: 'Define and export', detail: 'Python owns workflow rules, routing, human-work contracts, and the synthetic measurement model.' },
+  { title: 'Version the artifacts', detail: 'Exported JSON carries simulation behavior and a separate measurement dataset.' },
+  { title: 'Explore in the browser', detail: 'React interprets the manifest, draws the workflow, and records a temporary tab-local history.' }
+]} note="The public demo has no runtime backend or healthcare integration. FastAPI and SQLite are a separate optional reference implementation." />
+
+The browser consumes the exported rules instead of maintaining a competing version of the policy. Analytics loads separately from the interactive workflow. That separation makes the hosted experience portable while keeping its simulated behavior traceable to the canonical definitions.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Experience', tools: 'React · TypeScript · React Flow', purpose: 'Connect the workflow canvas, checkpoints, and operations views.' },
+  { layer: 'Rules and measurement', tools: 'Python · Versioned JSON', purpose: 'Generate repeatable behavior and comparisons from one policy source.' },
+  { layer: 'Delivery', tools: 'Vite · Static Sites hosting', purpose: 'Serve a self-contained demonstration without a running reference server.' }
+]} />
+
+## Decisions and design lessons
+
+**A delivered transaction is not a resolved case.** Technical delivery, a payer determination, dispensing, and therapy initiation need separate evidence. Keeping these states distinct avoids a reassuring status that outruns what is actually known.
+
+**Stopping can be the correct behavior.** Bounded retries, unresolved endings, and reviewed human handback make responsibility explicit. A workflow should preserve uncertainty when another automated attempt cannot resolve it.
+
+**Averages hide important tradeoffs.** The synthetic comparisons show why fewer human touches are not automatically a better outcome. Earlier review can help complex cases even when progressive automation reduces work overall. Segment-level questions are more useful than declaring one strategy universally superior.
+
+## Current state and next step
+
+The public demo includes workflow exploration, Operations, and Measurement. Documented rule, parity, and browser checks examine the simulation’s consistency; they do not establish real patient outcomes or standards certification. Voice, extraction, and AI-style recommendations are simulated.
+
+A useful next experiment is to shorten the automated fallback budget for complex exceptions while holding the cases and evidence rules fixed. The [full project experience](https://patient-access-orchestration.ktakeuchi.chatgpt.site/) provides the deeper product and measurement context.

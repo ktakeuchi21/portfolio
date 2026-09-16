@@ -1,0 +1,6 @@
+---
+import PodcastCarousel from '../PodcastCarousel.astro';
+interface Props { variant: 'fan' | 'coverflow' | 'rail' | 'sleeves'; }
+const { variant } = Astro.props;
+---
+<PodcastCarousel variant={variant} />

@@ -1,0 +1,7 @@
+---
+interface Props { items: { layer: string; tools: string; purpose: string }[]; }
+const { items } = Astro.props;
+---
+<dl class="technology-stack">
+  {items.map(item => <div><dt><span>{item.layer}</span><strong>{item.tools}</strong></dt><dd>{item.purpose}</dd></div>)}
+</dl>

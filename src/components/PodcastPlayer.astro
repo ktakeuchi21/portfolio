@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import PodcastCarousel from './PodcastCarousel.astro';
+import { learningResources } from '../data/learning';
+const videos = learningResources.filter(item => item.kind === 'video');
+---
+<section class="listening-section" aria-labelledby="learning-listening">
+  <PodcastCarousel variant="coverflow" headingId="learning-listening" headingLevel={2} />
+  {videos.map(video => <a class="video-link" href={video.href}>
+    <Image src={video.image} alt={`${video.title} channel artwork`} width={80} widths={[80, 160]} sizes="48px" format="webp" loading="lazy" decoding="async" />
+    <span><span class="video-label">Also on YouTube</span><span class="video-title">{video.title} <Icon kind="external" /></span><span class="video-creator">{video.creator}</span></span>
+  </a>)}
+</section>
+
+<style>
+  .listening-section { margin-top: 48px; }
+  .video-link { display: flex; gap: 16px; align-items: center; width: fit-content; margin-top: 26px; padding-block: 8px; }
+  .video-link :global(img) { width: 48px; height: 48px; object-fit: contain; border-radius: 4px; }
+  .video-label { display: block; color: var(--color-muted); font-size: .6875rem; margin-bottom: 2px; }
+  .video-title { font-size: .875rem; }
+  .video-title :global(svg) { display: inline; width: 14px; height: 14px; margin-left: 5px; }
+  .video-creator { display: block; font-size: .75rem; color: var(--color-muted); }
+  .video-link:hover .video-title { text-decoration: underline; }
+</style>

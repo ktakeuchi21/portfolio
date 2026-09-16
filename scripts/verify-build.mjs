@@ -14,7 +14,12 @@ async function walk(directory) {
 
 const files = await walk(root);
 const pages = files.filter(file => file.endsWith('.html'));
-for (const route of ['index.html', 'work/index.html', 'projects/index.html', 'about/index.html', 'projects/pathway/index.html', '404.html']) {
+const socialImagePath = '/images/social-preview.png';
+const socialImage = await readFile(path.join(root, socialImagePath));
+assert.equal(socialImage.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', 'Social preview must be a PNG');
+assert.equal(socialImage.readUInt32BE(16), 1200, 'Social preview width must match its metadata');
+assert.equal(socialImage.readUInt32BE(20), 630, 'Social preview height must match its metadata');
+for (const route of ['index.html', 'work/index.html', 'projects/index.html', 'about/index.html', 'projects/pathway/index.html', 'projects/patient-access-orchestration/index.html', 'projects/what-i-made/index.html', 'projects/interlude/index.html', 'projects/table-for-one/index.html', '404.html']) {
   assert(files.includes(path.join(root, route)), `Missing required page: ${route}`);
 }
 
@@ -48,6 +53,18 @@ for (const file of pages) {
   assert(html.includes('lang="en"'), `${relative}: missing language`);
   assert(html.includes('name="description"'), `${relative}: missing description`);
   assert(html.includes('property="og:title"'), `${relative}: missing sharing metadata`);
+  const meta = (key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`))?.[1];
+  const socialUrl = new URL(meta('og:image'));
+  assert.equal(socialUrl.pathname, `${base}${socialImagePath}`, `${relative}: social image must respect the configured base`);
+  assert(['http:', 'https:'].includes(socialUrl.protocol), `${relative}: social image must use an absolute HTTP URL`);
+  if (process.env.SITE_URL) assert.equal(socialUrl.origin, new URL(origin).origin, `${relative}: social image must use the configured site origin`);
+  assert.equal(meta('og:image:type'), 'image/png', `${relative}: incorrect social image type`);
+  assert.equal(meta('og:image:width'), '1200', `${relative}: incorrect social image width`);
+  assert.equal(meta('og:image:height'), '630', `${relative}: incorrect social image height`);
+  assert(meta('og:image:alt'), `${relative}: social image needs alt text`);
+  assert.equal(meta('twitter:card'), 'summary_large_image', `${relative}: expected large social card`);
+  assert.equal(meta('twitter:image'), socialUrl.href, `${relative}: social image URLs differ`);
+  assert.equal(meta('twitter:image:alt'), meta('og:image:alt'), `${relative}: social image descriptions differ`);
   assert(html.includes('id="main"'), `${relative}: missing main landmark target`);
   assert(!/href="(?:javascript:|#")/.test(html), `${relative}: invalid action`);
   assert(!/\b\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}\b/.test(html), `${relative}: possible private telephone number`);
@@ -59,6 +76,9 @@ for (const file of pages) {
     assert(/width="\d+"/.test(img[0]) && /height="\d+"/.test(img[0]), `${relative}: image dimensions missing`);
   }
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) await checkLink(match[1], relative, url);
+  for (const match of html.matchAll(/srcset="([^"]+)"/g)) {
+    for (const candidate of match[1].split(',')) await checkLink(candidate.trim().split(/\s+/)[0], relative, url);
+  }
   if (process.env.SITE_URL && relative !== '404.html') {
     const canonical = html.match(/<link rel="canonical" href="([^"]+)"/);
     assert.equal(canonical?.[1], url.href, `${relative}: incorrect canonical URL`);
@@ -88,4 +108,27 @@ for (const collection of ['projects', 'work']) {
 
 assert(!files.includes(path.join(root, 'resume/index.html')), 'The résumé page is intentionally removed');
 assert(files.every(file => !/Amgen.*\.pdf$/i.test(file)), 'An application PDF must not be published');
+const listing = await readFile(path.join(root, 'projects/index.html'), 'utf8');
+const professionalStart = listing.indexOf('id="professional"');
+const personalStart = listing.indexOf('id="personal"');
+assert(professionalStart >= 0 && personalStart > professionalStart, 'Project category sections are missing or out of order');
+for (const [category, slugs] of Object.entries({professional: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'pathway'], personal: ['what-i-made', 'interlude', 'table-for-one']})) {
+  const section = category === 'professional' ? listing.slice(professionalStart, personalStart) : listing.slice(personalStart);
+  let previousCard = -1;
+  for (const slug of slugs) {
+    assert.equal(listing.split(`data-project="${slug}"`).length - 1, 1, `${slug}: expected exactly one listing card`);
+    assert(section.includes(`data-project="${slug}" data-category="${category}"`), `${slug}: wrong category`);
+    const cardPosition = section.indexOf(`data-project="${slug}"`);
+    assert(cardPosition > previousCard, `${slug}: incorrect project order`);
+    previousCard = cardPosition;
+    const detail = await readFile(path.join(root, 'projects', slug, 'index.html'), 'utf8');
+    assert(detail.includes('class="architecture-flow"') && detail.includes('class="technology-stack"'), `${slug}: missing architecture or stack`);
+    assert(detail.includes('Decisions and design lessons') && detail.includes('Current state and next step'), `${slug}: missing decisions or status`);
+    assert(!/Reflection in progress|Case study forthcoming|Project preview forthcoming/.test(detail), `${slug}: placeholder narrative`);
+    if (['interlude', 'table-for-one'].includes(slug)) {
+      assert(!detail.includes('aria-label="Explore this project"'), `${slug}: unverified public project action`);
+    }
+  }
+}
+assert(!listing.includes('github.com/ktakeuchi21/patient-access-ai'), 'The private repository must not become a public action');
 console.log(`Verified ${pages.length} pages and ${checked} local asset/link targets at ${base || '/'}. Metadata, images, drafts, and résumé removal passed.`);

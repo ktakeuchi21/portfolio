@@ -7,3 +7,6 @@ dist/
 .DS_Store
 artifacts/
 tmp/
+.playwright-cli/
+output/playwright/
+output/research/

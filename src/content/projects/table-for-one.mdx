@@ -1,0 +1,69 @@
+---
+title: Table for One
+slug: table-for-one
+category: personal
+ownership: independent
+status: in-development
+role: Product design & prototyping
+audience: A person delegating a takeout phone order
+summary: "A voice takeout assistant exploring how to review an order, delegate a phone call, and take over when the conversation needs a person."
+featured: false
+order: 5
+draft: false
+image:
+  src: /images/table-for-one-order.png
+  alt: "Table for One’s desktop order screen, with cheeseburger preparation, card nickname selection, tip, and spending limit controls."
+  width: 1440
+  height: 1496
+  caption: "The local simulator uses demo customer details and dummy payments. No real calls or charges are made."
+tags: [React, Twilio, OpenAI Realtime]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## The product question
+
+A phone order looks simple until the restaurant puts someone on hold, asks about a substitution, or needs a decision that was not in the original request. Delegating the call means deciding which choices an assistant may make and when it should return control.
+
+Table for One explores that boundary through a private takeout-calling assistant. My role combines product design and prototyping. The project is deliberately bounded around one person’s reviewed order, rather than a general agent that can purchase anything it is asked to find.
+
+## The experience
+
+The current experience runs in a local simulator. A person describes an order, reviews its details and spending limit, then starts a simulated call. The app shows the order’s state and supports human intervention when the conversation moves beyond the approved request. Restaurant calling remains disabled pending controlled validation.
+
+The local simulator exercises holds, intervention, startup failures, and payment interruptions without calling a restaurant. Human takeover is designed to preserve the restaurant conversation while disconnecting the AI and privately briefing the owner. Order history records what is known; an uncertain call result must remain uncertain until there is evidence to reconcile it.
+
+## How it works
+
+<ArchitectureFlow label="A reviewed order with bounded voice delegation" steps={[
+  { title: 'Review and authorize', detail: 'The React PWA submits an explicit order and spending boundary through the authenticated API.' },
+  { title: 'Record before acting', detail: 'The service stores durable order and call state before requesting an external action.' },
+  { title: 'Connect the voice worker', detail: 'Twilio carries the telephone audio; an on-demand EC2 worker bridges it to OpenAI Realtime.' },
+  { title: 'Resolve or hand back', detail: 'The coordinator tracks outcomes and can move the existing conversation into human takeover.' }
+]} note="This describes the implemented architecture. Restaurant calling remains disabled pending controlled validation; real-card automation is not enabled." />
+
+The website and durable state remain available when the voice worker is off. Call creation has its own recorded identity and outcome, so a lost response does not justify blindly dialing again. Model tools request bounded actions; they cannot silently replace the approved destination or spending limit.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Review and control', tools: 'React · TypeScript · Vite · Fastify', purpose: 'Keep the order, authorization, and intervention controls together.' },
+  { layer: 'Voice', tools: 'Twilio · OpenAI Realtime · WebSockets', purpose: 'Connect telephone audio with an assistant and explicit takeover behavior.' },
+  { layer: 'State and delivery', tools: 'AWS Lambda · DynamoDB · S3/CloudFront', purpose: 'Keep the app and order records independent of an active voice session.' },
+  { layer: 'Voice runtime', tools: 'EC2 · AWS CDK', purpose: 'Provision and start the persistent connection worker when needed.' }
+]} />
+
+## Decisions and design lessons
+
+**Uncertainty is a real state.** A timed-out request does not prove that a call failed to start. Durable action records and evidence-based recovery matter more than making every error immediately retryable.
+
+**Taking over is part of the core journey.** A useful assistant needs a practical way to hand the conversation back. Preserving the existing call is different from telling the user to start again.
+
+**Payment cannot inherit conversational trust.** A fluent model response is not authorization or proof of payment. The payment laboratory uses dummy credentials and isolated test behavior; real-card automation remains a separate unresolved capability.
+
+## Current state and next step
+
+AWS components and the newer voice implementation are deployed, while restaurant calling remains disabled. Documented local checks cover deterministic scenarios, recovery, and transport behavior against fixtures. Those checks do not prove real restaurant interactions, payment handling, or physical-device reliability.
+
+The next milestone is controlled voice validation with a consenting test recipient, before widening the scope. Autonomous restaurant ordering has not yet been validated.

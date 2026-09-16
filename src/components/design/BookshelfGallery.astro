@@ -1,0 +1,63 @@
+---
+import BookshelfMock from './BookshelfMock.astro';
+import { withBase } from '../../lib/site';
+const concepts = [
+  { id: 'wall', number: '01', title: 'The gallery wall', note: 'Front-facing covers on two warm floating shelves. A small, architectural library with every book in view.', quality: 'Warm / architectural / easy to browse' },
+  { id: 'desk', number: '02', title: 'The reading desk', note: 'A loose spread of books, as if you have just set them down. Slide through the stack to bring a favorite forward.', quality: 'Tactile / relaxed / full of personality' },
+  { id: 'spotlight', number: '03', title: 'The book spotlight', note: 'One beautifully oversized book, with depth, a quiet backdrop, and a thumbnail strip to browse the collection.', quality: 'Sculptural / spacious / focused' },
+  { id: 'accordion', number: '04', title: 'The expanding library', note: 'A darker, more refined take on the literal shelf. Select a spine and the full cover opens into the collection.', quality: 'Compact / interactive / pairs with coverflow' },
+  { id: 'mosaic', number: '05', title: 'The cover constellation', note: 'A floating collage of covers in a deep green gallery. Each book lifts toward you when selected.', quality: 'Expressive / artful / all covers visible' },
+  { id: 'folio', number: '06', title: 'The reading folio', note: 'An open, bound catalog. Browse a table of contents on the left and reveal the selected book on the facing page.', quality: 'Literary / intimate / distinctive' },
+] as const;
+---
+<div class="page-width bookshelf-explorations">
+  <header class="intro">
+    <a class="back" href={withBase('/about/#learning-books')}>← Back to About</a>
+    <p class="eyebrow">Design explorations / The book collection</p>
+    <h1>A shelf with <em>personality.</em></h1>
+    <p class="deck">Eleven favorites. Six different ways to get lost in them.</p>
+    <a class="next-round" href={withBase('/design/book-ledges/')}>Explore four compact shelves with real covers →</a>
+    <nav aria-label="Bookshelf design options">
+      {concepts.map(item => <a href={`#${item.id}`}><span>{item.number}</span>{item.title}</a>)}
+    </nav>
+  </header>
+  {concepts.map(item => <section class="exploration" id={item.id} aria-labelledby={`${item.id}-label`}>
+    <div class="caption"><span>{item.number}</span><h2 id={`${item.id}-label`}>{item.title}</h2></div>
+    <p class="description">{item.note}</p>
+    <BookshelfMock variant={item.id} />
+    <div class="footnote"><span>{item.quality}</span><span>Select a book to explore.</span></div>
+  </section>)}
+  <p class="end-note">These are interactive previews using your actual covers and book links. Your current About page is ready for whichever direction you choose.</p>
+</div>
+
+<style>
+  .bookshelf-explorations { max-width: 1080px; }
+  .intro { padding-top: 32px; }
+  .back { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; color: var(--color-muted); margin-bottom: 30px; }
+  .back:hover { text-decoration: underline; }
+  .eyebrow { color: var(--color-muted); }
+  h1 { font: 400 clamp(3rem, 6.5vw, 5rem)/1.05 var(--font-display); letter-spacing: -.04em; margin-top: 20px; }
+  h1 em { color: var(--color-accent); }
+  .deck { margin-top: 18px; color: var(--color-muted); }
+  .next-round { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; color: var(--color-accent); font-size: .8rem; text-decoration: underline; }
+  nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 28px; margin-top: 32px; }
+  nav a { display: flex; align-items: center; gap: 14px; min-height: 54px; border-bottom: 1px solid var(--color-line); font-size: .8125rem; }
+  nav a:hover { color: var(--color-accent); border-color: var(--color-accent); }
+  nav span { color: var(--color-muted); font-family: var(--font-display); }
+  .exploration { margin-top: 64px; scroll-margin-top: 32px; }
+  .caption { display: flex; align-items: center; gap: 16px; }
+  .caption > span { color: var(--color-muted); font-size: .75rem; }
+  h2 { font: 400 2rem/1.1 var(--font-display); letter-spacing: -.02em; }
+  .description { margin: 12px 0 26px; max-width: 700px; color: var(--color-muted); font-size: .875rem; }
+  .footnote { display: flex; justify-content: space-between; gap: 16px; font-size: .7rem; color: var(--color-muted); margin-top: 16px; }
+  .footnote > :first-child { color: var(--color-accent); }
+  .end-note { font-size: .8rem; color: var(--color-muted); margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--color-line); }
+  @media (max-width: 640px) {
+    nav { grid-template-columns: repeat(2, 1fr); gap: 0 18px; }
+    nav a { font-size: .72rem; gap: 9px; }
+    .exploration { margin-top: 44px; }
+    h2 { font-size: 1.7rem; }
+    .footnote { font-size: .6rem; }
+    .footnote > :last-child { display: none; }
+  }
+</style>
