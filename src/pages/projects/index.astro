@@ -30,6 +30,7 @@ const projects = await getProjects();
     const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')!)!);
 
     function activate(index: number, userInitiated = false) {
+      const changed = tabs[index].getAttribute('aria-selected') !== 'true';
       // Never leave focus inside content that is about to be hidden.
       const moveFocus = userInitiated || tabList.contains(document.activeElement) ||
         panels.some((panel, panelIndex) => panelIndex !== index && panel.contains(document.activeElement));
@@ -44,6 +45,11 @@ const projects = await getProjects();
       if (moveFocus) tabs[index].focus({ preventScroll: true });
       const hash = `#${panels[index].id}`;
       if (userInitiated && location.hash !== hash) history.pushState(null, '', hash);
+      if (userInitiated && changed) {
+        document.dispatchEvent(new CustomEvent('portfolio:project-category', {
+          detail: tabs[index].textContent?.trim(),
+        }));
+      }
     }
 
     function syncFromLocation() {

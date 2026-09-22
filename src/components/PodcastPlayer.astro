@@ -7,7 +7,7 @@ const videos = learningResources.filter(item => item.kind === 'video');
 ---
 <section class="listening-section" aria-labelledby="learning-listening">
   <PodcastCarousel variant="coverflow" headingId="learning-listening" headingLevel={2} />
-  {videos.map(video => <a class="video-link" href={video.href}>
+  {videos.map(video => <a class="video-link" href={video.href} target="_blank" rel="noopener noreferrer">
     <Image src={video.image} alt={`${video.title} channel artwork`} width={80} widths={[80, 160]} sizes="48px" format="webp" loading="lazy" decoding="async" />
     <span><span class="video-label">Also on YouTube</span><span class="video-title">{video.title} <Icon kind="external" /></span><span class="video-creator">{video.creator}</span></span>
   </a>)}

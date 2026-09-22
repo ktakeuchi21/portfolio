@@ -1,0 +1,7 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { externalLinkAttributes } from '../lib/site';
+type Props = HTMLAttributes<'a'>;
+const { href, ...attributes } = Astro.props;
+---
+<a href={href} {...attributes} {...externalLinkAttributes(href, Astro.site ?? Astro.url)}><slot /></a>

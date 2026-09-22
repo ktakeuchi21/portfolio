@@ -1,0 +1,13 @@
+---
+import { analyticsHosts } from '../lib/analytics';
+interface Props { disabled?: boolean; }
+const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
+const enabled = !Astro.props.disabled && import.meta.env.PROD && websiteId &&
+  Astro.site?.protocol === 'https:' && analyticsHosts.includes(Astro.site.hostname);
+---
+{enabled && <meta name="umami-website-id" content={websiteId} />}
+<script>
+  import { startAnalytics } from '../lib/analytics';
+  const websiteId = document.querySelector<HTMLMetaElement>('meta[name="umami-website-id"]')?.content;
+  if (websiteId) startAnalytics(websiteId);
+</script>

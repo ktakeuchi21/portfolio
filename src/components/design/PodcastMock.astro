@@ -31,7 +31,7 @@ const initial = podcasts[0];
         <h3 data-title-display>{initial.title}</h3>
         <p data-creator-display>{initial.creator}</p>
       </div>
-      <a class="open-link" data-open href={initial.href} aria-label={`Open ${initial.title} on Apple Podcasts`}>Open podcast <Icon kind="external" /></a>
+      <a class="open-link" data-open href={initial.href} target="_blank" rel="noopener noreferrer" aria-label={`Open ${initial.title} on Apple Podcasts`}>Open podcast <Icon kind="external" /></a>
     </div>
     <div class="transport" aria-label="Browse podcasts">
       <button class="skip" type="button" data-step="-1" aria-label="Previous podcast"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
@@ -51,7 +51,7 @@ const initial = podcasts[0];
     </div>
   </div>
   <div class="mock-footer"><span>{variant === 'analog' ? 'Five favorites. Always in rotation.' : variant === 'gallery' ? 'Swipe to explore the collection' : 'A few familiar voices.'}</span><span class="loop-note"><span aria-hidden="true">↻</span> {variant === 'analog' ? 'Continuous tuning' : 'Keep exploring'}</span></div>
-  <noscript><p class="no-script">Browse the collection: {podcasts.map((podcast, index) => <><a href={podcast.href}>{podcast.title}</a>{index < podcasts.length - 1 ? ' · ' : ''}</>)}</p></noscript>
+  <noscript><p class="no-script">Browse the collection: {podcasts.map((podcast, index) => <><a href={podcast.href} target="_blank" rel="noopener noreferrer">{podcast.title}</a>{index < podcasts.length - 1 ? ' · ' : ''}</>)}</p></noscript>
 </div>
 
 <script>

@@ -264,3 +264,30 @@ Kai requested merging the reviewed portfolio, updating its GitHub README, and de
 - `npm run verify:content` verified temporary entries in both project categories and Work, then removed its fixtures and rebuilt the real catalog.
 - The production build using `SITE_URL=https://kaitakeuchi.com` and `BASE_PATH=/` passed verification for 11 pages and 345 local asset/link targets, including canonical and social image URLs. Experimental `/design/` routes are absent. `git diff --check` passed.
 - Responsive, interaction, image, and no-JavaScript evidence for the reviewed changes is recorded in the sections above. Production rollout follows the existing GitHub Pages Actions workflow; its deployment run is the authoritative completion record.
+
+## External destinations in new tabs (September 16, 2026)
+
+- Outbound links now use native new-tab attributes across employer titles/actions, LinkedIn, GitHub, demos, case-study body references, learning resources, and design previews. Internal links and page anchors retain same-tab navigation. MDX narratives use a shared anchor component; carousel destination changes retain their attributes.
+- Type check passed for 43 files with zero errors, warnings, or hints. Normal build: 11 pages and 345 local targets. Design-enabled preview: 15 pages and 1,556 targets. The build verifier now checks all generated anchors for the expected target and relationship attributes. `git diff --check` passed.
+- Browser clicks verified separate tabs, the exact destination, a retained portfolio tab, and a null opener for employer headings/actions, LinkedIn, footer GitHub, an inline case-study reference, selected books/podcasts, an episode, and YouTube. Internal navigation stayed in place. A no-JavaScript book link also opened separately, and mobile layout had no overflow. External destination documents were stubbed for this browser behavior check; their third-party page content was not retested. No runtime errors occurred.
+- Evidence: ignored `output/playwright/external-links-review.js`. Exact duplicate files discovered during the update were preserved under ignored `artifacts/duplicate-copies-20260916/` so duplicate case-study entries and preview routes do not enter the build.
+- Local preview: `http://127.0.0.1:4324/work/?review=new-tab-links`. This update is not yet deployed.
+
+## September 18: Umami integration prepared, activation pending
+
+- Added production-only Umami tracking for page views, outbound links, project category selections, 30/60-second visible-page milestones, and 75% scroll depth. The site has no configured website ID, so collection is disabled.
+- The authenticated Umami account lists Pathway Agent as its only website. Creating Kai Takeuchi Portfolio returned `Website limit reached.` Billing confirms Hobby: one website, 100K events/month, six-month retention; Pro is displayed at $20/month. The owner has been asked to choose an account/plan route. No website was created, no account plan was changed, and Pathway's tracking ID was not reused.
+- `npm run verify:analytics` passes behavioral checks for origin restrictions, opt-out/DNT/GPC, sanitized payloads, ordered buffering, outbound and category events, hidden-tab time exclusion, one-time scroll/milestone events, and tracker failures.
+- `npm run check`: 45 files, zero errors/warnings/hints. Normal and production-configured builds each verify 11 pages and 345 local links/assets. The production test used a synthetic ID, never a live collector destination.
+- Browser checks on port 4324 confirm category click and Home-key navigation. Even with a synthetic production ID in the compiled markup, localhost does not insert the external Umami script. The normal unconfigured build was restored afterward.
+- Activation still requires the portfolio's own public website ID in the GitHub Actions repository variable `PUBLIC_UMAMI_WEBSITE_ID`, deployment, and a controlled visit confirmed in the private Umami dashboard. These changes are local and not yet deployed.
+
+## September 22 release validation
+
+Kai authorized publishing the reviewed changes. This release includes external links opening in new tabs, the Optum Match role update, aligned project cards, the soft-lift bookshelf selection, GSAP homepage motion, project screenshot transitions and architecture views, and the personal photo stack. It also removes the requested card ownership labels, footer location line, hero supporting line, and visible photo captions/counts. Earlier local-only notes above describe prior checkpoints.
+
+- Astro/TypeScript checked 52 files with zero errors, warnings, or hints.
+- Analytics behavioral checks passed. The GitHub repository has no analytics variable configured, so tracking remains disabled.
+- The production build with `SITE_URL=https://kaitakeuchi.com` and `BASE_PATH=/` passed verification for 11 pages and 381 local asset/link targets. No experimental design routes are generated. `git diff --check` passed.
+- Desktop, tablet, 390px, and 320px browser checks for the interactions are recorded in `docs/design-toolkit-review.md`. These include keyboard tab controls, photo selection, project navigation, browser Back restoration, focus visibility, and responsive layouts. Reduced-motion and JavaScript-free fallback behavior for the latest interactions was reviewed in source rather than separately browser-emulated.
+- Publishing uses the existing `main` branch and GitHub Pages workflow. Its deployment run is the authoritative completion record; the live site is checked after that run succeeds.

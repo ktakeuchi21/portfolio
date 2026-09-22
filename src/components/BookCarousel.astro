@@ -23,7 +23,7 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
     <div class="shelf-viewport" data-shelf-viewport>
       <div class="shelf-track" data-shelf-track>
         {books.map((book, i) => <div class="shelf-slot" data-shelf-slot data-book-category={book.category} style={`--ratio:${book.image.width / book.image.height}`}>
-          <a class="shelf-item" data-shelf-book={i} data-title={book.title} data-creator={book.creator} href={book.href} aria-label={`${book.title}, by ${book.creator}`}>
+          <a class="shelf-item" data-shelf-book={i} data-title={book.title} data-creator={book.creator} href={book.href} target="_blank" rel="noopener noreferrer" aria-label={`${book.title}, by ${book.creator}`}>
             <span class="shelf-jacket"><Image src={book.image} alt={`${book.title} book cover`} width={240} widths={[120,240,480]} sizes="(max-width: 640px) 140px, 180px" format="webp" quality={90} loading="lazy" decoding="async" /></span>
           </a>
         </div>)}
@@ -37,7 +37,7 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
       <div class="selection-meta"><p class="selection-author" data-shelf-creator>{books[initial].creator}</p><p class="selection-count" data-shelf-count>{String(initial + 1).padStart(2,'0')} / {String(books.length).padStart(2,'0')}</p></div>
     </div>
     <div class="rail-actions">
-      <a class="explore-book" data-shelf-open href={books[initial].href}>Explore book <Icon kind="external" /></a>
+      <a class="explore-book" data-shelf-open href={books[initial].href} target="_blank" rel="noopener noreferrer">Explore book <Icon kind="external" /></a>
       <div class="rail-controls">
         <button type="button" data-shelf-step="-1" aria-label="Previous book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
         <button type="button" data-shelf-step="1" aria-label="Next book"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>
@@ -240,7 +240,22 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
   .shelf-overlap .shelf-jacket { width: calc(var(--book-height) * var(--ratio)); height: var(--book-height); max-width: none; flex-shrink: 0; }
   .shelf-overlap .shelf-scene { background: radial-gradient(ellipse at 50% 85%,#d7dbc433,transparent 70%); }
 
-  .shelf-overlap { --book-height: 220px; --stage-height: 280px; --lift: 20px; }
+  .shelf-overlap { --book-height: 220px; --stage-height: 280px; --lift: 7px; }
+  .shelf-overlap.shelf-ready .shelf-item.is-current .shelf-jacket { box-shadow: 5px 12px 18px -10px #29382e77; }
+  .shelf-overlap .shelf-item:focus-visible .shelf-jacket { outline: none; }
+  .shelf-overlap .shelf-jacket::before {
+    content: ''; position: absolute; inset: -7px -7px 3px; opacity: 0; pointer-events: none; z-index: 2;
+    background:
+      linear-gradient(currentColor,currentColor) left top / 11px 2px no-repeat,
+      linear-gradient(currentColor,currentColor) left top / 2px 11px no-repeat,
+      linear-gradient(currentColor,currentColor) right top / 11px 2px no-repeat,
+      linear-gradient(currentColor,currentColor) right top / 2px 11px no-repeat,
+      linear-gradient(currentColor,currentColor) left bottom / 11px 2px no-repeat,
+      linear-gradient(currentColor,currentColor) left bottom / 2px 11px no-repeat,
+      linear-gradient(currentColor,currentColor) right bottom / 11px 2px no-repeat,
+      linear-gradient(currentColor,currentColor) right bottom / 2px 11px no-repeat;
+  }
+  .shelf-overlap .shelf-item:focus-visible .shelf-jacket::before { opacity: 1; }
   .shelf-overlap .rail-heading { padding-top: 22px; }
   .shelf-overlap .shelf-topics { margin-top: 12px; }
   .shelf-overlap .rail-bottom { padding: 16px 32px 22px; align-items: center; gap: 22px; }
@@ -289,7 +304,7 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
     .rail-bottom { padding: 22px 20px 16px; }
     .rail-selection :is(h3,h4) { font-size: 1.5rem; }
     .rail-selection { min-height: 152px; }
-    .shelf-rail.shelf-overlap { --book-height: 188px; --stage-height: 246px; --lift: 18px; }
+    .shelf-rail.shelf-overlap { --book-height: 188px; --stage-height: 246px; --lift: 7px; }
     .shelf-overlap .rail-heading { padding-top: 20px; }
     .shelf-overlap .rail-bottom { padding: 14px 20px 18px; }
     .shelf-overlap .rail-selection { min-height: 0; }

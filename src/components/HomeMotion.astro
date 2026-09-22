@@ -1,0 +1,113 @@
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const overview = document.querySelector<HTMLElement>('[data-home-motion]');
+  if (overview) {
+    gsap.registerPlugin(ScrollTrigger);
+    const media = gsap.matchMedia();
+    let introduced = false;
+
+    media.add('(prefers-reduced-motion: no-preference)', context => {
+      const cleanups: Array<() => void> = [];
+      const listen = (element: HTMLElement, event: string, handler: EventListener) => {
+        element.addEventListener(event, handler);
+        cleanups.push(() => element.removeEventListener(event, handler));
+      };
+
+      if (!introduced && scrollY < 50 && !location.hash) {
+        const lines = overview.querySelectorAll('[data-hero-line]');
+        const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        intro.from(lines, { y: 26, opacity: 0, duration: .7, stagger: .1, clearProps: 'transform,opacity' });
+        intro.from(overview.querySelector('.hero-bottom'), { y: 12, opacity: .4, duration: .5, clearProps: 'transform,opacity' }, .2);
+        const flourish = overview.querySelector<SVGPathElement>('[data-hero-flourish]');
+        if (flourish) {
+          const length = flourish.getTotalLength();
+          intro.fromTo(flourish, { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, duration: .8, clearProps: 'strokeDasharray,strokeDashoffset' }, .4);
+        }
+        listen(overview.querySelector<HTMLElement>('.home-hero')!, 'focusin', () => intro.progress(1));
+      }
+      introduced = true;
+
+      overview.querySelectorAll<HTMLElement>('.section-header, .work-card, .project-image, .about-strip > div').forEach(target => {
+        let entrance: gsap.core.Tween | undefined;
+        ScrollTrigger.create({
+          trigger: target,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            // Never dim focused content or replay entrances above a restored scroll position.
+            if (target.contains(document.activeElement) || target.getBoundingClientRect().bottom < 0) return;
+            context.add(() => {
+              entrance = gsap.fromTo(target, { y: 16, opacity: .55 }, { y: 0, opacity: 1, duration: .55, ease: 'power2.out', clearProps: 'transform,opacity' });
+            });
+          },
+        });
+        listen(target, 'focusin', () => entrance?.progress(1));
+      });
+      return () => cleanups.forEach(cleanup => cleanup());
+    }, overview);
+
+    media.add('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)', () => {
+      const cleanups: Array<() => void> = [];
+      const listen = (element: HTMLElement, event: string, handler: EventListener) => {
+        element.addEventListener(event, handler);
+        cleanups.push(() => element.removeEventListener(event, handler));
+      };
+      overview.querySelectorAll<HTMLElement>('.project-image--interactive').forEach(frame => {
+        const image = frame.querySelector('img')!;
+        const cue = frame.querySelector('.project-preview-cue')!;
+        const hover = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+          .to(image, { scale: 1.045, duration: .45 }, 0)
+          .fromTo(cue, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .25 }, 0);
+        const xTo = gsap.quickTo(image, 'x', { duration: .45, ease: 'power3.out' });
+        const yTo = gsap.quickTo(image, 'y', { duration: .45, ease: 'power3.out' });
+        const turnTo = gsap.quickTo(image, 'rotation', { duration: .5, ease: 'power3.out' });
+        let bounds: DOMRect | undefined;
+        const reset = () => { xTo(0); yTo(0); turnTo(0); };
+        listen(frame, 'pointerenter', () => { bounds = frame.getBoundingClientRect(); hover.play(); });
+        listen(frame, 'pointermove', event => {
+          if (!bounds || frame.contains(document.activeElement)) return;
+          const pointer = event as PointerEvent;
+          const x = gsap.utils.clamp(-.5, .5, (pointer.clientX - bounds.left) / bounds.width - .5);
+          const y = gsap.utils.clamp(-.5, .5, (pointer.clientY - bounds.top) / bounds.height - .5);
+          xTo(x * 12); yTo(y * 10); turnTo(x * 2);
+        });
+        listen(frame, 'pointerleave', () => { bounds = undefined; reset(); if (!frame.contains(document.activeElement)) hover.reverse(); });
+        listen(frame, 'focusin', () => { reset(); hover.play(); });
+        listen(frame, 'focusout', () => { if (!frame.matches(':hover')) hover.reverse(); });
+        listen(frame, 'dragstart', event => event.preventDefault());
+      });
+
+      overview.querySelectorAll<HTMLElement>('.work-card').forEach(card => {
+        const emphasis = gsap.timeline({ paused: true, defaults: { duration: .3, ease: 'power2.out' } })
+          .to(card, { '--work-wash': 1 }, 0)
+          .to(card.querySelector('.work-name'), { x: 7 }, 0);
+        listen(card, 'pointerenter', () => emphasis.play());
+        listen(card, 'pointerleave', () => { if (!card.contains(document.activeElement)) emphasis.reverse(); });
+        listen(card, 'focusin', () => emphasis.play());
+        listen(card, 'focusout', event => {
+          if (!card.contains((event as FocusEvent).relatedTarget as Node | null) && !card.matches(':hover')) emphasis.reverse();
+        });
+      });
+      return () => cleanups.forEach(cleanup => cleanup());
+    }, overview);
+
+    // Preserve cached pages for Back/Forward; refresh their measurements on return.
+    window.addEventListener('pagehide', event => { if (!event.persisted) media.revert(); });
+    window.addEventListener('pageshow', event => { if (event.persisted) ScrollTrigger.refresh(); });
+  }
+</script>
+
+<style is:global>
+  [data-home-motion] .work-card { position: relative; isolation: isolate; }
+  [data-home-motion] .work-card::before { content: ''; position: absolute; z-index: -1; inset: 0 -12px; background: var(--color-wash); transform: scaleX(var(--work-wash,0)); transform-origin: left; pointer-events: none; }
+  [data-home-motion] .project-image--interactive { position: relative; }
+  [data-home-motion] .project-image--interactive:hover { border-color: var(--color-accent); }
+  [data-home-motion] .project-image--interactive:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+  [data-home-motion] .project-preview-cue { display: inline-flex; align-items: center; gap: 13px; position: absolute; bottom: 13px; right: 13px; padding: 8px 12px; min-height: 38px; background: var(--color-accent); color: white; font-size: .7rem; border-radius: 2px; pointer-events: none; }
+  [data-home-motion] .project-preview-cue svg { width: 14px; height: 14px; }
+  @media (prefers-reduced-motion: reduce), (hover: none) {
+    [data-home-motion] .work-card:focus-within::before { transform: none; }
+  }
+</style>

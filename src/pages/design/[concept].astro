@@ -4,13 +4,17 @@ import PodcastMock from '../../components/design/PodcastMock.astro';
 import RecordCrateMock from '../../components/design/RecordCrateMock.astro';
 import BookshelfGallery from '../../components/design/BookshelfGallery.astro';
 import ShelfRailGallery from '../../components/design/ShelfRailGallery.astro';
+import MotionStudies from '../../components/design/MotionStudies.astro';
+import BookSelectionGallery from '../../components/design/BookSelectionGallery.astro';
 import { withBase } from '../../lib/site';
 
 // Explorations are opt-in, so ordinary production builds omit this route.
 export function getStaticPaths() {
-  return import.meta.env.DESIGN_PREVIEW === '1' ? ['podcasts', 'record-crates', 'bookshelves', 'book-ledges'].map(concept => ({ params: { concept } })) : [];
+  return import.meta.env.DESIGN_PREVIEW === '1' ? ['podcasts', 'record-crates', 'bookshelves', 'book-ledges', 'motion-studies', 'book-selection'].map(concept => ({ params: { concept } })) : [];
 }
 
+const isBookSelection = Astro.params.concept === 'book-selection';
+const isMotion = Astro.params.concept === 'motion-studies';
 const isBookshelf = Astro.params.concept === 'bookshelves';
 const isLedge = Astro.params.concept === 'book-ledges';
 const isCrate = Astro.params.concept === 'record-crates';
@@ -28,8 +32,8 @@ const crates = [
 ] as const;
 const concepts = isCrate ? crates : originals;
 ---
-<SiteLayout title={isLedge ? 'Shelf and cover explorations' : isBookshelf ? 'Bookshelf explorations' : isCrate ? 'Record crate explorations' : 'Podcast design explorations'} description={isLedge ? 'Four compact, interactive shelves for Kai Takeuchi’s favorite books.' : isBookshelf ? 'Six interactive ways to explore Kai Takeuchi’s favorite books.' : 'Four interactive design directions for Kai Takeuchi’s podcast collection.'} noindex>
-  {isLedge ? <ShelfRailGallery /> : isBookshelf ? <BookshelfGallery /> : <div class="page-width design-page">
+<SiteLayout title={isBookSelection ? 'Book selection explorations' : isMotion ? 'The interaction notebook' : isLedge ? 'Shelf and cover explorations' : isBookshelf ? 'Bookshelf explorations' : isCrate ? 'Record crate explorations' : 'Podcast design explorations'} description={isBookSelection ? 'Four selected states for the overlapping bookshelf: soft lift, bookmark, spotlight, and marker.' : isMotion ? 'Two local interaction studies for Kai Takeuchi’s portfolio: a project spotlight and a photo journal.' : isLedge ? 'Four compact, interactive shelves for Kai Takeuchi’s favorite books.' : isBookshelf ? 'Six interactive ways to explore Kai Takeuchi’s favorite books.' : 'Four interactive design directions for Kai Takeuchi’s podcast collection.'} noindex>
+  {isBookSelection ? <BookSelectionGallery /> : isMotion ? <MotionStudies /> : isLedge ? <ShelfRailGallery /> : isBookshelf ? <BookshelfGallery /> : <div class="page-width design-page">
     <header class="design-intro">
       <a class="back-link" href={withBase(isCrate ? '/design/podcasts/#gallery' : '/about/#learning-listening')}>← {isCrate ? 'Back to the original record crate' : 'Back to About'}</a>
       <p class="eyebrow">Design explorations / {isCrate ? 'Record crate collection' : 'September 2026'}</p>
@@ -49,7 +53,7 @@ const concepts = isCrate ? crates : originals;
       <div class="concept-footnote"><span>{concept.trait}</span><span>{isCrate ? 'Scroll, drag, or use the arrows.' : 'Try the covers, arrows, or keyboard.'}</span></div>
     </section>)}
     <aside class="design-notes" aria-label="Design references">
-      <p>Original mockups, informed by open-source interaction patterns from <a href="https://github.com/DIYgod/APlayer">APlayer</a>, <a href="https://www.embla-carousel.com/docs/v8/examples/predefined">Embla</a>, <a href="https://swiperjs.com/demos">Swiper</a>, and <a href="https://v3.shadcn.com/examples/music">shadcn’s music app</a>.</p>
+      <p>Original mockups, informed by open-source interaction patterns from <a href="https://github.com/DIYgod/APlayer" target="_blank" rel="noopener noreferrer">APlayer</a>, <a href="https://www.embla-carousel.com/docs/v8/examples/predefined" target="_blank" rel="noopener noreferrer">Embla</a>, <a href="https://swiperjs.com/demos" target="_blank" rel="noopener noreferrer">Swiper</a>, and <a href="https://v3.shadcn.com/examples/music" target="_blank" rel="noopener noreferrer">shadcn’s music app</a>.</p>
       <p>These are browsing previews. “Open podcast” takes you to the show on Apple Podcasts. Your current About page is unchanged.</p>
     </aside>
   </div>}

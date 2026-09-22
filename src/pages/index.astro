@@ -5,13 +5,15 @@ import SectionHeader from '../components/SectionHeader.astro';
 import WorkCard from '../components/WorkCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import LinkButton from '../components/LinkButton.astro';
-import Portrait from '../components/Portrait.astro';
+import PhotoStack from '../components/PhotoStack.astro';
+import HomeMotion from '../components/HomeMotion.astro';
 import { getWork, getProjects, projectCategories } from '../lib/content';
 import { withBase } from '../lib/site';
 const work = (await getWork()).filter(entry => entry.data.featured);
 const projects = (await getProjects()).filter(entry => entry.data.featured);
 ---
 <SiteLayout>
+  <div data-home-motion>
   <Hero />
   <section class="home-section page-width" aria-label="Selected experience">
     <SectionHeader number="01" title="Selected experience"><LinkButton href="/work/">View work</LinkButton></SectionHeader>
@@ -21,10 +23,12 @@ const projects = (await getProjects()).filter(entry => entry.data.featured);
     <SectionHeader number="02" title="Selected projects"><LinkButton href="/projects/">All projects</LinkButton></SectionHeader>
     <p class="section-intro">Independent builds, from healthcare workflows to the everyday ritual of cooking.</p>
     <nav class="project-jump-links" aria-label="Project categories">{projectCategories.map(category => <a href={withBase(`/projects/#${category.id}`)}>{category.title}</a>)}</nav>
-    <div class="projects-grid">{projects.map(entry => <ProjectCard entry={entry} />)}</div>
+    <div class="projects-grid">{projects.map(entry => <ProjectCard entry={entry} interactiveImage />)}</div>
   </section>
   <section class="about-strip page-width" aria-labelledby="about-title">
-    <Portrait />
+    <PhotoStack id="home-photos" />
     <div><span class="eyebrow">A little about me</span><h2 id="about-title">Curiosity, made concrete.</h2><p>My background spans economics, healthcare administration, and product development. I’m interested in how better tools can make complex work easier for the people doing it.</p><p>Outside work, I keep building, whether it’s an AI prototype or a small app for the things I cook.</p><LinkButton href="/about/">More about me</LinkButton></div>
   </section>
+  </div>
+  <HomeMotion />
 </SiteLayout>

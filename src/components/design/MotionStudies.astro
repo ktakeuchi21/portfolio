@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import { getProjects, caseStudyPath } from '../../lib/content';
+import { withBase } from '../../lib/site';
+import diving from '../../assets/personal/diving.jpeg';
+import hiking from '../../assets/personal/hiking.jpeg';
+import beachDog from '../../assets/personal/beach-dog.jpeg';
+
+const projects = await getProjects();
+const picks = ['pathway', 'what-i-made', 'interlude'].map(slug => projects.find(project => project.data.slug === slug)!);
+const photos = [
+  { src: diving, title: 'Under the surface', detail: 'Diving', alt: 'A freediver below a pod of dolphins in clear blue water.' },
+  { src: hiking, title: 'Taking the long way', detail: 'Hiking & photography', alt: 'A steep staircase follows a green mountain ridge above a coastal town.' },
+  { src: beachDog, title: 'Good company', detail: 'A day at the beach', alt: 'A dog on a sandy beach in warm sunlight.' },
+];
+---
+<div class="page-width motion-study">
+  <header class="study-intro">
+    <p class="eyebrow">The interaction notebook / 01</p>
+    <h1>A little more <em>life.</em></h1>
+    <p>Two ways to bring the work and the person behind it into focus.</p>
+    <nav aria-label="Explore the studies"><a href="#project-study">01 / Project spotlight</a><a href="#photo-study">02 / Photo journal</a></nav>
+  </header>
+
+  <section id="project-study" class="study" aria-labelledby="project-study-title">
+    <header class="study-heading"><h2 id="project-study-title"><span>01</span> The project spotlight</h2><p>Choose a project. Give the work the stage.</p></header>
+    <div class="spotlight" data-spotlight>
+      <div class="spotlight-directory">
+        <p class="eyebrow">Selected independent builds</p>
+        <div class="project-choices" data-project-choices aria-label="Featured projects">
+          {picks.map((project, index) => <a id={`pick-${project.data.slug}`} href={`#study-${project.data.slug}`} data-pick={index}>
+            <span class="pick-number">0{index + 1}</span><span>{project.data.title}</span><span class="pick-arrow" aria-hidden="true">↗</span>
+          </a>)}
+        </div>
+        <a class="all-projects" href={withBase('/projects/')}>Explore all projects <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="project-stage">
+        {picks.map((project, index) => <article class:list={['stage-panel', `stage-panel--${project.data.slug}`]} id={`study-${project.data.slug}`} data-stage={index}>
+          <div class="project-art">
+            <span class="stage-edition" aria-hidden="true">Selected work / 0{index + 1}</span>
+            <div class="screen-frame">
+              {project.data.image && <img src={withBase(project.data.image.src)} alt={project.data.image.alt} width={project.data.image.width} height={project.data.image.height} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />}
+            </div>
+            <span class="art-category">{project.data.category === 'professional' ? 'Healthcare' : 'Everyday life'}</span>
+          </div>
+          <div class="stage-copy">
+            <h3>{project.data.title}</h3>
+            <p>{project.data.summary}</p>
+            <a href={withBase(caseStudyPath(project)!)}>Explore the case study <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>)}
+      </div>
+    </div>
+    <p class="study-note">A compact alternative for selected projects on the homepage. The full project collection stays one click away.</p>
+  </section>
+
+  <section id="photo-study" class="study" aria-labelledby="photo-study-title">
+    <header class="study-heading"><h2 id="photo-study-title"><span>02</span> The photo journal</h2><p>A few moments away from the screen.</p></header>
+    <div class="photo-journal">
+      <div class="journal-copy"><p class="eyebrow">Outside of work</p><h3>Room to<br /> <em>wander.</em></h3><a href={withBase('/about/#outside-work-title')}>A little about me <span aria-hidden="true">↗</span></a></div>
+      <div class="photo-strip" aria-label="Personal photographs">
+        {photos.map((photo, index) => <figure class="photo-print" tabindex="0">
+          <Image src={photo.src} alt={photo.alt} width={540} widths={[270, 540]} sizes="(max-width: 640px) 210px, 240px" format="webp" loading="lazy" decoding="async" />
+          <figcaption><span>0{index + 1} / {photo.detail}</span><strong>{photo.title}</strong></figcaption>
+        </figure>)}
+      </div>
+    </div>
+    <p class="study-note">Real photographs, a little depth, and a horizontal rail on smaller screens. Hover or focus lifts each print; captions remain readable throughout.</p>
+  </section>
+  <footer class="study-footer"><p>Local design study · Astro, CSS, and browser-native animation</p><a href={withBase('/')}>Return to the portfolio ↗</a></footer>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-spotlight]');
+  if (root) {
+    const choices = root.querySelector<HTMLElement>('[data-project-choices]')!;
+    const tabs = [...root.querySelectorAll<HTMLAnchorElement>('[data-pick]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-stage]')];
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let selected = -1;
+    const select = (index: number) => {
+      if (selected === index) return;
+      panels.forEach(panel => panel.getAnimations().forEach(animation => animation.cancel()));
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+        panels[i].hidden = i !== index;
+      });
+      if (selected !== -1 && !reducedMotion.matches) {
+        panels[index].animate([{ opacity: .35, transform: 'translateY(10px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 260, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      }
+      selected = index;
+    };
+    choices.setAttribute('role', 'tablist');
+    choices.setAttribute('aria-orientation', 'vertical');
+    tabs.forEach((tab, index) => {
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', panels[index].id);
+      panels[index].setAttribute('role', 'tabpanel');
+      panels[index].setAttribute('aria-labelledby', tab.id);
+      panels[index].tabIndex = 0;
+      tab.addEventListener('click', event => { event.preventDefault(); select(index); });
+      tab.addEventListener('keydown', event => {
+        const next = event.key === 'ArrowDown' ? (index + 1) % tabs.length : event.key === 'ArrowUp' ? (index - 1 + tabs.length) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+        if (next >= 0) { event.preventDefault(); select(next); tabs[next].focus(); }
+        else if (event.key === ' ') { event.preventDefault(); select(index); }
+      });
+    });
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) panels.forEach(panel => panel.getAnimations().forEach(animation => animation.cancel()));
+    });
+    root.classList.add('is-ready');
+    select(0);
+  }
+</script>
+
+<style>
+  .motion-study { padding-top: 38px; }
+  .study-intro > .eyebrow { color: var(--color-muted); }
+  h1 { font: 400 clamp(3rem, 6vw, 4.8rem)/1.05 var(--font-display); letter-spacing: -.045em; margin: 16px 0 12px; }
+  h1 em { color: var(--color-accent); }
+  .study-intro > p:last-of-type { color: var(--color-muted); max-width: 60ch; }
+  .study-intro nav { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 18px; font-size: .8rem; }
+  .study-intro nav a { min-height: 44px; display: flex; align-items: center; text-decoration: underline; }
+  .study { margin-top: 34px; scroll-margin-top: 24px; }
+  .study + .study { margin-top: 48px; }
+  .study-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; margin-bottom: 16px; }
+  .study-heading h2 { font: 400 1.6rem/1.2 var(--font-display); letter-spacing: -.02em; }
+  .study-heading h2 span { font: 400 .75rem var(--font-sans); margin-right: 16px; color: var(--color-muted); }
+  .study-heading p, .study-note { font-size: .8rem; color: var(--color-muted); }
+  .study-note { margin-top: 14px; max-width: 85ch; }
+  .spotlight { display: grid; grid-template-columns: .75fr 1.3fr; background: #202e28; color: #f4f3e9; border-radius: 3px; padding: 30px; gap: 36px; }
+  .spotlight-directory { display: flex; flex-direction: column; padding: 6px 0; }
+  .spotlight-directory > .eyebrow { font-size: .64rem; color: #c7d2c3; }
+  .project-choices { margin: 36px 0 26px; }
+  .project-choices a { display: grid; grid-template-columns: 22px 1fr 22px; align-items: baseline; gap: 10px; min-height: 70px; padding: 18px 0; border-bottom: 1px solid #657367; color: #b5c1b5; font: 400 clamp(1.5rem, 2.8vw, 2.15rem)/1.2 var(--font-display); transition: color 180ms; }
+  .project-choices a:hover, .project-choices a[aria-selected="true"] { color: #fffef7; }
+  .pick-number { font: 400 .65rem var(--font-sans); color: #bac9b7; }
+  .pick-arrow { font: 400 1rem var(--font-sans); opacity: .2; transform: translate(-3px, 3px); transition: opacity 180ms, transform 180ms; }
+  .project-choices a[aria-selected="true"] .pick-arrow, .project-choices a:hover .pick-arrow { opacity: 1; transform: translate(0, 0); }
+  .all-projects { margin-top: auto; font-size: .75rem; display: flex; width: fit-content; gap: 24px; min-height: 44px; align-items: center; text-decoration: underline; }
+  .stage-panel { min-width: 0; }
+  .stage-panel[hidden] { display: none; }
+  .stage-panel + .stage-panel { margin-top: 32px; }
+  .is-ready .stage-panel + .stage-panel { margin-top: 0; }
+  .project-art { position: relative; display: grid; place-items: center; height: 294px; overflow: hidden; background: #d8e1d1; color: #394a3c; padding: 42px 26px 28px; }
+  .stage-edition { position: absolute; top: 13px; left: 17px; text-transform: uppercase; font-size: .58rem; letter-spacing: .12em; }
+  .art-category { position: absolute; bottom: 10px; right: 17px; font-size: .62rem; }
+  .screen-frame { width: fit-content; max-width: 95%; max-height: 220px; transform: rotate(-3deg); box-shadow: 0 12px 28px #182f2830; transition: transform 280ms; }
+  .screen-frame img { width: auto; height: 210px; object-fit: contain; }
+  .project-art:hover .screen-frame { transform: rotate(0deg) translateY(-3px); }
+  .stage-panel--what-i-made .project-art { background: #e5d8be; }
+  .stage-panel--what-i-made .screen-frame { width: 102px; border-radius: 10px; overflow: hidden; transform: rotate(6deg); }
+  .stage-panel--interlude .project-art { background: #ded8cb; }
+  .stage-panel--interlude .screen-frame { transform: rotate(2deg); }
+  .stage-copy { padding: 20px 0 0; }
+  .stage-copy h3 { font: 400 1.6rem/1.2 var(--font-display); }
+  .stage-copy p { color: #c7d2c3; font-size: .82rem; line-height: 1.6; margin-top: 8px; max-width: 58ch; }
+  .stage-copy a { display: inline-flex; align-items: center; gap: 24px; min-height: 44px; margin-top: 6px; font-size: .75rem; text-decoration: underline; }
+  .spotlight :is(a, [tabindex]):focus-visible { outline: 2px solid #e7dfa8; outline-offset: 4px; }
+  .photo-journal { display: grid; grid-template-columns: 190px 1fr; gap: 24px; align-items: center; padding: 30px; background: #eeeee6; border: 1px solid #d8dcd0; border-radius: 3px; }
+  .journal-copy > .eyebrow { color: var(--color-muted); font-size: .64rem; }
+  .journal-copy h3 { font: 400 2.75rem/1.08 var(--font-display); letter-spacing: -.025em; margin: 20px 0; }
+  .journal-copy h3 em { color: var(--color-accent); }
+  .journal-copy a { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; font-size: .75rem; text-decoration: underline; }
+  .photo-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; min-width: 0; padding: 16px 5px; }
+  .photo-print { background: #fffef9; padding: 9px 9px 14px; box-shadow: 0 7px 14px #25342616; transform: rotate(-3deg); transition: transform 240ms; margin: 0; min-width: 0; }
+  .photo-print:nth-child(2) { transform: translateY(-4px) rotate(3deg); }
+  .photo-print:nth-child(3) { transform: rotate(-2deg); }
+  .photo-print:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  .photo-print:hover, .photo-print:focus-visible { transform: translateY(-12px) rotate(0); z-index: 1; }
+  .photo-print :global(img) { height: 210px; width: 100%; object-fit: cover; }
+  .photo-print figcaption { padding: 13px 4px 0; }
+  .photo-print figcaption span { font-size: .58rem; color: var(--color-muted); display: block; }
+  .photo-print figcaption strong { display: block; margin-top: 5px; font: 400 1.05rem/1.15 var(--font-display); }
+  .study-footer { border-top: 1px solid var(--color-line); margin-top: 42px; padding-top: 20px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; font-size: .75rem; color: var(--color-muted); }
+  .study-footer a { min-height: 44px; text-decoration: underline; }
+  @media (max-width: 900px) {
+    .spotlight { grid-template-columns: .65fr 1fr; gap: 24px; padding: 24px; }
+    .photo-journal { grid-template-columns: 1fr; gap: 10px; }
+    .journal-copy { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .journal-copy h3 { font-size: 2rem; margin: 0; }
+    .journal-copy h3 br { display: none; }
+  }
+  @media (max-width: 640px) {
+    .motion-study { padding-top: 26px; }
+    .study-intro nav { gap: 8px 22px; }
+    .spotlight { grid-template-columns: 1fr; gap: 18px; padding: 20px; }
+    .project-choices { margin: 12px 0 0; }
+    .project-choices a { min-height: 48px; padding: 10px 0; font-size: 1.6rem; }
+    .all-projects { margin-top: 10px; }
+    .project-art { height: 258px; padding-inline: 14px; }
+    .screen-frame img { height: 180px; }
+    .photo-journal { padding: 20px 0; overflow: hidden; }
+    .journal-copy { padding-inline: 20px; }
+    .journal-copy > .eyebrow { flex-basis: 100%; }
+    .photo-strip { display: flex; overflow-x: auto; padding: 24px 20px 18px; scroll-snap-type: x proximity; }
+    .photo-print { flex: 0 0 210px; scroll-snap-align: center; }
+    .photo-print :global(img) { height: 230px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-print, .pick-arrow, .project-choices a, .screen-frame { transition: none; }
+    .photo-print:hover, .photo-print:focus-visible, .project-art:hover .screen-frame { transform: none; }
+  }
+</style>

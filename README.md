@@ -1,17 +1,17 @@
 # Kai Takeuchi: portfolio
 
-A static Astro + TypeScript portfolio for healthcare and AI product leadership. Tailwind CSS supplies the theme tokens and utility layer; Astro components provide the layouts. MDX content collections generate project listings and detail pages. There is no backend, analytics, external font request, or client-side framework.
+A static Astro + TypeScript portfolio for healthcare and AI product leadership. Tailwind CSS supplies the theme tokens and utility layer; Astro components provide the layouts. MDX content collections generate project listings and detail pages. There is no backend, external font request, or client-side framework. Optional Umami analytics runs only on the production domain when configured.
 
 **Live website: [kaitakeuchi.com](https://kaitakeuchi.com/)**
 
 ## What’s on the site
 
 - **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order.
-- **Projects:** Healthcare and Everyday life tabs, with six independent builds. Case studies include the product question, screenshots, architecture, stack, design decisions, and current state.
-- **About:** background, personal photography, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
+- **Projects:** Healthcare and Everyday life tabs, with six independent builds. Product and Under the hood views pair screenshots with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
+- **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
 
-Employer experience is separate from independent projects. Healthcare describes the subject of a project; every project carries the ownership label **Independent build**.
+Employer experience is separate from independent projects. Healthcare describes the subject of a project; case studies carry the ownership label **Independent build**. Listing cards omit the repeated label.
 
 | Category | Case study | Current status |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ Employer experience is separate from independent projects. Healthcare describes 
 
 ## Stack
 
-Astro 7, TypeScript 6, MDX content collections, and Tailwind CSS 4 generate a static site. Small Astro scripts enhance tabs, shelves, and carousels. Book covers, podcast artwork, and personal photos use Astro’s responsive image pipeline. Inter and Newsreader fonts are self-hosted. GitHub Actions validates and deploys to GitHub Pages; Cloudflare manages the custom domain’s DNS.
+Astro 7, TypeScript 6, MDX content collections, and Tailwind CSS 4 generate a static site. Small Astro scripts enhance tabs, shelves, and carousels. Locally bundled GSAP adds homepage entrances, project architecture reveals, and photo transitions. Native cross-document view transitions connect project thumbnails to case-study covers in supported browsers. Motion respects reduced-motion preferences. Book covers, podcast artwork, and personal photos use Astro’s responsive image pipeline. Inter and Newsreader fonts are self-hosted. GitHub Actions validates and deploys to GitHub Pages; Cloudflare manages the custom domain’s DNS.
 
 ## Local development
 
@@ -41,6 +41,7 @@ Astro 7 runs its development and preview servers in the background. Use `npm exe
 
 ```sh
 npm run check
+npm run verify:analytics
 npm run build
 npm run verify:build
 npm run preview
@@ -51,6 +52,18 @@ npm run preview
 `npm run verify:content` temporarily adds entries in both project categories and employer Work, proves that they generate cards and detail routes, then removes them and restores the normal build. Use it when changing the content infrastructure, not for ordinary copy edits. Avoid running content builds alongside the development server: Astro shares its content cache. Use the production preview after validation to inspect the final catalog.
 
 Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, and the six case studies listed above. The résumé route is intentionally absent.
+
+## Visitor analytics
+
+The Umami integration is prepared but disabled until the portfolio has its own website ID. The existing Umami Hobby account currently permits one website, occupied by Pathway. Do not reuse Pathway's ID or upgrade the account without resolving that choice with the owner.
+
+Set the public GitHub Actions repository variable `PUBLIC_UMAMI_WEBSITE_ID` to the portfolio website ID, then rebuild and deploy. `.env.example` documents the equivalent local build setting. This identifier is public; no account credentials or API keys are needed. Tracking requires a production build with the real `SITE_URL` and an exact HTTPS `kaitakeuchi.com` or `www.kaitakeuchi.com` browser location. Localhost, preview domains, design mocks, and unconfigured builds do not load the Umami tracker.
+
+Collected events are page views, `outbound-link` (destination without query/hash and public link label), `project-category` (Healthcare or Everyday life, including keyboard selection), `visible-30s`, `visible-60s`, and `scroll-75`. Visibility timers pause while the page is hidden; they measure visible time, not attention. Scroll completion and each time milestone are recorded once per page load. Anchor changes do not inflate page views. URLs retain only UTM campaign parameters; referrers are reduced to their origin. No visitor identity, replay, heatmap, or performance recording is enabled.
+
+To exclude your own browser, visit `https://kaitakeuchi.com/?analytics=off` after deployment. This stores Umami's standard `umami.disabled=1` preference on that origin. Use `?analytics=on` to re-enable tracking. Do Not Track and Global Privacy Control are respected. Ad blockers, network failures, and very short visits can cause undercounting. Tracker failures never interrupt navigation. Tests should intercept collection rather than send synthetic traffic to the live dashboard.
+
+After activation, verify a controlled visit in the private Umami dashboard before reporting collection as live. Account website/event limits and retention depend on the selected plan.
 
 ## Add or update content
 
@@ -77,13 +90,15 @@ tags: [Product discovery, Workflow design]
 
 Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Set `featured: true` to include it on the homepage. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
 
-Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both display “Independent build.” The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
+Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both use “Independent build” on case studies. The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
 
 `status` is `public-demo`, `private-app`, or `in-development`. Status is independent of `draft`: an unfinished product can have a complete, published narrative.
 
 For employer Work, use `type: professional`, `organization`, and `role` in `src/content/work/`. An optional `website` URL adds a “Visit website” action and links the title when no case study is published. `order` controls the order on both Home and Work. These entries are separate from independent projects. Work pages automatically use `/work/<slug>/` when their narratives are published.
 
 Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive steps and an optional boundary note) and `TechnologyStack.astro` (layer, tools, and purpose). Import these in MDX as shown in the existing entries. Explain product decisions and source-grounded design takeaways; keep unconfirmed firsthand reflections in ignored local notes.
+
+`ProjectVisual.astro` renders Product and Under the hood views for published projects. Its three-step summaries live in `src/lib/project-architecture.ts`; keep them aligned with the MDX narrative and clearly distinguish implemented behavior from planned capabilities. Without a summary, a project retains its screenshot. The tabs support arrow keys, Home/End, and visible focus; inactive panels are excluded from keyboard navigation.
 
 ### Drafts and external case studies
 
@@ -109,6 +124,8 @@ image:
 Use real, appropriate screenshots; entries without imagery use a text layout. Retain attribution in `public/credits.txt`. Current screenshots come from public demos, repository assets, and local synthetic workspaces. User-supplied portraits and personal photos live in `src/assets/`; Astro produces their responsive derivatives. Source and font-license records are in `docs/sources.md` and `public/licenses/`.
 
 MDX body links to local pages/assets must also respect deployment subpaths. Import `withBase` from `../../lib/site` inside the MDX file and use `<a href={withBase('/projects/')}>Projects</a>` for a local link rather than hardcoding `/projects/`. Use external HTTPS links normally.
+
+External website links open a new tab with `target="_blank"` and `rel="noopener noreferrer"`; internal navigation stays in the current tab. Shared link components and card titles apply this rule, while `ContentLink.astro` handles Markdown links in case-study bodies. Book, podcast, episode, and video destinations use the same attributes, including their no-JavaScript fallback links. The build verifier checks every generated anchor so new links follow the convention.
 
 ### Profile links and future résumé
 

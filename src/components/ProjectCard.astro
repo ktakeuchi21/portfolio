@@ -3,20 +3,26 @@ import type { CollectionEntry } from 'astro:content';
 import Tag from './Tag.astro';
 import LinkButton from './LinkButton.astro';
 import ExternalLink from './ExternalLink.astro';
-import { caseStudyPath, projectOwnershipLabel, projectStatuses } from '../lib/content';
-import { withBase } from '../lib/site';
-interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3'; }
-const { entry, headingLevel: Heading = 'h3' } = Astro.props;
+import Icon from './Icon.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import { caseStudyPath, projectStatuses } from '../lib/content';
+import { externalLinkAttributes, withBase } from '../lib/site';
+interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3'; interactiveImage?: boolean; }
+const { entry, headingLevel: Heading = 'h3', interactiveImage = false } = Astro.props;
 const { title, summary, image, tags, liveDemo, github, slug, status, category } = entry.data;
 const caseStudy = caseStudyPath(entry);
 const primary = caseStudy || liveDemo || github;
+const imageLink = interactiveImage && primary ? primary : undefined;
+const ImageFrame = imageLink ? 'a' : 'div';
 ---
 <article class:list={['project-card', `project-card--${slug}`, { 'project-card--text': !image }]} data-project={slug} data-category={category}>
-  {image && <div class="project-image"><img src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" /></div>}
+  {image && !entry.data.draft ? <ProjectVisual entry={entry} /> : image && <ImageFrame class:list={['project-image', { 'project-image--interactive': imageLink }]} href={imageLink ? withBase(imageLink) : undefined} {...(imageLink ? externalLinkAttributes(imageLink, Astro.site ?? Astro.url) : {})} aria-label={imageLink ? `Explore ${title}` : undefined} draggable={imageLink ? false : undefined}>
+    <img src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" draggable={imageLink ? false : undefined} />
+    {imageLink && <span class="project-preview-cue" aria-hidden="true">Explore project <Icon kind="arrow" /></span>}
+  </ImageFrame>}
   <div class="project-copy">
     <div class="project-heading">
-      <p class="eyebrow">{projectOwnershipLabel}</p>
-      <Heading class="card-title">{primary ? <a href={withBase(primary)}>{title}</a> : title}</Heading>
+      <Heading class="card-title">{primary ? <a href={withBase(primary)} {...externalLinkAttributes(primary, Astro.site ?? Astro.url)}>{title}</a> : title}</Heading>
       <p class="project-status">{projectStatuses[status]}</p>
     </div>
     <div class="project-detail">

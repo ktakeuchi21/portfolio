@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import LinkButton from './LinkButton.astro';
 import ExternalLink from './ExternalLink.astro';
 import { caseStudyPath } from '../lib/content';
-import { withBase } from '../lib/site';
+import { externalLinkAttributes, withBase } from '../lib/site';
 interface Props { entry: CollectionEntry<'work'>; index: number; headingLevel?: 'h2' | 'h3'; }
 const { entry, index, headingLevel: Heading = 'h3' } = Astro.props;
 const { title, summary, organization, role, tags, website } = entry.data;
@@ -12,7 +12,7 @@ const titleHref = href || website;
 ---
 <article class="work-card">
   <span class="work-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-  <div class="work-name"><p class="eyebrow">{organization}</p><Heading class="card-title">{titleHref ? <a href={withBase(titleHref)}>{title}</a> : title}</Heading><p class="work-role">{role}</p></div>
+  <div class="work-name"><p class="eyebrow">{organization}</p><Heading class="card-title">{titleHref ? <a href={withBase(titleHref)} {...externalLinkAttributes(titleHref, Astro.site ?? Astro.url)}>{title}</a> : title}</Heading><p class="work-role">{role}</p></div>
   <div class="work-summary">
     <p>{summary}</p>
     <div class="work-concepts">{tags.join(' · ')}</div>

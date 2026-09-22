@@ -1,7 +1,10 @@
 ---
 import '../styles/global.css';
+import '../styles/project-transitions.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import ProjectTransitions from '../components/ProjectTransitions.astro';
 import { profile, withBase } from '../lib/site';
 interface Props { title?: string; description?: string; noindex?: boolean; }
 const { title, description = 'Kai Takeuchi is a healthcare and AI product leader building 0-to-1 products around complex workflows, enterprise data, and human decision-making.', noindex = false } = Astro.props;
@@ -15,6 +18,7 @@ const socialImageAlt = 'Kai Takeuchi. Healthcare + AI Product Leader. Product st
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ProjectTransitions />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#faf9f6" />
@@ -36,6 +40,7 @@ const socialImageAlt = 'Kai Takeuchi. Healthcare + AI Product Leader. Product st
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={socialImageAlt} />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <Analytics disabled={noindex} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

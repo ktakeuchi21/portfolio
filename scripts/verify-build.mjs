@@ -69,11 +69,31 @@ for (const file of pages) {
   assert(!/href="(?:javascript:|#")/.test(html), `${relative}: invalid action`);
   assert(!/\b\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}\b/.test(html), `${relative}: possible private telephone number`);
   if (!new URL(origin).hostname.endsWith('kaitakeuchi.com')) {
-    assert(!html.includes('kaitakeuchi.com'), `${relative}: unconfigured custom domain`);
+    // Client scripts can contain the analytics hostname allowlist even in a local build.
+    const markup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+    assert(!markup.includes('kaitakeuchi.com'), `${relative}: unconfigured custom domain`);
   }
+  const analyticsId = process.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
+  const analyticsEnabled = analyticsId && ['https://kaitakeuchi.com', 'https://www.kaitakeuchi.com'].includes(new URL(origin).origin) &&
+    !html.includes('name="robots" content="noindex"');
+  assert.equal(meta('umami-website-id'), analyticsEnabled ? analyticsId : undefined, `${relative}: analytics activation mismatch`);
   for (const img of html.matchAll(/<img\b[^>]*>/g)) {
     assert(/alt="[^"]+"/.test(img[0]), `${relative}: image needs meaningful alt text`);
     assert(/width="\d+"/.test(img[0]) && /height="\d+"/.test(img[0]), `${relative}: image dimensions missing`);
+  }
+  for (const anchor of html.matchAll(/<a\s[^>]*>/g)) {
+    const attribute = name => anchor[0].match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
+    const href = attribute('href')?.replaceAll('&amp;', '&');
+    if (!href) continue;
+    const destination = new URL(href, url);
+    const external = /^https?:$/.test(destination.protocol) && destination.origin !== url.origin;
+    if (external) {
+      assert.equal(attribute('target'), '_blank', `${relative}: external link must open a new tab: ${href}`);
+      const rel = new Set((attribute('rel') || '').split(/\s+/));
+      assert(rel.has('noopener') && rel.has('noreferrer'), `${relative}: missing external link protection: ${href}`);
+    } else {
+      assert.notEqual(attribute('target'), '_blank', `${relative}: internal navigation must stay in the current tab: ${href}`);
+    }
   }
   for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) await checkLink(match[1], relative, url);
   for (const match of html.matchAll(/srcset="([^"]+)"/g)) {

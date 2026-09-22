@@ -1,0 +1,150 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { caseStudyPath } from '../lib/content';
+import { projectArchitecture } from '../lib/project-architecture';
+import { externalLinkAttributes, withBase } from '../lib/site';
+interface Props { entry: CollectionEntry<'projects'>; variant?: 'card' | 'cover'; }
+const { entry, variant = 'card' } = Astro.props;
+const { image, slug, title } = entry.data;
+const architecture = projectArchitecture[slug];
+const href = variant === 'card' ? caseStudyPath(entry) : undefined;
+const Frame = href ? 'a' : 'div';
+const id = `visual-${slug}`;
+---
+{image && <div class:list={['project-visual', `project-visual--${variant}`]} data-project-visual>
+  {architecture && <div class="visual-toolbar" hidden>
+    <div class="visual-tabs" data-visual-tabs aria-label={`${title} view`}>
+      <button type="button" id={`${id}-product-tab`} aria-controls={`${id}-product`}>Product</button>
+      <button type="button" id={`${id}-architecture-tab`} aria-controls={`${id}-architecture`}>Under the hood</button>
+    </div>
+  </div>}
+  <div class="visual-stage">
+    <div class="visual-product" id={`${id}-product`} data-visual-panel tabindex={variant === 'cover' ? 0 : undefined}>
+      <Frame class:list={['project-image', { 'project-image--interactive': href }]} href={href ? withBase(href) : undefined} {...(href ? externalLinkAttributes(href, Astro.site ?? Astro.url) : {})} aria-label={href ? `Explore ${title}` : undefined} draggable={false}>
+        <img data-project-image={slug} src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading={variant === 'cover' ? 'eager' : 'lazy'} fetchpriority={variant === 'cover' ? 'high' : 'auto'} decoding="async" draggable={false} style={`view-transition-name: project-${slug}`} />
+        {href && <span class="project-preview-cue" aria-hidden="true">Explore project <Icon kind="arrow" /></span>}
+      </Frame>
+    </div>
+    {architecture && <div class="visual-architecture" id={`${id}-architecture`} data-visual-panel hidden tabindex="0">
+      <ol class="architecture-nodes" aria-label={`${title} architecture`}>
+        {architecture.steps.map((step, index) => <li>
+          <div class="architecture-node"><span class="node-number" aria-hidden="true">0{index + 1}</span><div><strong>{step.title}</strong><small>{step.technology}</small></div></div>
+          {index < architecture.steps.length - 1 && <svg class="architecture-wire" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true"><path d="M1 0V100" pathLength="100" /></svg>}
+        </li>)}
+      </ol>
+      <p class="architecture-note">{architecture.note}</p>
+    </div>}
+  </div>
+</div>}
+
+<script>
+  import { gsap } from 'gsap';
+  document.querySelectorAll<HTMLElement>('[data-project-visual]').forEach(visual => {
+    const tabs = visual.querySelector<HTMLElement>('[data-visual-tabs]');
+    if (!tabs) return;
+    const buttons = Array.from(tabs.querySelectorAll<HTMLButtonElement>('button'));
+    const panels = Array.from(visual.querySelectorAll<HTMLElement>('[data-visual-panel]'));
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let animation: gsap.core.Timeline | undefined;
+    let active = 0;
+    const show = (index: number, animate = true) => {
+      animation?.progress(1).kill();
+      active = index;
+      buttons.forEach((button, i) => { button.setAttribute('aria-selected', String(i === index)); button.tabIndex = i === index ? 0 : -1; });
+      panels.forEach((panel, i) => { panel.hidden = i !== index; });
+      if (!animate || reduced.matches) return;
+      const panel = panels[index];
+      animation = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      animation.fromTo(panel, { opacity: .25, y: 6 }, { opacity: 1, y: 0, duration: .3, clearProps: 'opacity,transform' });
+      if (index === 1) {
+        animation.fromTo(panel.querySelectorAll('.architecture-node'), { opacity: .3, y: 5 }, { opacity: 1, y: 0, duration: .3, stagger: .08, clearProps: 'opacity,transform' }, 0);
+        animation.fromTo(panel.querySelectorAll('.architecture-wire path'), { strokeDasharray: 100, strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: .4, stagger: .1, clearProps: 'strokeDasharray,strokeDashoffset' }, .1);
+      }
+    };
+    tabs.setAttribute('role', 'tablist');
+    buttons.forEach((button, i) => {
+      button.setAttribute('role', 'tab');
+      panels[i].setAttribute('role', 'tabpanel');
+      panels[i].setAttribute('aria-labelledby', button.id);
+      button.addEventListener('click', () => { if (i !== active) show(i); });
+      button.addEventListener('keydown', event => {
+        let next: number;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') next = 1 - active;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = buttons.length - 1;
+        else return;
+        event.preventDefault(); show(next); buttons[next].focus();
+      });
+    });
+    visual.querySelector<HTMLElement>('.visual-toolbar')!.hidden = false;
+    visual.classList.add('is-ready');
+    show(0, false);
+    reduced.addEventListener('change', () => { animation?.progress(1).kill(); });
+  });
+</script>
+
+<style>
+  .project-visual { --visual-ratio: 1.32; width: 100%; min-width: 0; background: var(--color-wash); border: 1px solid var(--color-line); }
+  .project-visual.is-ready { display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(0, 1fr) 45px; aspect-ratio: var(--visual-ratio); }
+  .project-visual--card.is-ready { min-height: 270px; }
+  .visual-stage { grid-row: 1; position: relative; min-height: 0; }
+  .visual-product { height: 100%; }
+  .project-visual .project-image { position: relative; width: 100%; height: 100%; border: 0; }
+  .project-image--interactive:focus-visible { outline-offset: -5px; }
+  .project-preview-cue { display: inline-flex; align-items: center; gap: 13px; position: absolute; bottom: 12px; right: 12px; padding: 8px 12px; min-height: 38px; background: var(--color-accent); color: white; font-size: .75rem; border-radius: 2px; pointer-events: none; }
+  .project-preview-cue :global(svg) { width: 14px; height: 14px; }
+  .is-ready .project-image { aspect-ratio: auto; }
+  .visual-toolbar { grid-row: 2; border-top: 1px solid var(--color-line); background: var(--color-paper); padding-inline: 10px; }
+  .visual-tabs { display: flex; justify-content: space-between; height: 100%; gap: 8px; }
+  .visual-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 0 5px; min-height: 44px; cursor: pointer; font: 400 .75rem var(--font-sans); color: var(--color-muted); }
+  .visual-tabs button[aria-selected="true"] { border-bottom-color: var(--color-accent); color: var(--color-accent); font-weight: 600; }
+  .visual-tabs button span { display: inline-block; margin-left: 5px; }
+  .visual-tabs button:focus-visible { outline-offset: -4px; }
+  .visual-architecture { height: 100%; padding: 12px 14px; background: radial-gradient(var(--color-line) .65px, transparent .65px) 0 0 / 12px 12px, var(--color-wash); }
+  .visual-architecture[hidden], .visual-product[hidden], .visual-toolbar[hidden] { display: none; }
+  .visual-architecture:focus-visible, .visual-product:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -5px; }
+  .architecture-nodes { display: grid; gap: 12px; list-style: none; padding: 0; margin: 0; }
+  .architecture-nodes li { position: relative; min-width: 0; }
+  .architecture-node { display: flex; align-items: center; gap: 12px; min-height: 38px; padding: 3px 10px; background: var(--color-paper); border: 1px solid #cdd5ca; border-radius: 3px; }
+  .node-number { font: 400 .875rem var(--font-display); color: var(--color-accent); }
+  .architecture-node strong { display: block; font-size: .8125rem; line-height: 1.35; font-weight: 550; }
+  .architecture-node small { display: block; font-size: .75rem; line-height: 1.5; color: var(--color-muted); }
+  .architecture-wire { position: absolute; top: 100%; left: 22px; height: 12px; width: 2px; overflow: visible; }
+  .architecture-wire path { fill: none; stroke: var(--color-accent); stroke-width: 1; }
+  .architecture-note { margin-top: 9px; font-size: .75rem; line-height: 1.4; color: var(--color-muted); }
+  .project-visual--cover { --visual-ratio: 2.05; }
+  .project-visual--cover .project-image { min-height: 300px; padding: 28px; }
+  .project-visual--cover .project-image img { object-fit: contain; }
+  .project-visual--cover .visual-architecture { display: flex; flex-direction: column; justify-content: center; padding: 42px; }
+  .project-visual--cover .visual-architecture[hidden] { display: none; }
+  .project-visual--cover .architecture-nodes { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 30px; }
+  .project-visual--cover .architecture-node { flex-direction: column; align-items: start; padding: 22px; min-height: 145px; gap: 14px; box-shadow: 0 6px 20px #27332e06; }
+  .project-visual--cover .node-number { font-size: 1.25rem; }
+  .project-visual--cover .architecture-node strong { font-size: 1rem; }
+  .project-visual--cover .architecture-node small { font-size: .75rem; margin-top: 8px; }
+  .project-visual--cover .architecture-wire { height: 30px; top: 50%; left: calc(100% + 15px); transform: translateY(-50%) rotate(-90deg); }
+  .project-visual--cover .architecture-note { font-size: .8125rem; margin-top: 26px; }
+  .project-visual--cover .visual-toolbar { padding-inline: 24px; }
+  .project-visual--cover .visual-tabs { justify-content: start; gap: 28px; }
+  .project-visual--cover .visual-tabs button { font-size: .8125rem; }
+  @media (min-width: 641px) and (max-width: 1100px) {
+    .project-visual--card.is-ready { aspect-ratio: auto; height: 300px; }
+    .architecture-node { gap: 7px; padding-inline: 6px; }
+  }
+  @media (max-width: 640px) {
+    .project-visual--card { --visual-ratio: 1.32; }
+    .project-visual--cover.is-ready { aspect-ratio: auto; height: 370px; }
+    .project-visual--cover .project-image { min-height: 0; padding: 18px; }
+    .project-visual--cover .visual-architecture { padding: 20px; }
+    .project-visual--cover .architecture-nodes { grid-template-columns: 1fr; gap: 18px; }
+    .project-visual--cover .architecture-node { flex-direction: row; align-items: center; min-height: 62px; padding: 10px 14px; gap: 14px; }
+    .project-visual--cover .architecture-node strong { font-size: .875rem; }
+    .project-visual--cover .architecture-node small { font-size: .6875rem; margin-top: 3px; }
+    .project-visual--cover .architecture-wire { transform: none; height: 18px; top: 100%; left: 25px; }
+    .project-visual--cover .architecture-note { font-size: .6875rem; margin-top: 18px; }
+  }
+  @media (max-width: 360px) {
+    .project-visual--card.is-ready { min-height: 300px; }
+  }
+</style>

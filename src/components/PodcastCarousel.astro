@@ -18,7 +18,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
   </div>
   <div class="crate-reel" data-crate-reel>
     <div class="crate-track">
-      {podcasts.map((podcast, index) => <a class="record" href={podcast.href} data-record={index} data-title={podcast.title} data-creator={podcast.creator} aria-label={podcast.title} style={`--disc-label:${colors[index % colors.length]}`}>
+      {podcasts.map((podcast, index) => <a class="record" href={podcast.href} target="_blank" rel="noopener noreferrer" data-record={index} data-title={podcast.title} data-creator={podcast.creator} aria-label={podcast.title} style={`--disc-label:${colors[index % colors.length]}`}>
         <span class="album">
           {variant === 'sleeves' && <span class="vinyl" aria-hidden="true"><span></span></span>}
           <span class="jacket"><Image src={podcast.image} alt={`${podcast.title} podcast artwork`} width={320} widths={[180, 260, 520]} sizes="(max-width: 640px) 176px, 240px" format="webp" quality={90} loading="lazy" decoding="async" /></span>
@@ -33,7 +33,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
       <div class="show-meta"><p class="show-creator" data-crate-creator>{podcasts[0].creator}</p><p class="show-count" data-crate-count>01 / {totalLabel}</p></div>
     </div>
     <div class="crate-actions">
-      <a class="open-show" data-crate-open href={podcasts[0].href}>Open podcast <Icon kind="external" /></a>
+      <a class="open-show" data-crate-open href={podcasts[0].href} target="_blank" rel="noopener noreferrer">Open podcast <Icon kind="external" /></a>
       <div class="crate-transport">
         <button type="button" data-crate-step="-1" aria-label="Previous podcast"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg></button>
         <button type="button" data-crate-step="1" aria-label="Next podcast"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 5 7 7-7 7" /></svg></button>

@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import diving from '../assets/personal/diving.jpeg';
+import hiking from '../assets/personal/hiking.jpeg';
+import beachDog from '../assets/personal/beach-dog.jpeg';
+interface Props { id: string; }
+const { id } = Astro.props;
+const photos = [
+  { src: diving, title: 'Diving', alt: 'A freediver below a pod of dolphins in clear blue water.' },
+  { src: hiking, title: 'Hiking & photography', alt: 'A steep staircase follows a green mountain ridge above a coastal town.' },
+  { src: beachDog, title: 'By the water', alt: 'A dog on a sandy beach in warm sunlight.' },
+];
+---
+<div class="photo-stack" data-photo-stack role="group" aria-label="Personal photographs">
+  <div class="photo-stack-stage" id={`${id}-photos`}>
+    {photos.map((photo, index) => <figure class="stack-print" data-photo-index={index} data-photo-title={photo.title}>
+      <button type="button" aria-label={`Show photo: ${photo.title}`} disabled>
+        <Image src={photo.src} alt={photo.alt} width={540} widths={[360,540,720]} sizes="230px" format="webp" quality={85} loading="lazy" decoding="async" />
+      </button>
+    </figure>)}
+  </div>
+  <div class="photo-stack-footer" hidden>
+    <span class="photo-stack-status" data-photo-status aria-live="polite" aria-atomic="true"></span>
+    <div class="photo-stack-controls">
+      <button type="button" data-photo-prev aria-label="Previous photograph" aria-controls={`${id}-photos`}>←</button>
+      <button type="button" data-photo-next aria-label="Next photograph" aria-controls={`${id}-photos`}>→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  document.querySelectorAll<HTMLElement>('[data-photo-stack]').forEach(stack => {
+    const prints = Array.from(stack.querySelectorAll<HTMLElement>('[data-photo-index]'));
+    const buttons = prints.map(print => print.querySelector<HTMLButtonElement>('button')!);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let active = 0;
+    const select = (index: number, animate = true) => {
+      active = (index + prints.length) % prints.length;
+      prints.forEach((print, i) => {
+        const position = (i - active + prints.length) % prints.length;
+        const front = position === 0;
+        const left = position === 1;
+        print.style.zIndex = String(front ? 3 : left ? 1 : 2);
+        buttons[i].setAttribute('aria-pressed', String(front));
+        gsap.to(print, { xPercent: front ? 0 : left ? -28 : 28, y: front ? -8 : left ? 11 : 18, rotation: front ? -2 : left ? -12 : 11, scale: front ? 1 : .91, duration: animate && !reduced.matches ? .55 : 0, ease: 'power3.out', overwrite: true });
+      });
+      const photo = prints[active];
+      stack.querySelector('[data-photo-status]')!.textContent = `Photo ${active + 1} of ${prints.length}: ${photo.dataset.photoTitle}`;
+    };
+    buttons.forEach((button, i) => {
+      button.disabled = false;
+      button.addEventListener('click', () => select(i));
+      // A focused print is always brought fully into view.
+      button.addEventListener('focus', () => { if (active !== i) select(i); });
+    });
+    stack.addEventListener('keydown', event => {
+      if (!buttons.includes(event.target as HTMLButtonElement)) return;
+      let next: number;
+      if (event.key === 'ArrowRight') next = (active + 1) % prints.length;
+      else if (event.key === 'ArrowLeft') next = (active + prints.length - 1) % prints.length;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = prints.length - 1;
+      else return;
+      event.preventDefault(); select(next); buttons[next].focus();
+    });
+    stack.querySelector('[data-photo-prev]')!.addEventListener('click', () => select(active - 1));
+    stack.querySelector('[data-photo-next]')!.addEventListener('click', () => select(active + 1));
+    stack.classList.add('is-ready');
+    stack.querySelector<HTMLElement>('.photo-stack-footer')!.hidden = false;
+    select(0, false);
+    reduced.addEventListener('change', () => select(active, false));
+  });
+</script>
+
+<style>
+  .photo-stack { width: 100%; min-width: 0; max-width: 440px; margin-inline: auto; container-type: inline-size; }
+  .photo-stack-stage { display: grid; gap: 20px; }
+  .stack-print { margin: 0; }
+  .stack-print button { display: block; width: 100%; padding: 10px 10px 24px; border: 1px solid #e1dfd7; background: #fffefb; box-shadow: 0 8px 22px -12px #27332e66; cursor: pointer; border-radius: 2px; }
+  .stack-print button:disabled { cursor: default; }
+  .stack-print :global(img) { width: 100%; height: auto; }
+  .is-ready .photo-stack-stage { display: grid; place-items: center; height: 362px; padding-top: 14px; }
+  .is-ready .stack-print { grid-area: 1 / 1; width: clamp(140px, 60%, 222px); transform-origin: 50% 80%; }
+  .is-ready .stack-print :global(img) { aspect-ratio: 2 / 3; object-fit: cover; }
+  .stack-print button:focus-visible { outline-offset: 5px; }
+  .photo-stack-footer { display: flex; justify-content: flex-end; align-items: center; padding: 12px 4px 0; }
+  .photo-stack-footer[hidden] { display: none; }
+  .photo-stack-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+  .photo-stack-controls { display: flex; gap: 6px; }
+  .photo-stack-controls button { width: 44px; height: 44px; border: 1px solid var(--color-line); background: transparent; border-radius: 50%; cursor: pointer; font-size: 1.1rem; }
+  .photo-stack-controls button:hover { background: var(--color-wash); }
+  @container (max-width: 280px) {
+    .is-ready .photo-stack-stage { height: 285px; }
+    .photo-stack-controls { gap: 2px; }
+  }
+  @media (max-width: 640px) {
+    .photo-stack { max-width: 340px; }
+    .is-ready .photo-stack-stage { height: 338px; }
+  }
+</style>

@@ -16,7 +16,7 @@ const total = favoriteEpisodeShows.reduce((sum, show) => sum + show.episodes.len
     <h3 class="episode-show-heading" id={`episode-heading-${show.id}`}>{show.title}</h3>
     <ol class="episode-list" role="list" data-episode-list>
       {show.episodes.map((episode, index) => <li>
-        <a class="episode-link" href={episode.href}>
+        <a class="episode-link" href={episode.href} target="_blank" rel="noopener noreferrer">
           <div class="episode-art">
             <Image src={episode.image} alt={`${show.title} episode artwork`} width={96} widths={[96, 192]} sizes="60px" format="webp" quality={85} loading="lazy" decoding="async" />
             <span class="episode-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>

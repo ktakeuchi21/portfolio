@@ -1,0 +1,34 @@
+---
+import { withBase } from '../lib/site';
+const overviewPaths = [withBase('/'), withBase('/projects/')];
+---
+<!-- This tiny head script runs before the incoming document's first paint. -->
+<script is:inline define:vars={{overviewPaths}}>
+  (() => {
+    const projectSlug = url => new URL(url, location.href).pathname.match(/\/projects\/([a-z0-9-]+)\/?$/)?.[1];
+    const isOverview = url => overviewPaths.some(path => path.replace(/\/$/, '') === new URL(url, location.href).pathname.replace(/\/$/, ''));
+    const images = () => Array.from(document.querySelectorAll('[data-project-image]'));
+    const restore = () => images().forEach(image => { image.style.viewTransitionName = `project-${image.dataset.projectImage}`; });
+    const prepare = (transition, from, to) => {
+      if (!transition) return;
+      let ready = false;
+      // A resize or an intentional skip can reject ready; normal navigation still succeeds.
+      transition.ready.then(() => { ready = true; }, () => { document.documentElement.dataset.projectTransitionState = 'skipped'; });
+      transition.finished.then(() => {
+        restore();
+        if (ready) document.documentElement.dataset.projectTransitionState = 'complete';
+      }, restore);
+      if (!from || !to) { transition.skipTransition(); return; }
+      const fromSlug = projectSlug(from);
+      const toSlug = projectSlug(to);
+      const slug = isOverview(from) && toSlug ? toSlug : isOverview(to) && fromSlug ? fromSlug : undefined;
+      if (!slug || matchMedia('(prefers-reduced-motion: reduce)').matches) { transition.skipTransition(); return; }
+      // Only the selected project's image participates; other thumbnails stay in the page snapshot.
+      images().forEach(image => { image.style.viewTransitionName = image.dataset.projectImage === slug ? `project-${slug}` : 'none'; });
+      document.documentElement.dataset.projectTransition = slug;
+      document.documentElement.dataset.projectTransitionState = 'running';
+    };
+    window.addEventListener('pageswap', event => prepare(event.viewTransition, location.href, event.activation?.entry?.url));
+    window.addEventListener('pagereveal', event => prepare(event.viewTransition, window.navigation?.activation?.from?.url, location.href));
+  })();
+</script>

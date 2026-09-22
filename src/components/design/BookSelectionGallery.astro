@@ -1,0 +1,72 @@
+---
+import BookCarousel from '../BookCarousel.astro';
+import { withBase } from '../../lib/site';
+const options = [
+  { id: 'lift', title: 'Soft lift', description: 'A small lift and a soft shadow. The real cover does the work, with no frame around it.', trait: 'My pick: familiar, quiet, and tactile.' },
+  { id: 'bookmark', title: 'Bookmark ribbon', description: 'The book stays on the shelf. A small green ribbon marks the selected cover.', trait: 'A more literal library detail, with very little movement.' },
+  { id: 'spotlight', title: 'Quiet spotlight', description: 'Nearby covers become slightly muted while the selected book stays bright and comes forward just a little.', trait: 'The strongest emphasis, without drawing a border.' },
+  { id: 'marker', title: 'Stationary marker', description: 'All covers stay at the same height. A small green line above the selected book identifies it.', trait: 'The most restrained option, with a steady shelf line.' },
+];
+---
+<div class="page-width selection-study" data-selection-study data-selection-style="lift">
+  <header class="study-intro">
+    <a class="back" href={withBase('/about/#learning-books')}>← Back to the bookshelf</a>
+    <p class="eyebrow">Bookshelf / Selected state explorations</p>
+    <h1>A quieter way to <em>choose.</em></h1>
+    <p class="intro-copy">The same overlapping shelf, with four ways to bring one book into focus.</p>
+  </header>
+  <div class="style-picker" role="group" aria-label="Book selection style" hidden>
+    {options.map((option, i) => <button type="button" data-selection-option={option.id} data-description={option.description} data-trait={option.trait} aria-pressed={i === 0 ? 'true' : 'false'}><span>0{i + 1}</span>{option.title}</button>)}
+  </div>
+  <div class="option-note" aria-live="polite" aria-atomic="true"><p data-selection-description>{options[0].description}</p><p class="trait" data-selection-trait>{options[0].trait}</p></div>
+  <BookCarousel variant="overlap" headingId="selection-study-books" headingLevel={2} withCategories />
+  <p class="focus-note">Try another style, then hover over or tap a book. Keyboard focus uses small corner marks so it stays visible without a heavy frame.</p>
+  <noscript><p>This preview shows Soft lift. Enable JavaScript to compare the other three treatments.</p></noscript>
+</div>
+
+<script>
+  const study = document.querySelector<HTMLElement>('[data-selection-study]');
+  if (study) {
+    const buttons = [...study.querySelectorAll<HTMLButtonElement>('[data-selection-option]')];
+    buttons.forEach(button => button.addEventListener('click', () => {
+      study.dataset.selectionStyle = button.dataset.selectionOption;
+      buttons.forEach(option => option.setAttribute('aria-pressed', String(option === button)));
+      study.querySelector<HTMLElement>('[data-selection-description]')!.textContent = button.dataset.description!;
+      study.querySelector<HTMLElement>('[data-selection-trait]')!.textContent = button.dataset.trait!;
+    }));
+    study.querySelector<HTMLElement>('.style-picker')!.hidden = false;
+  }
+</script>
+
+<style>
+  .selection-study { padding-top: 24px; }
+  .back { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-muted); font-size: .8rem; margin-bottom: 18px; text-decoration: underline; }
+  .eyebrow { color: var(--color-muted); }
+  h1 { font: 400 clamp(2.8rem,5.5vw,4.25rem)/1.1 var(--font-display); letter-spacing: -.035em; margin: 15px 0 12px; }
+  h1 em { color: var(--color-accent); }
+  .intro-copy { color: var(--color-muted); }
+  .style-picker { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 26px; }
+  .style-picker[hidden] { display: none; }
+  .style-picker button { display: flex; gap: 12px; align-items: center; min-height: 52px; text-align: left; padding: 12px 16px; background: transparent; color: var(--color-ink); border: 1px solid var(--color-line); border-radius: 3px; cursor: pointer; font-size: .8125rem; }
+  .style-picker button span { font-size: .7rem; opacity: .8; }
+  .style-picker button[aria-pressed="true"] { background: var(--color-accent); border-color: var(--color-accent); color: white; }
+  .style-picker button:hover:not([aria-pressed="true"]) { background: var(--color-wash); }
+  .option-note { padding: 18px 0; min-height: 96px; font-size: .875rem; }
+  .trait { color: var(--color-muted); font-size: .75rem; margin-top: 5px; }
+  .focus-note, noscript p { color: var(--color-muted); font-size: .8rem; margin-top: 18px; max-width: 80ch; }
+
+  /* Soft lift is the shared default; alternatives remain preview-only. */
+  .selection-study :global(.shelf-jacket::after) { content: ''; position: absolute; pointer-events: none; opacity: 0; background: #3b594c; }
+
+  [data-selection-style="bookmark"] :global(.shelf-rail.shelf-overlap),
+  [data-selection-style="marker"] :global(.shelf-rail.shelf-overlap) { --lift: 0px; }
+  [data-selection-style="bookmark"] :global(.shelf-ready .is-current .shelf-jacket::after) { opacity: 1; width: 11px; height: 29px; top: -8px; right: 13px; clip-path: polygon(0 0,100% 0,100% 100%,50% 80%,0 100%); }
+  [data-selection-style="spotlight"] :global(.shelf-rail.shelf-overlap) { --lift: 5px; }
+  [data-selection-style="spotlight"] :global(.shelf-ready .shelf-item:not(.is-current) .shelf-jacket) { filter: saturate(.45) brightness(.84); }
+  [data-selection-style="marker"] :global(.shelf-ready .is-current .shelf-jacket::after) { opacity: 1; width: 28px; height: 4px; top: -14px; left: calc(50% - 14px); border-radius: 2px; }
+  @media (max-width: 640px) {
+    .style-picker { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+    .style-picker button { font-size: .75rem; gap: 8px; padding-inline: 12px; }
+    .option-note { min-height: 134px; }
+  }
+</style>
