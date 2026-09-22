@@ -55,7 +55,9 @@ Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, and the six 
 
 ## Visitor analytics
 
-The Umami integration is prepared but disabled until the portfolio has its own website ID. The existing Umami Hobby account currently permits one website, occupied by Pathway. Do not reuse Pathway's ID or upgrade the account without resolving that choice with the owner.
+The portfolio uses its own **Kai Takeuchi Portfolio** entry in Umami Cloud Hobby. On September 22, 2026, the owner approved deleting Pathway's analytics entry and history to free the account's website slot. The portfolio has a new website ID; Pathway's retired ID is not reused. No paid plan is required.
+
+View the [private portfolio dashboard](https://cloud.umami.is/analytics/us/websites/a5fed162-9914-4594-9688-665df6e082f0) while signed into the owner's Umami account. Collection starts with the portfolio's activation; there is no historical backfill or public dashboard link.
 
 Set the public GitHub Actions repository variable `PUBLIC_UMAMI_WEBSITE_ID` to the portfolio website ID, then rebuild and deploy. `.env.example` documents the equivalent local build setting. This identifier is public; no account credentials or API keys are needed. Tracking requires a production build with the real `SITE_URL` and an exact HTTPS `kaitakeuchi.com` or `www.kaitakeuchi.com` browser location. Localhost, preview domains, design mocks, and unconfigured builds do not load the Umami tracker.
 
@@ -63,7 +65,7 @@ Collected events are page views, `outbound-link` (destination without query/hash
 
 To exclude your own browser, visit `https://kaitakeuchi.com/?analytics=off` after deployment. This stores Umami's standard `umami.disabled=1` preference on that origin. Use `?analytics=on` to re-enable tracking. Do Not Track and Global Privacy Control are respected. Ad blockers, network failures, and very short visits can cause undercounting. Tracker failures never interrupt navigation. Tests should intercept collection rather than send synthetic traffic to the live dashboard.
 
-After activation, verify a controlled visit in the private Umami dashboard before reporting collection as live. Account website/event limits and retention depend on the selected plan.
+After changing the website ID or tracker, verify a controlled visit in the private Umami dashboard before reporting collection as live. Account website/event limits and retention depend on the selected plan.
 
 ## Add or update content
 

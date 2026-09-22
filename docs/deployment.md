@@ -33,4 +33,10 @@ Push validated changes to `main` and confirm the Actions run completes successfu
 
 GitHub Pages manages the TLS certificate. If the domain or HTTPS setting changes, run the workflow again so generated canonical and social URLs use the current origin. With a custom Actions workflow, GitHub's Pages settings are authoritative; a source `CNAME` file is not required.
 
+## Analytics configuration
+
+The repository variable `PUBLIC_UMAMI_WEBSITE_ID` points to the portfolio's dedicated Umami website entry. The Pages workflow injects it at build time; changing the variable requires a new deployment. Removing it and redeploying disables collection. This is a public tracking identifier, not an account credential.
+
+On September 22, 2026, the owner explicitly approved retiring Pathway's analytics and deleting its history to free the Hobby slot. The new portfolio entry uses a different ID so the old application tracker cannot contribute to the portfolio dashboard. The Pathway application itself was not changed. Dashboard access remains private; no sharing link, paid upgrade, replay, or heatmap feature was enabled.
+
 Reference: [GitHub Pages HTTPS setup](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
