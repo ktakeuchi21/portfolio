@@ -24,7 +24,7 @@ The five screenshots come from Kai’s project documentation and demos, copied u
 - `pathway-workspace.png`: 1440 × 900, the public repository’s desktop workspace screenshot with a synthetic case.
 - `what-i-made-map.png`: 390 × 844, the public repository’s fictional sample map screenshot, recaptured September 15 with the current country-density map. The source app’s complete media attribution is preserved to retain the provenance of any visible thumbnail fragments; its country boundaries use public-domain Natural Earth data.
 - `interlude-today.jpg`: 1280 × 720, the public Interlude repository’s Today view, captured September 15 with a synthetic Demo profile and learning history. The same image appears on its project card and case-study cover.
-- `table-for-one-order.png`: 1440 × 1496, copied from `docs/screenshots/desktop-order.png` in the private Table for One repository after Kai pushed the images and requested their use. The README identifies these as local-simulator screenshots with demo customer details and dummy payments. The image is used on the project card and case-study cover; no private repository link is offered as a public action.
+- `table-for-one-order.png`: 1440 × 2998, refreshed October 9, 2026 with an unchanged copy of `docs/screenshots/voice-order-desktop.png` from the private Table for One repository. The local simulator uses synthetic orders and dummy payment behavior; the capture made no real calls, charges, or transcription requests. The image appears on the project card and case-study cover. The private repository and app are not linked publicly.
 
 ## Fonts and technical references
 
@@ -98,3 +98,10 @@ The case study is grounded in the public `ktakeuchi21/ai-evaluation-governance-l
 `public/images/ai-evaluation-workspace.png` is an unmodified browser capture of the running local Demo Alpha case workspace. Its 1152 × 1094 main-content capture shows only authored synthetic fixtures. No simulator action was submitted to create the screenshot. The source link is public; no live-demo link or local address is published. Design lessons summarize documented implementation choices rather than invented firsthand retrospectives.
 
 Kai requested this project second in Healthcare and Clinician Matching last. Clinician Matching did not appear in the accessible GitHub repository list at the time of this update; its link has been requested before adding a narrative.
+
+
+## Table for One update (October 9, 2026)
+
+Kai supplied the first-person motivation: Saturday visits with his son to a nearby children's museum where they have a membership, followed by STK cheeseburgers. Repeated explanations to the restaurant's voice AI made ordering two cheeseburgers take too long. The narrative uses that account without naming an uncertain museum or claiming the assistant already handles those trips.
+
+The private project's current code and release documentation support the v8 feature description, 379 passing automated tests, and 19 local simulated-call scenarios. V8 is built but not deployed; the older STK v7 AWS release has calling disabled. Real-model conversation evaluation, controlled audio calls, and physical iPhone dictation still need validation. Automatic real-card payment is not implemented. No private repository or live-app link was added.

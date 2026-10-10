@@ -4,66 +4,71 @@ slug: table-for-one
 category: personal
 ownership: independent
 status: in-development
-role: Product design & prototyping
+role: Product design & implementation
 audience: A person delegating a takeout phone order
-summary: "A voice takeout assistant exploring how to review an order, delegate a phone call, and take over when the conversation needs a person."
+summary: "A personal takeout assistant inspired by Saturday museum trips with my son, built to turn our usual cheeseburger order into one reviewed request."
 featured: false
 order: 5
 draft: false
 image:
   src: /images/table-for-one-order.png
-  alt: "Table for One’s desktop order screen, with cheeseburger preparation, card nickname selection, tip, and spending limit controls."
+  alt: "Table for One’s desktop order composer, with voice or text input, a saved restaurant, multiple items, pickup time, payment preference, tip, and spending limit."
   width: 1440
-  height: 1496
-  caption: "The local simulator uses demo customer details and dummy payments. No real calls or charges are made."
-tags: [React, Twilio, OpenAI Realtime]
+  height: 2998
+  caption: "The v8 local simulator uses synthetic orders and dummy payment behavior. This capture made no real calls, charges, or transcription requests."
+tags: [React, Twilio, OpenAI Realtime, AWS]
 ---
 
 import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
 import TechnologyStack from '../../components/TechnologyStack.astro';
 
-## The product question
+## Why I built it
 
-A phone order looks simple until the restaurant puts someone on hold, asks about a substitution, or needs a decision that was not in the original request. Delegating the call means deciding which choices an assistant may make and when it should return control.
+On Saturdays, my son and I visit a nearby children's museum where we have a membership. Afterward, we get cheeseburgers from STK.
 
-Table for One explores that boundary through a private takeout-calling assistant. My role combines product design and prototyping. The project is deliberately bounded around one person’s reviewed order, rather than a general agent that can purchase anything it is asked to find.
+Ordering two cheeseburgers should be a small part of that routine. But explaining the same order to the restaurant's voice AI took too long. I wanted to tap a saved favorite or say what we wanted, review it once, and have my own assistant handle the call.
+
+That became Table for One, a private web app for my takeout orders. I designed and built it around our usual order, then expanded it to saved restaurants and different meals. The new build is ready for further testing; restaurant calling remains disabled.
 
 ## The experience
 
-The current experience runs in a local simulator. A person describes an order, reviews its details and spending limit, then starts a simulated call. The app shows the order’s state and supports human intervention when the conversation moves beyond the approved request. Restaurant calling remains disabled pending controlled validation.
+I can speak or type an order, or load a saved favorite. The app turns the request into editable fields for the exact restaurant location, each item and quantity, special requests, and pickup time. Missing or ambiguous details need an answer before I can continue.
 
-The local simulator exercises holds, intervention, startup failures, and payment interruptions without calling a restaurant. Human takeover is designed to preserve the restaurant conversation while disconnecting the AI and privately briefing the owner. Order history records what is known; an uncertain call result must remain uncertain until there is evidence to reconcile it.
+I choose a card nickname or payment at pickup, add a tip, and set a maximum total. A separate review screen shows the whole order before submission. Speaking or filling in a draft cannot start a call. During a call, the restaurant must confirm the items, price, and pickup time within those limits.
+
+If a modification is refused or the conversation needs my help, the assistant can ask me to join the same call. The app tracks the confirmed total, ready time, and outcome. Payment at pickup stays marked as due, and an unclear outcome stays unresolved.
 
 ## How it works
 
-<ArchitectureFlow label="A reviewed order with bounded voice delegation" steps={[
-  { title: 'Review and authorize', detail: 'The React PWA submits an explicit order and spending boundary through the authenticated API.' },
-  { title: 'Record before acting', detail: 'The service stores durable order and call state before requesting an external action.' },
-  { title: 'Connect the voice worker', detail: 'Twilio carries the telephone audio; an on-demand EC2 worker bridges it to OpenAI Realtime.' },
-  { title: 'Resolve or hand back', detail: 'The coordinator tracks outcomes and can move the existing conversation into human takeover.' }
-]} note="This describes the implemented architecture. Restaurant calling remains disabled pending controlled validation; real-card automation is not enabled." />
+<ArchitectureFlow label="From a spoken request to a reviewed phone order" steps={[
+  { title: 'Describe and review', detail: 'Voice or text becomes an editable draft using saved restaurant details and order preferences.' },
+  { title: 'Save the approved order', detail: 'The authenticated service records the exact location, items, pickup request, and spending limit before acting.' },
+  { title: 'Connect the call', detail: 'Twilio carries telephone audio; an on-demand EC2 worker connects it to OpenAI Realtime.' },
+  { title: 'Confirm or ask for help', detail: 'The service tracks restaurant confirmations and can hand the existing call to me.' }
+]} note="The v8 implementation is built but not deployed. Live restaurant calling and automatic real-card payment are disabled." />
 
-The website and durable state remain available when the voice worker is off. Call creation has its own recorded identity and outcome, so a lost response does not justify blindly dialing again. Model tools request bounded actions; they cannot silently replace the approved destination or spending limit.
+The website and order records stay available while the voice worker is off. Call attempts have a saved identity, so a lost response does not justify dialing again. Editing a saved restaurant cannot change the destination of an order already submitted.
 
 ## Stack and choices
 
 <TechnologyStack items={[
-  { layer: 'Review and control', tools: 'React · TypeScript · Vite · Fastify', purpose: 'Keep the order, authorization, and intervention controls together.' },
-  { layer: 'Voice', tools: 'Twilio · OpenAI Realtime · WebSockets', purpose: 'Connect telephone audio with an assistant and explicit takeover behavior.' },
-  { layer: 'State and delivery', tools: 'AWS Lambda · DynamoDB · S3/CloudFront', purpose: 'Keep the app and order records independent of an active voice session.' },
-  { layer: 'Voice runtime', tools: 'EC2 · AWS CDK', purpose: 'Provision and start the persistent connection worker when needed.' }
+  { layer: 'Order and review', tools: 'React PWA · TypeScript · Vite · Fastify', purpose: 'Keep the editable draft, review, history, and takeover controls together.' },
+  { layer: 'Voice and text input', tools: 'OpenAI transcription · structured outputs', purpose: 'Turn a short request into fields that I can check before ordering.' },
+  { layer: 'Phone conversation', tools: 'Twilio · OpenAI Realtime · WebSockets', purpose: 'Connect restaurant audio with the assistant and support human takeover.' },
+  { layer: 'App and order records', tools: 'AWS Lambda · DynamoDB · S3/CloudFront', purpose: 'Keep the app available without an always-running voice server.' },
+  { layer: 'Voice worker', tools: 'EC2 · AWS CDK', purpose: 'Start the persistent connection worker when a call needs it.' }
 ]} />
 
 ## Decisions and design lessons
 
-**Uncertainty is a real state.** A timed-out request does not prove that a call failed to start. Durable action records and evidence-based recovery matter more than making every error immediately retryable.
+**A favorite still needs review.** Saved items remove repetition, but the restaurant, quantities, pickup time, and spending limit remain visible. The assistant cannot quietly swap an item or accept a higher total.
 
-**Taking over is part of the core journey.** A useful assistant needs a practical way to hand the conversation back. Preserving the existing call is different from telling the user to start again.
+**An unclear outcome needs checking.** A dropped connection does not prove that an order failed. The app preserves the submitted request for recovery and gives me a way to take over the conversation.
 
-**Payment cannot inherit conversational trust.** A fluent model response is not authorization or proof of payment. The payment laboratory uses dummy credentials and isolated test behavior; real-card automation remains a separate unresolved capability.
+**Payment needs its own boundary.** The app saves card nicknames and last four digits only. Real card payment needs my private participation. Automatic card entry is not implemented, and a restaurant's promise to accept payment at pickup does not count as a payment.
 
 ## Current state and next step
 
-AWS components and the newer voice implementation are deployed, while restaurant calling remains disabled. Documented local checks cover deterministic scenarios, recovery, and transport behavior against fixtures. Those checks do not prove real restaurant interactions, payment handling, or physical-device reliability.
+As of October 9, 2026, the v8 implementation passes 379 automated tests and 19 local simulated-call scenarios. It supports saved restaurants and favorites, voice or text drafts, multiple items, requested pickup times, review, and takeover controls. These checks use synthetic data and do not prove real restaurant or iPhone behavior.
 
-The next milestone is controlled voice validation with a consenting test recipient, before widening the scope. Autonomous restaurant ordering has not yet been validated.
+The older STK v7 release is deployed on AWS with calling disabled. The new v8 build has not been deployed or evaluated in new real-model or audio calls. Next are model-conversation evaluation, a controlled call with a consenting test recipient, and physical iPhone dictation checks before enabling restaurant calls. Real-card automation remains outside this release.

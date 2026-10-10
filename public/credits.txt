@@ -6,7 +6,7 @@ Pathway: https://github.com/ktakeuchi21/case-resolution-agent/blob/main/docs/scr
 Patient Access Orchestration: https://patient-access-orchestration.ktakeuchi.chatgpt.site/assets/workflow-overview-Ch28Rs4H.png
 What I Made: https://github.com/ktakeuchi21/what-i-made/blob/main/docs/assets/readme/map.png
 Interlude: https://github.com/ktakeuchi21/interlude/blob/main/docs/screenshots/today.jpg
-Table for One: Desktop ordering screenshot supplied by Kai from the private project documentation (docs/screenshots/desktop-order.png). Captured from the local simulator using demo customer details and dummy payments; no real calls or charges.
+Table for One: Desktop voice-order composer screenshot, 1440 × 2998, copied unchanged October 9, 2026 from the private project documentation (docs/screenshots/voice-order-desktop.png). Captured from the local simulator with synthetic orders and dummy payment behavior; no real calls, charges, or transcription requests. The private repository and app are not linked publicly.
 
 Interlude and What I Made screenshots were captured on September 15, 2026. Interlude uses a synthetic Demo profile and learning history. What I Made shows a fictional public sample archive, with Natural Earth public-domain country boundaries in its map.
 

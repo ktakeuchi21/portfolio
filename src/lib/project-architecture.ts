@@ -45,10 +45,10 @@ export const projectArchitecture: Record<string, ProjectArchitecture> = {
   },
   'table-for-one': {
     steps: [
-      { title: 'Review & record an order', technology: 'React · Fastify · DynamoDB' },
-      { title: 'Connect the voice worker', technology: 'EC2 · Twilio · OpenAI Realtime' },
-      { title: 'Resolve or hand back', technology: 'Durable state · human takeover' },
+      { title: 'Speak, type & review', technology: 'React · OpenAI transcription & extraction' },
+      { title: 'Save & call on demand', technology: 'AWS · Twilio · OpenAI Realtime' },
+      { title: 'Confirm or take over', technology: 'Order records · human intervention' },
     ],
-    note: 'Local simulator. Restaurant calling is disabled.',
+    note: 'New build not deployed. Restaurant calling disabled.',
   },
 };
