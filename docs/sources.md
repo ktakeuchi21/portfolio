@@ -91,13 +91,15 @@ The four How I AI destinations are the exact Apple Podcasts URLs Kai supplied, i
 
 A single horizontal row per show, selected by tabs, replaces the stacked episode grid. Adding more episodes extends the row without adding rows to the page. The books and show-level coverflow remain unchanged.
 
-## AI Evaluation & Governance Lab (September 16, 2026)
+## AI Evaluation & Governance Lab (October 10, 2026)
 
-The case study is grounded in the public `ktakeuchi21/ai-evaluation-governance-lab` README at revision `e8c013b5497482714fcd8e3b1f100695e3e475ca`, its architecture documentation, and ADR 0003 on independent evaluation and human control. The published implementation is Milestone 2: persistent synthetic cases and explicit manual simulator actions. Agent runs, evaluation, durable human review, and analytical integrations remain planned. The narrative keeps those stages distinct and makes no outcome or compliance claims.
+The refreshed case study is grounded in the current local `ai-evaluation-governance-lab` implementation, `evaluation/README.md`, the bundled recorded reports, and the evidence manifest for the case-study artifacts. Foundry generation, independent automatic checks, source/output comparisons, persistent reviewer assessments, run controls, exports, and page walkthroughs are implemented. The project remains in development with no public live-app URL.
 
-`public/images/ai-evaluation-workspace.png` is an unmodified browser capture of the running local Demo Alpha case workspace. Its 1152 × 1094 main-content capture shows only authored synthetic fixtures. No simulator action was submitted to create the screenshot. The source link is public; no live-demo link or local address is published. Design lessons summarize documented implementation choices rather than invented firsthand retrospectives.
+The original 24-case comparison passed all eight automatic checks for both prompts. With the prompts frozen, a separate 12-case holdout returned 11/12 for baseline and 12/12 for the grounded checklist. This is 72 comparison outputs over 36 authored cases, with one output per case and prompt. The native groundedness demonstration evaluated two selected recorded summaries, using the same model as generator and judge; its scores do not establish an independent or general quality result. About $0.33 is the estimated model token charge across those runs, the connection test, and two judge calls, not a billed Azure total. Human assessments, expert validation, and staff time savings remain unmeasured.
 
-Kai requested this project second in Healthcare and Clinician Matching last. Clinician Matching did not appear in the accessible GitHub repository list at the time of this update; its link has been requested before adding a narrative.
+`public/images/ai-evaluation-workspace.png` is a fresh browser capture of the evaluation workbench on October 10, 2026. It replaces the older Demo Alpha case screenshot. The workbench displays retained model outputs and their authored source evidence. The capture makes no model request or assessment write. `/documents/ai-evaluation-case-study.pdf` supplies the refreshed downloadable case study. No local app address, account identifier, or authenticated cloud report URL is published.
+
+Kai requested this project second in Healthcare and Clinician Matching last. Clinician Matching did not appear in the accessible GitHub repository list at the time of the original update; it has not been added without a source.
 
 
 ## Table for One update (October 9, 2026)

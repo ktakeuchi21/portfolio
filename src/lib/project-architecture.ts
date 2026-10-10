@@ -38,11 +38,11 @@ export const projectArchitecture: Record<string, ProjectArchitecture> = {
   },
   'ai-evaluation-governance-lab': {
     steps: [
-      { title: 'Inspect a synthetic case', technology: 'Next.js · typed HTTP proxy' },
-      { title: 'Run an explicit action', technology: 'FastAPI · simulator APIs' },
-      { title: 'Keep service state separate', technology: 'PostgreSQL · isolated schemas' },
+      { title: 'Run a controlled experiment', technology: 'Microsoft Foundry · GPT-5 mini' },
+      { title: 'Compare outputs with sources', technology: 'Next.js · independent task checks' },
+      { title: 'Save a reviewer assessment', technology: 'FastAPI · SQLite' },
     ],
-    note: 'Current build: manual actions, no agent execution.',
+    note: 'Versioned prompts and evidence stay attached to each run.',
   },
   interlude: {
     steps: [

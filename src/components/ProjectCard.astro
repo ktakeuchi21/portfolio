@@ -7,7 +7,7 @@ import Icon from './Icon.astro';
 import ProjectVisual from './ProjectVisual.astro';
 import { caseStudyPath, projectStatuses } from '../lib/content';
 import { externalLinkAttributes, withBase } from '../lib/site';
-interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3'; interactiveImage?: boolean; }
+interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3' | 'h4'; interactiveImage?: boolean; }
 const { entry, headingLevel: Heading = 'h3', interactiveImage = false } = Astro.props;
 const { title, summary, image, tags, liveDemo, github, slug, status, category } = entry.data;
 const caseStudy = caseStudyPath(entry);

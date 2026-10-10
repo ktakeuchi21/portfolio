@@ -1,0 +1,174 @@
+---
+import { homeProjectGroups } from '../lib/content';
+---
+<div class="home-sections page-width" data-home-sections>
+  <nav class="section-nav" aria-label="On this page" data-section-nav>
+    <p class="eyebrow">On this page</p>
+    <ul class="section-nav-main">
+      <li><a href="#experience">Experience</a></li>
+      <li class="section-nav-projects">
+        <a href="#projects" data-projects-parent>Projects</a>
+        <ul class="section-nav-categories" aria-label="Project categories">
+          {homeProjectGroups.map(group => <li><a href={`#${group.anchor}`} aria-controls={group.anchor} data-category-link>{group.title}</a></li>)}
+        </ul>
+      </li>
+      <li><a href="#about">About me</a></li>
+    </ul>
+  </nav>
+  <div class="home-sections-body"><slot /></div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-home-sections]');
+  const nav = root?.querySelector<HTMLElement>('[data-section-nav]');
+
+  if (root && nav) {
+    const entries = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a')).flatMap(link => {
+      const section = document.getElementById(link.hash.slice(1));
+      return section ? [{ link, section }] : [];
+    });
+    const compact = window.matchMedia('(max-width: 1000px)');
+    const categories = entries.filter(entry => entry.section.hasAttribute('data-home-project-group'));
+    const projects = entries.find(entry => entry.section.id === 'projects')!;
+    let selected = '';
+    let frame = 0;
+    let current = '';
+
+    const categoryFromHash = () => categories.find(entry => entry.link.hash === location.hash);
+    const selectCategory = (id: string) => {
+      const next = categories.find(entry => entry.section.id === id);
+      if (!next || id === selected) return false;
+      next.section.hidden = false;
+      // History navigation can hide a panel that still contains keyboard focus.
+      if (categories.some(entry => entry !== next && entry.section.contains(document.activeElement))) {
+        next.section.focus({ preventScroll: true });
+      }
+      categories.forEach(entry => {
+        entry.section.hidden = entry !== next;
+        entry.link.toggleAttribute('data-selected', entry === next);
+      });
+      selected = id;
+      document.dispatchEvent(new Event('portfolio:home-project-layout'));
+      return true;
+    };
+
+    const update = () => {
+      frame = 0;
+      // Read section positions together; leave the URL and keyboard focus alone while scrolling.
+      const threshold = compact.matches ? Math.max(128, nav.getBoundingClientRect().bottom + 48) : 128;
+      const visible = entries.filter(entry => !entry.section.hidden);
+      const positions = visible.map(entry => entry.section.getBoundingClientRect().top);
+      let active = visible[0];
+      positions.forEach((top, index) => { if (top <= threshold) active = visible[index]; });
+      if (active === projects) active = categories.find(entry => entry.section.id === selected)!;
+      // A short final section may never reach the threshold on a tall display.
+      if (scrollY > 0 && Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2) active = visible[visible.length - 1];
+      if (active.section.id === current) return;
+      current = active.section.id;
+      entries.forEach(entry => {
+        if (entry === active) entry.link.setAttribute('aria-current', 'location');
+        else entry.link.removeAttribute('aria-current');
+      });
+      projects.link.toggleAttribute('data-section-active', active === projects || categories.includes(active));
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const scrollTo = (section: HTMLElement, smooth: boolean) => {
+      // Keep the Projects heading in view when changing its category.
+      const target = section.hasAttribute('data-home-project-group') ? projects.section : section;
+      const anchor = target.querySelector('.section-header') ?? target;
+      anchor.scrollIntoView({ block: 'start', behavior: smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+    };
+
+    nav.addEventListener('click', event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = (event.target as Element).closest('a');
+      const entry = entries.find(item => item.link === link);
+      if (!entry) return;
+      event.preventDefault();
+      const changed = selectCategory(entry.section.id);
+      if (location.hash !== entry.link.hash) {
+        history.pushState({ ...history.state, homeProjectCategory: selected }, '', entry.link.hash);
+      }
+      if (changed) document.dispatchEvent(new CustomEvent('portfolio:project-category', { detail: entry.section.dataset.homeProjectGroup }));
+      // Focus without a competing browser scroll, including when Enter activates a link.
+      entry.section.focus({ preventScroll: true });
+      scrollTo(entry.section, true);
+      schedule();
+    });
+
+    const restore = () => {
+      const category = categoryFromHash();
+      selectCategory(category?.section.id || history.state?.homeProjectCategory || selected);
+      // Reveal before the browser restores its saved scroll position.
+      schedule();
+    };
+
+    selectCategory(categoryFromHash()?.section.id || history.state?.homeProjectCategory || categories[0].section.id);
+    history.replaceState({ ...history.state, homeProjectCategory: selected }, '');
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('hashchange', restore);
+    window.addEventListener('popstate', restore);
+    window.addEventListener('pageshow', restore);
+    const observer = new ResizeObserver(() => {
+      root.style.setProperty('--home-nav-height', `${nav.offsetHeight}px`);
+      schedule();
+    });
+    entries.forEach(({ section }) => observer.observe(section));
+    observer.observe(nav);
+    root.style.setProperty('--home-nav-height', `${nav.offsetHeight}px`);
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const initialTarget = entries.find(entry => entry.link.hash === location.hash);
+    if (initialTarget && (!navigation || navigation.type === 'navigate')) {
+      requestAnimationFrame(() => { scrollTo(initialTarget.section, false); schedule(); });
+    }
+    update();
+  }
+</script>
+
+<style>
+  .home-sections { display: grid; grid-template-columns: 152px minmax(0, 1fr); gap: 32px; margin-top: 64px; }
+  .home-sections-body { min-width: 0; }
+  .section-nav { position: sticky; top: 32px; align-self: start; }
+  .section-nav > p { color: var(--color-muted); font-size: .75rem; margin-bottom: 14px; }
+  .section-nav ul { list-style: none; padding: 0; margin: 0; }
+  .section-nav-main { border-left: 1px solid var(--color-line); }
+  .section-nav a { display: flex; align-items: center; min-height: 44px; padding: 9px 0 9px 15px; margin-left: -1px; border-left: 2px solid transparent; font-size: .8125rem; color: var(--color-muted); transition: color 160ms ease, border-color 160ms ease; }
+  .section-nav a:hover { color: var(--color-accent); text-decoration: underline; }
+  .section-nav a[aria-current="location"] { color: var(--color-accent); border-color: var(--color-accent); font-weight: 650; }
+  .section-nav a[data-section-active] { color: var(--color-ink); font-weight: 650; }
+  .section-nav .section-nav-categories { margin: 2px 0 8px 15px; padding-left: 10px; border-left: 1px solid var(--color-line); }
+  .section-nav-categories a { padding: 8px 9px; margin: 0; border: 0; border-radius: 3px; font-size: .8125rem; white-space: nowrap; }
+  .section-nav-categories a[data-selected], .section-nav-categories a[aria-current="location"] { background: var(--color-wash); color: var(--color-accent); font-weight: 650; box-shadow: inset 2px 0 var(--color-accent); }
+  .section-nav a:focus-visible { outline-offset: 3px; }
+  .home-sections-body :global([data-home-section]), .home-sections-body :global(.section-header) { scroll-margin-top: 1rem; }
+  .home-sections-body :global([data-home-section]:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 8px; }
+  .home-sections-body :global(.home-section:first-child) { padding-top: 0; }
+  .home-sections-body :global(.about-strip) { gap: 48px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-nav a { transition: none; }
+  }
+  @media (max-width: 1000px) {
+    .home-sections { display: block; margin-top: 40px; }
+    .section-nav { top: 0; z-index: 10; padding-block: 8px; margin-bottom: 32px; background: var(--color-paper); border-block: 1px solid var(--color-line); }
+    .section-nav > p { display: none; }
+    .section-nav-main { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 0; }
+    .section-nav-main > li:first-child { grid-column: 1; grid-row: 1; }
+    .section-nav-main > li:last-child { grid-column: 3; grid-row: 1; }
+    .section-nav-projects { display: contents; }
+    .section-nav [data-projects-parent] { grid-column: 2; grid-row: 1; }
+    .section-nav a { padding: 8px 4px; margin: 0; border-left: 0; border-bottom: 2px solid transparent; }
+    .section-nav-main > li > a, .section-nav [data-projects-parent] { justify-content: center; }
+    .section-nav .section-nav-categories { display: flex; gap: 8px; grid-column: 1 / -1; grid-row: 2; margin: 5px 0 0; padding: 0; border: 0; }
+    .section-nav-categories > li { flex: 1; }
+    .section-nav-categories a { justify-content: center; padding-inline: 12px; border: 1px solid var(--color-line); }
+    .section-nav-categories a[data-selected], .section-nav-categories a[aria-current="location"] { border-color: var(--color-accent); box-shadow: none; }
+    .home-sections-body :global([data-home-section]), .home-sections-body :global(.section-header) { scroll-margin-top: var(--home-nav-height, 114px); }
+  }
+  @media (max-width: 640px) {
+    .home-sections { margin-top: 32px; }
+    .section-nav { margin-bottom: 24px; }
+    .home-sections-body :global(.about-strip) { gap: 24px; }
+  }
+</style>

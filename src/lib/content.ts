@@ -5,6 +5,14 @@ export const projectCategories = [
   { id: 'personal', title: 'Everyday life', description: 'Products for cooking, learning, and the small tasks of everyday life. Built around a specific need, with room to explore.' },
 ] as const;
 
+// Homepage curation is independent of the complete Projects listing.
+const homeSelections = {
+  professional: { anchor: 'healthcare', slugs: ['patient-access-orchestration', 'ai-evaluation-governance-lab'] },
+  personal: { anchor: 'everyday-life', slugs: ['next-chapter', 'table-for-one'] },
+} as const;
+
+export const homeProjectGroups = projectCategories.map(category => ({ ...category, ...homeSelections[category.id] }));
+
 export const projectStatuses = {
   'public-demo': 'Public demo',
   'private-app': 'Private app',

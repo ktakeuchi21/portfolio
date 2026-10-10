@@ -426,9 +426,13 @@ Reference: https://podcasts.apple.com/us/podcast/claude-code-for-product-manager
 Artwork source: https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/fa/ef/a3/faefa345-20fb-f95d-e58b-c417424ce72d/mza_2485117918239571659.jpg/480x480bb.webp
 
 ai-evaluation-workspace.png
-Screenshot of Kai Takeuchi's AI Evaluation & Governance Lab, captured September 16, 2026.
+Screenshot of Kai Takeuchi's AI Evaluation & Governance Lab, captured October 10, 2026.
 Reference: https://github.com/ktakeuchi21/ai-evaluation-governance-lab
-Local Demo Alpha workspace, authored synthetic fixtures only. No real patient information.
+Evaluation workbench with retained Foundry output and authored source records. No new model call or assessment was made for the capture.
+
+ai-evaluation-walkthrough.png
+Screenshot of the optional run-selection walkthrough in Kai Takeuchi's AI Evaluation & Governance Lab, captured October 10, 2026.
+Reference: https://github.com/ktakeuchi21/ai-evaluation-governance-lab
 
 next-chapter-workflow.svg
 Original workflow diagram created for the Next Chapter portfolio case study, October 10, 2026.

@@ -96,6 +96,7 @@
     // Preserve cached pages for Back/Forward; refresh their measurements on return.
     window.addEventListener('pagehide', event => { if (!event.persisted) media.revert(); });
     window.addEventListener('pageshow', event => { if (event.persisted) ScrollTrigger.refresh(); });
+    document.addEventListener('portfolio:home-project-layout', () => ScrollTrigger.refresh());
   }
 </script>
 

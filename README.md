@@ -1,12 +1,12 @@
 # Kai Takeuchi: portfolio
 
-A static Astro + TypeScript portfolio for healthcare and AI product leadership. Tailwind CSS supplies the theme tokens and utility layer; Astro components provide the layouts. MDX content collections generate project listings and detail pages. There is no backend, external font request, or client-side framework. Optional Umami analytics runs only on the production domain when configured.
+A static Astro + TypeScript portfolio for healthcare and AI product building. Tailwind CSS supplies the theme tokens and utility layer; Astro components provide the layouts. MDX content collections generate project listings and detail pages. There is no backend, external font request, or client-side framework. Optional Umami analytics runs only on the production domain when configured.
 
 **Live website: [kaitakeuchi.com](https://kaitakeuchi.com/)**
 
 ## What’s on the site
 
-- **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order.
+- **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order. Below the homepage hero, sticky section navigation tracks Experience, Projects, and About me. Healthcare and Everyday life are nested under Projects, switching between two wider project cards per category. On mobile, both categories stay visible beneath the section links.
 - **Projects:** Healthcare and Everyday life tabs, with seven independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
 - **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
@@ -16,7 +16,7 @@ Employer experience is separate from independent projects. Healthcare describes 
 | Category | Case study | Current status |
 | --- | --- | --- |
 | Healthcare | [Patient Access Orchestration](https://kaitakeuchi.com/projects/patient-access-orchestration/) | Public synthetic demo |
-| Healthcare | [AI Evaluation & Governance Lab](https://kaitakeuchi.com/projects/ai-evaluation-governance-lab/) | In development; synthetic case workspace implemented, agent runs and evaluation planned |
+| Healthcare | [AI Evaluation & Governance Lab](https://kaitakeuchi.com/projects/ai-evaluation-governance-lab/) | In development; Foundry evaluations, source comparison, saved assessments, and section walkthroughs implemented |
 | Healthcare | [Pathway](https://kaitakeuchi.com/projects/pathway/) | Public synthetic demo |
 | Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
 | Everyday life | [What I Made](https://kaitakeuchi.com/projects/what-i-made/) | Private app with a fictional public sample |
@@ -91,13 +91,15 @@ tags: [Product discovery, Workflow design]
 ---
 ```
 
-Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Set `featured: true` to include it on the homepage. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
+Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
+
+The homepage uses explicit project selections in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab; Everyday life shows Next Chapter and Table for One. Update `homeSelections` to change these pairs. Homepage links `/#healthcare` and `/#everyday-life` open the corresponding category. Back/Forward restores category selection and reading position; without JavaScript, both pairs remain readable as normal sections.
 
 Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both use “Independent build” on case studies. The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
 
 `status` is `public-demo`, `private-app`, or `in-development`. Status is independent of `draft`: an unfinished product can have a complete, published narrative.
 
-For employer Work, use `type: professional`, `organization`, and `role` in `src/content/work/`. An optional `website` URL adds a “Visit website” action and links the title when no case study is published. `order` controls the order on both Home and Work. These entries are separate from independent projects. Work pages automatically use `/work/<slug>/` when their narratives are published.
+For employer Work, use `type: professional`, `organization`, and `role` in `src/content/work/`. Set `featured: true` to include an experience on the homepage. An optional `website` URL adds a “Visit website” action and links the title when no case study is published. `order` controls the order on both Home and Work. These entries are separate from independent projects. Work pages automatically use `/work/<slug>/` when their narratives are published.
 
 Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive steps and an optional boundary note) and `TechnologyStack.astro` (layer, tools, and purpose). Import these in MDX as shown in the existing entries. Explain product decisions and source-grounded design takeaways; keep unconfirmed firsthand reflections in ignored local notes.
 
