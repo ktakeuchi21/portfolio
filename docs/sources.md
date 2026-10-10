@@ -18,13 +18,13 @@ Reviewed September 13, 2026. The sources below provide facts and assets, not dev
 
 ## Screenshot provenance
 
-The five screenshots come from Kai’s project documentation and demos, copied unchanged at his request. Interlude, What I Made, and Table for One were added or refreshed September 15, 2026; the new What I Made image came from the README-update checkout. No fictional employer interface or architecture was created. Project source URLs and third-party photo licenses are retained in `public/credits.txt`, accessible from the Projects page.
+The screenshots come from Kai’s project documentation and demos, copied unchanged at his request. Interlude, What I Made, and Table for One were added or refreshed September 15, 2026; the new What I Made image came from the README-update checkout. Table for One's cover changed to an original workflow diagram on October 10, recorded below. No fictional employer interface or architecture was created. Project source URLs and third-party photo licenses are retained in `public/credits.txt`, accessible from the Projects page.
 
 - `patient-access-workflow.png`: 1600 × 1150, the public site’s existing workflow-overview image.
 - `pathway-workspace.png`: 1440 × 900, the public repository’s desktop workspace screenshot with a synthetic case.
 - `what-i-made-map.png`: 390 × 844, the public repository’s fictional sample map screenshot, recaptured September 15 with the current country-density map. The source app’s complete media attribution is preserved to retain the provenance of any visible thumbnail fragments; its country boundaries use public-domain Natural Earth data.
 - `interlude-today.jpg`: 1280 × 720, the public Interlude repository’s Today view, captured September 15 with a synthetic Demo profile and learning history. The same image appears on its project card and case-study cover.
-- `table-for-one-order.png`: 1440 × 2998, refreshed October 9, 2026 with an unchanged copy of `docs/screenshots/voice-order-desktop.png` from the private Table for One repository. The local simulator uses synthetic orders and dummy payment behavior; the capture made no real calls, charges, or transcription requests. The image appears on the project card and case-study cover. The private repository and app are not linked publicly.
+- `table-for-one-order.png`: 1440 × 2998, refreshed October 9, 2026 with an unchanged copy of `docs/screenshots/voice-order-desktop.png` from the private Table for One repository. The local simulator uses synthetic orders and dummy payment behavior; the capture made no real calls, charges, or transcription requests. Retained as an earlier screenshot; the card and cover now use the workflow diagram below. The private repository and app are not linked publicly.
 
 ## Fonts and technical references
 
@@ -105,6 +105,12 @@ Kai requested this project second in Healthcare and Clinician Matching last. Cli
 Kai supplied the first-person motivation: Saturday visits with his son to a nearby children's museum where they have a membership, followed by STK cheeseburgers. Repeated explanations to the restaurant's voice AI made ordering two cheeseburgers take too long. The narrative uses that account without naming an uncertain museum or claiming the assistant already handles those trips.
 
 The private project's current code and release documentation support the v8 feature description, 379 passing automated tests, and 19 local simulated-call scenarios. V8 is built but not deployed; the older STK v7 AWS release has calling disabled. Real-model conversation evaluation, controlled audio calls, and physical iPhone dictation still need validation. Automatic real-card payment is not implemented. No private repository or live-app link was added.
+
+## Table for One workflow update (October 10, 2026)
+
+Kai requested an n8n-style workflow thumbnail and supplied the AWS rationale: becoming more familiar with its tools by building something he would use. The private project's README and implementation support the service roles and the input, review, phone conversation, payment, and outcome flow. No new use, time-saving, or restaurant-order success claims were added.
+
+`table-for-one-workflow.svg` is an original 1200 × 960 diagram created for the portfolio. Its node-and-connection style is inspired by n8n, but Table for One uses custom TypeScript and AWS services without an n8n runtime. It represents the implemented v8 candidate, which remains undeployed. Twilio provides telephony, not payment processing. Real cards need private owner participation; automatic real-card entry is not implemented. The October 9 test totals remain historical validation evidence only. The diagram includes no personal order data, card details, private destinations, or third-party artwork.
 
 ## Next Chapter (October 10, 2026)
 

@@ -53,6 +53,7 @@ export const projectArchitecture: Record<string, ProjectArchitecture> = {
     note: 'Saved narration plays without new synthesis.',
   },
   'table-for-one': {
+    visualLabel: 'Workflow',
     steps: [
       { title: 'Speak, type & review', technology: 'React · OpenAI transcription & extraction' },
       { title: 'Save & call on demand', technology: 'AWS · Twilio · OpenAI Realtime' },

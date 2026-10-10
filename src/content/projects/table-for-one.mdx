@@ -6,29 +6,30 @@ ownership: independent
 status: in-development
 role: Product design & implementation
 audience: A person delegating a takeout phone order
-summary: "A personal takeout assistant inspired by Saturday museum trips with my son, built to turn our usual cheeseburger order into one reviewed request."
+summary: "Saturday museum trips with my son led me to build a takeout assistant for our usual two cheeseburgers: speak or tap a favorite, review once, and delegate the call."
 featured: false
 order: 5
 draft: false
 image:
-  src: /images/table-for-one-order.png
-  alt: "Table for One’s desktop order composer, with voice or text input, a saved restaurant, multiple items, pickup time, payment preference, tip, and spending limit."
-  width: 1440
-  height: 2998
-  caption: "The v8 local simulator uses synthetic orders and dummy payment behavior. This capture made no real calls, charges, or transcription requests."
+  src: /images/table-for-one-workflow.svg
+  alt: "Table for One workflow from spoken order and owner review through a restaurant call, payment choice, confirmation, or human takeover."
+  width: 1200
+  height: 960
+  caption: "From an order request to a confirmed outcome. Calling remains disabled; real-card payment requires the owner."
 tags: [React, Twilio, OpenAI Realtime, AWS]
 ---
 
 import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
 import TechnologyStack from '../../components/TechnologyStack.astro';
+import { withBase } from '../../lib/site';
 
 ## Why I built it
 
-On Saturdays, my son and I visit a nearby children's museum where we have a membership. Afterward, we get cheeseburgers from STK.
+On Saturdays, my son and I visit a nearby children's museum where we have a membership. Afterward, we get two cheeseburgers from STK. It's a small routine I wanted to make easier.
 
-Ordering two cheeseburgers should be a small part of that routine. But explaining the same order to the restaurant's voice AI took too long. I wanted to tap a saved favorite or say what we wanted, review it once, and have my own assistant handle the call.
+Each order meant another call to the restaurant's voice AI and another round of the same questions. Explaining two cheeseburgers took too long. I wanted to tap our usual order or say what we wanted, review it once, and let my own assistant handle the call.
 
-That became Table for One, a private web app for my takeout orders. I designed and built it around our usual order, then expanded it to saved restaurants and different meals. The new build is ready for further testing; restaurant calling remains disabled.
+That became Table for One, a private web app for my takeout orders. I started with our STK order, then expanded it to saved restaurants and different meals. The new build is ready for further testing; restaurant calling remains disabled.
 
 ## The experience
 
@@ -40,14 +41,19 @@ If a modification is refused or the conversation needs my help, the assistant ca
 
 ## How it works
 
-<ArchitectureFlow label="From a spoken request to a reviewed phone order" steps={[
-  { title: 'Describe and review', detail: 'Voice or text becomes an editable draft using saved restaurant details and order preferences.' },
-  { title: 'Save the approved order', detail: 'The authenticated service records the exact location, items, pickup request, and spending limit before acting.' },
-  { title: 'Connect the call', detail: 'Twilio carries telephone audio; an on-demand EC2 worker connects it to OpenAI Realtime.' },
-  { title: 'Confirm or ask for help', detail: 'The service tracks restaurant confirmations and can hand the existing call to me.' }
-]} note="The v8 implementation is built but not deployed. Live restaurant calling and automatic real-card payment are disabled." />
+<p><a href={withBase('/images/table-for-one-workflow.svg')}>View the full-size workflow map</a></p>
+
+<ArchitectureFlow label="From my request to the restaurant's answer" steps={[
+  { title: 'Turn words into a draft', detail: 'OpenAI transcribes spoken input and extracts order fields from voice or text. A saved favorite can fill the same draft.' },
+  { title: 'Review and approve', detail: 'I check the location, food, quantities, pickup time, payment preference, tip, and spending limit before submitting.' },
+  { title: 'Call the restaurant', detail: 'Twilio carries the phone audio. An on-demand EC2 worker connects the call to OpenAI Realtime for the conversation.' },
+  { title: 'Resolve payment', detail: 'Prepaid orders need my private participation. Payment at pickup requires both my choice and the restaurant’s acceptance.' },
+  { title: 'Confirm or ask for help', detail: 'The app records the confirmed total, ready time, and outcome. If the call needs me, I can join the existing conversation.' }
+]} note="V8 is built but not deployed. Restaurant calling is disabled, and automatic real-card payment is not implemented." />
 
 The website and order records stay available while the voice worker is off. Call attempts have a saved identity, so a lost response does not justify dialing again. Editing a saved restaurant cannot change the destination of an order already submitted.
+
+The diagram uses n8n-inspired nodes and connections to show the process. The app runs on custom TypeScript code and AWS services.
 
 ## Stack and choices
 
@@ -55,9 +61,13 @@ The website and order records stay available while the voice worker is off. Call
   { layer: 'Order and review', tools: 'React PWA · TypeScript · Vite · Fastify', purpose: 'Keep the editable draft, review, history, and takeover controls together.' },
   { layer: 'Voice and text input', tools: 'OpenAI transcription · structured outputs', purpose: 'Turn a short request into fields that I can check before ordering.' },
   { layer: 'Phone conversation', tools: 'Twilio · OpenAI Realtime · WebSockets', purpose: 'Connect restaurant audio with the assistant and support human takeover.' },
-  { layer: 'App and order records', tools: 'AWS Lambda · DynamoDB · S3/CloudFront', purpose: 'Keep the app available without an always-running voice server.' },
+  { layer: 'App and order records', tools: 'API Gateway · Lambda · DynamoDB · S3/CloudFront', purpose: 'Serve the app, handle requests, and save order and call records.' },
   { layer: 'Voice worker', tools: 'EC2 · AWS CDK', purpose: 'Start the persistent connection worker when a call needs it.' }
 ]} />
+
+I chose AWS because I wanted to become more familiar with its tools by building something I'd use myself. It gave me a reason to learn how hosting, storage, permissions, and background work fit together.
+
+S3 and CloudFront serve the website. API Gateway and Lambda handle requests, and DynamoDB saves orders and preferences. EC2 runs the ongoing audio connection only when a call needs it. Secrets Manager holds provider credentials, while CloudWatch and SNS support operational logs and email alerts. With only a few calls a month, I can stop the voice worker between orders, though storage and other services still have costs.
 
 ## Decisions and design lessons
 
@@ -65,7 +75,7 @@ The website and order records stay available while the voice worker is off. Call
 
 **An unclear outcome needs checking.** A dropped connection does not prove that an order failed. The app preserves the submitted request for recovery and gives me a way to take over the conversation.
 
-**Payment needs its own boundary.** The app saves card nicknames and last four digits only. Real card payment needs my private participation. Automatic card entry is not implemented, and a restaurant's promise to accept payment at pickup does not count as a payment.
+**Payment needs its own boundary.** Twilio provides the phone connection; the restaurant handles payment. Saved card labels contain the nickname, brand, and last four digits, without full card details. Real card payment needs my private participation, and automatic card entry is not implemented. An order accepted for payment at pickup still has money due.
 
 ## Current state and next step
 

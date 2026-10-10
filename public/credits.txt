@@ -16,7 +16,7 @@ Full attribution: https://github.com/ktakeuchi21/case-resolution-agent/blob/main
 Patient Access Orchestration: https://patient-access-orchestration.ktakeuchi.chatgpt.site/assets/workflow-overview-Ch28Rs4H.png
 What I Made: https://github.com/ktakeuchi21/what-i-made/blob/main/docs/assets/readme/map.png
 Interlude: https://github.com/ktakeuchi21/interlude/blob/main/docs/screenshots/today.jpg
-Table for One: Desktop voice-order composer screenshot, 1440 × 2998, copied unchanged October 9, 2026 from the private project documentation (docs/screenshots/voice-order-desktop.png). Captured from the local simulator with synthetic orders and dummy payment behavior; no real calls, charges, or transcription requests. The private repository and app are not linked publicly.
+Table for One: Earlier desktop voice-order composer screenshot, 1440 × 2998, copied unchanged October 9, 2026 from the private project documentation (docs/screenshots/voice-order-desktop.png). Captured from the local simulator with synthetic orders and dummy payment behavior; no real calls, charges, or transcription requests. Retained as an earlier asset; the current card and cover use table-for-one-workflow.svg. The private repository and app are not linked publicly.
 
 Interlude and What I Made screenshots were captured on September 15, 2026. Interlude uses a synthetic Demo profile and learning history. What I Made shows a fictional public sample archive, with Natural Earth public-domain country boundaries in its map.
 
@@ -435,3 +435,8 @@ Original workflow diagram created for the Next Chapter portfolio case study, Oct
 Reference: https://github.com/ktakeuchi21/next-chapter-ds
 Shows the intended resale workflow; automatic sale monitoring and delisting are marked as planned.
 No client photographs, personal records, or third-party artwork are included.
+
+table-for-one-workflow.svg
+Original 1200 × 960 workflow diagram created for the Table for One portfolio case study, October 10, 2026.
+The n8n-inspired node layout illustrates the implemented v8 candidate, which is not yet deployed. Table for One runs on custom TypeScript and AWS services, without an n8n runtime.
+This is a diagram, not an app screenshot. It contains no personal order data, payment credentials, or third-party artwork. The repository and app remain private.

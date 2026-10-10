@@ -10,7 +10,7 @@ Updated October 10, 2026. The site includes Healthcare and Everyday life project
 | Next Chapter | Everyday life, first; supplied family-business motivation, original workflow diagram, public source link, stack and staged integration status | Seller-account validation, eBay developer approval, live order sync and automatic delisting |
 | What I Made | Everyday life; local narrative, private-app status and fictional public sample | Optional firsthand reflection |
 | Interlude | Everyday life; local narrative reflecting newer private deployment/narration records | Optional firsthand reflection; no verified public app/repository action |
-| Table for One | Everyday life; supplied Saturday museum/cheeseburger story, v8 voice-order composer screenshot, in-development status | V8 deployment, model/audio and iPhone validation; repository and app remain private |
+| Table for One | Everyday life; supplied Saturday museum/two-cheeseburger story, original workflow diagram, AWS learning rationale, in-development status | V8 deployment, model/audio and iPhone validation; repository and app remain private |
 | Syneos, Optum Match, UnitedHealthcare ACA, Optum Virtual Care | Selected experience in Kai’s requested order; UHC summary added from the supplied résumé; public website links on the three requested entries; draft bodies excluded | Full employer case-study narratives and evidence |
 | Résumé | Page and links remain removed | Optional future approved public résumé |
 | Portrait | User-supplied portrait on Home and About; included in the authorized release | None |
@@ -23,7 +23,7 @@ Product maturity is separate from narrative visibility. All seven project narrat
 
 Case-study bodies are concise accounts of the product question, experience, architecture, technology, decisions, and current state. Design lessons are grounded in implementation and documentation. The October 9 Table for One update includes Kai's supplied first-person motivation. Other design lessons remain grounded in project documentation. Questions and detailed local-source references are retained in ignored `artifacts/project-content-review.md`.
 
-Application PDFs remain reference-only. No private phone numbers, patient data, real card details, private application links, or internal employer architecture were introduced. Interlude uses its real Today screenshot with synthetic demo data, What I Made uses its refreshed fictional-sample map, Table for One uses the desktop order screenshot from its local simulator with demo details and dummy payments, and AI Eval uses its synthetic Demo Alpha workspace. Six project cards and case studies have screenshots; Next Chapter uses an original workflow diagram. Image attribution is preserved. Experimental design routes are excluded from ordinary production builds.
+Application PDFs remain reference-only. No private phone numbers, patient data, real card details, private application links, or internal employer architecture were introduced. Interlude uses its real Today screenshot with synthetic demo data, What I Made uses its refreshed fictional-sample map, and AI Eval uses its synthetic Demo Alpha workspace. Five project cards and case studies have screenshots; Next Chapter and Table for One use original workflow diagrams. Image attribution is preserved. Experimental design routes are excluded from ordinary production builds.
 
 ## Next Chapter addition, October 10, 2026
 
@@ -35,3 +35,9 @@ The public source supports the capture, inventory, research, Etsy unpublished-dr
 ## Table for One update, October 9, 2026
 
 The existing personal-project entry now explains the Saturday routine that prompted the app and the new voice/text ordering build. V8 supports saved locations and favorites, multiple items and modifications, requested pickup times, review, spending and tip limits, payment preferences, and takeover. Its 379 automated tests and 19 simulated scenarios do not establish live restaurant or physical-device reliability. V8 remains undeployed; the older AWS release has calling disabled. The refreshed screenshot uses synthetic orders and dummy payment behavior, with no real calls or transcription. No public repository or app action was added.
+
+## Table for One workflow update, October 10, 2026
+
+The project card and case-study cover now use an original 1200 × 960 SVG workflow diagram. The n8n-style nodes show input, a draft, owner review, the restaurant call, payment choices, and confirmation or intervention. This is an illustration of the implemented v8 candidate, not a screenshot or an n8n integration. The earlier simulator screenshot remains in the image archive.
+
+The narrative strengthens Kai's supplied Saturday routine and adds his stated reason for choosing AWS: learning its tools through a personal project. It explains the purpose of the hosting, storage, API, voice worker, credentials, and monitoring services. Twilio carries the phone conversation; the restaurant collects payment, with private owner participation for real cards. Deployment and validation status remain unchanged. The 379 tests and 19 simulated scenarios are the October 9 record, not evidence of live operation.
