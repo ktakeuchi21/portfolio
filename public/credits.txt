@@ -16,7 +16,8 @@ Full attribution: https://github.com/ktakeuchi21/case-resolution-agent/blob/main
 Patient Access Orchestration: https://patient-access-orchestration.ktakeuchi.chatgpt.site/assets/workflow-overview-Ch28Rs4H.png
 What I Made: https://github.com/ktakeuchi21/what-i-made/blob/main/docs/assets/readme/map.png
 Interlude: https://github.com/ktakeuchi21/interlude/blob/main/docs/screenshots/today.jpg
-Table for One: Earlier desktop voice-order composer screenshot, 1440 × 2998, copied unchanged October 9, 2026 from the private project documentation (docs/screenshots/voice-order-desktop.png). Captured from the local simulator with synthetic orders and dummy payment behavior; no real calls, charges, or transcription requests. Retained as an earlier asset; the current card and cover use table-for-one-workflow.svg. The private repository and app are not linked publicly.
+Table for One: Earlier desktop voice-order composer screenshot, 1440 × 2998, copied unchanged October 9, 2026 from the private project documentation (docs/screenshots/voice-order-desktop.png). Captured from the local simulator with synthetic orders and dummy payment behavior; no real calls, charges, or transcription requests. Used as the homepage thumbnail; the Projects listing and case-study cover use table-for-one-workflow.svg. The private repository and app are not linked publicly.
+Next Chapter: next-chapter-research.png, 1110 × 920, copied unchanged October 10, 2026 from the local project's output/playwright/pricing-desktop.png capture. Shows the item research and pricing review panel with no private inventory photos or personal contact details. Used as the homepage thumbnail; the Projects listing and case-study cover retain the original workflow illustration.
 
 Interlude and What I Made screenshots were captured on September 15, 2026. Interlude uses a synthetic Demo profile and learning history. What I Made shows a fictional public sample archive, with Natural Earth public-domain country boundaries in its map.
 
@@ -438,7 +439,7 @@ next-chapter-workflow.svg
 Original workflow diagram created for the Next Chapter portfolio case study, October 10, 2026.
 Original vector scenes follow a couch from capture to handoff; the portfolio adds optional GSAP playback to the same static artwork used in the project's public README.
 Reference: https://github.com/ktakeuchi21/next-chapter-ds
-Shows the intended resale workflow; automatic sale monitoring and delisting are marked as planned.
+Shows the intended resale workflow; automatic sale monitoring and delisting are planned.
 No client photographs, personal records, or third-party artwork are included.
 
 table-for-one-workflow.svg

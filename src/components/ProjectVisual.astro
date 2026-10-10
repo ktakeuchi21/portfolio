@@ -5,19 +5,21 @@ import NextChapterWorkflow from './NextChapterWorkflow.astro';
 import { caseStudyPath } from '../lib/content';
 import { projectArchitecture } from '../lib/project-architecture';
 import { externalLinkAttributes, withBase } from '../lib/site';
-interface Props { entry: CollectionEntry<'projects'>; variant?: 'card' | 'cover'; }
-const { entry, variant = 'card' } = Astro.props;
-const { image, slug, title } = entry.data;
+interface Props { entry: CollectionEntry<'projects'>; variant?: 'card' | 'cover'; compact?: boolean; thumbnail?: NonNullable<CollectionEntry<'projects'>['data']['image']>; }
+const { entry, variant = 'card', compact = false, thumbnail } = Astro.props;
+const { slug, title } = entry.data;
+const usesThumbnail = variant === 'card' && !!thumbnail;
+const image = usesThumbnail ? thumbnail : entry.data.image;
 const architecture = projectArchitecture[slug];
 const href = variant === 'card' ? caseStudyPath(entry) : undefined;
 const Frame = href ? 'a' : 'div';
 const id = `visual-${slug}`;
-const illustratedWorkflow = slug === 'next-chapter';
+const illustratedWorkflow = slug === 'next-chapter' && !usesThumbnail;
 ---
-{image && <div class:list={['project-visual', `project-visual--${variant}`, { 'project-visual--workflow': architecture?.visualLabel === 'Workflow', 'project-visual--illustrated': illustratedWorkflow }]} data-project-visual>
+{image && <div class:list={['project-visual', `project-visual--${variant}`, { 'project-visual--workflow': architecture?.visualLabel === 'Workflow' && !usesThumbnail, 'project-visual--illustrated': illustratedWorkflow, 'project-visual--compact': compact, 'project-visual--thumbnail': usesThumbnail }]} data-project-visual>
   {architecture && <div class="visual-toolbar" hidden>
     <div class="visual-tabs" data-visual-tabs aria-label={`${title} view`}>
-      <button type="button" id={`${id}-product-tab`} aria-controls={`${id}-product`}>{architecture.visualLabel ?? 'Product'}</button>
+      <button type="button" id={`${id}-product-tab`} aria-controls={`${id}-product`}>{usesThumbnail ? 'Product' : architecture.visualLabel ?? 'Product'}</button>
       <button type="button" id={`${id}-architecture-tab`} aria-controls={`${id}-architecture`}>Under the hood</button>
     </div>
     {illustratedWorkflow && <button class="workflow-play" type="button" data-workflow-play aria-controls={`${id}-product`} aria-label="Play workflow animation" hidden>
@@ -101,7 +103,7 @@ const illustratedWorkflow = slug === 'next-chapter';
   .visual-product { height: 100%; }
   .project-visual .project-image { position: relative; width: 100%; height: 100%; border: 0; }
   .project-image--interactive:focus-visible { outline-offset: -5px; }
-  .project-preview-cue { display: inline-flex; align-items: center; gap: 13px; position: absolute; bottom: 12px; right: 12px; padding: 8px 12px; min-height: 38px; background: var(--color-accent); color: white; font-size: .75rem; border-radius: 2px; pointer-events: none; }
+  .project-preview-cue { display: inline-flex; align-items: center; gap: 13px; position: absolute; bottom: 12px; right: 12px; padding: 8px 12px; min-height: 38px; background: var(--color-accent); color: var(--color-on-accent); font-size: .75rem; border-radius: 2px; pointer-events: none; }
   .project-preview-cue :global(svg) { width: 14px; height: 14px; }
   .is-ready .project-image { aspect-ratio: auto; }
   .visual-toolbar { grid-row: 2; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--color-line); background: var(--color-paper); padding-inline: 10px; }
@@ -121,7 +123,7 @@ const illustratedWorkflow = slug === 'next-chapter';
   .visual-architecture:focus-visible, .visual-product:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -5px; }
   .architecture-nodes { display: grid; gap: 12px; list-style: none; padding: 0; margin: 0; }
   .architecture-nodes li { position: relative; min-width: 0; }
-  .architecture-node { display: flex; align-items: center; gap: 12px; min-height: 38px; padding: 3px 10px; background: var(--color-paper); border: 1px solid #cdd5ca; border-radius: 3px; }
+  .architecture-node { display: flex; align-items: center; gap: 12px; min-height: 38px; padding: 3px 10px; background: var(--color-paper); border: 1px solid var(--color-line); border-radius: 3px; }
   .node-number { font: 400 .875rem var(--font-display); color: var(--color-accent); }
   .architecture-node strong { display: block; font-size: .8125rem; line-height: 1.35; font-weight: 550; }
   .architecture-node small { display: block; font-size: .75rem; line-height: 1.5; color: var(--color-muted); }
@@ -176,4 +178,9 @@ const illustratedWorkflow = slug === 'next-chapter';
     .project-visual--illustrated .visual-tabs button { font-size: .75rem; }
   }
   .project-visual--illustrated:not(.is-ready) .project-image { aspect-ratio: 1000 / 968; }
+  .project-visual.project-visual--card.project-visual--compact { height: 300px; min-height: 0; aspect-ratio: auto; }
+  .project-visual--compact .visual-stage, .project-visual--compact .visual-product { height: 100%; min-height: 0; }
+  .project-visual.project-visual--compact .project-image { aspect-ratio: auto; }
+  .project-visual--compact .visual-architecture { overflow-y: auto; }
+  .project-visual--thumbnail .project-image img { object-fit: cover; object-position: top; }
 </style>

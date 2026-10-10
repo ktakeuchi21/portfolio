@@ -6,13 +6,21 @@ import BookshelfGallery from '../../components/design/BookshelfGallery.astro';
 import ShelfRailGallery from '../../components/design/ShelfRailGallery.astro';
 import MotionStudies from '../../components/design/MotionStudies.astro';
 import BookSelectionGallery from '../../components/design/BookSelectionGallery.astro';
+import HomePalettePreview from '../../components/design/HomePalettePreview.astro';
 import { withBase } from '../../lib/site';
 
 // Explorations are opt-in, so ordinary production builds omit this route.
 export function getStaticPaths() {
-  return import.meta.env.DESIGN_PREVIEW === '1' ? ['podcasts', 'record-crates', 'bookshelves', 'book-ledges', 'motion-studies', 'book-selection'].map(concept => ({ params: { concept } })) : [];
+  const concepts = import.meta.env.DESIGN_PREVIEW === '1' ? ['podcasts', 'record-crates', 'bookshelves', 'book-ledges', 'motion-studies', 'book-selection'] : [];
+  if (import.meta.env.DEV || import.meta.env.DESIGN_PREVIEW === '1') concepts.push('home-colors', 'home-colors-bold', 'home-colors-references', 'home-colors-warm');
+  return concepts.map(concept => ({ params: { concept } }));
 }
 
+const isBoldColors = Astro.params.concept === 'home-colors-bold';
+const isReferenceColors = Astro.params.concept === 'home-colors-references';
+const isWarmColors = Astro.params.concept === 'home-colors-warm';
+const initialHomePalette = isWarmColors ? 'espresso' : isReferenceColors ? 'oura' : isBoldColors ? 'acid' : Astro.params.concept === 'home-colors' ? 'cobalt' : undefined;
+const isHomeColors = Astro.params.concept === 'home-colors' || isBoldColors || isReferenceColors || isWarmColors;
 const isBookSelection = Astro.params.concept === 'book-selection';
 const isMotion = Astro.params.concept === 'motion-studies';
 const isBookshelf = Astro.params.concept === 'bookshelves';
@@ -32,8 +40,8 @@ const crates = [
 ] as const;
 const concepts = isCrate ? crates : originals;
 ---
-<SiteLayout title={isBookSelection ? 'Book selection explorations' : isMotion ? 'The interaction notebook' : isLedge ? 'Shelf and cover explorations' : isBookshelf ? 'Bookshelf explorations' : isCrate ? 'Record crate explorations' : 'Podcast design explorations'} description={isBookSelection ? 'Four selected states for the overlapping bookshelf: soft lift, bookmark, spotlight, and marker.' : isMotion ? 'Two local interaction studies for Kai Takeuchi’s portfolio: a project spotlight and a photo journal.' : isLedge ? 'Four compact, interactive shelves for Kai Takeuchi’s favorite books.' : isBookshelf ? 'Six interactive ways to explore Kai Takeuchi’s favorite books.' : 'Four interactive design directions for Kai Takeuchi’s podcast collection.'} noindex>
-  {isBookSelection ? <BookSelectionGallery /> : isMotion ? <MotionStudies /> : isLedge ? <ShelfRailGallery /> : isBookshelf ? <BookshelfGallery /> : <div class="page-width design-page">
+<SiteLayout homePalette={initialHomePalette} title={isHomeColors ? (isWarmColors ? 'Homepage palettes beyond blue and purple' : isReferenceColors ? 'Homepage color reference studies' : isBoldColors ? 'Five bolder homepage palettes' : 'Five homepage color palettes') : isBookSelection ? 'Book selection explorations' : isMotion ? 'The interaction notebook' : isLedge ? 'Shelf and cover explorations' : isBookshelf ? 'Bookshelf explorations' : isCrate ? 'Record crate explorations' : 'Podcast design explorations'} description={isHomeColors ? (isWarmColors ? 'Five homepage color explorations: espresso, forest, vermilion, ochre, and cocoa.' : isReferenceColors ? 'Homepage color studies inspired by Oura, Pentagram, Apple, Linear, and Stripe.' : isBoldColors ? 'Five bolder color directions: chartreuse, vivid red, pink and espresso, cyan and oxblood, and black with electric lime.' : 'Five color directions for the same homepage: cobalt, terracotta, plum, teal, and dark amber.') : isBookSelection ? 'Four selected states for the overlapping bookshelf: soft lift, bookmark, spotlight, and marker.' : isMotion ? 'Two local interaction studies for Kai Takeuchi’s portfolio: a project spotlight and a photo journal.' : isLedge ? 'Four compact, interactive shelves for Kai Takeuchi’s favorite books.' : isBookshelf ? 'Six interactive ways to explore Kai Takeuchi’s favorite books.' : 'Four interactive design directions for Kai Takeuchi’s podcast collection.'} noindex>
+  {isHomeColors ? <HomePalettePreview bold={isBoldColors} references={isReferenceColors} warm={isWarmColors} /> : isBookSelection ? <BookSelectionGallery /> : isMotion ? <MotionStudies /> : isLedge ? <ShelfRailGallery /> : isBookshelf ? <BookshelfGallery /> : isCrate || Astro.params.concept === 'podcasts' ? <div class="page-width design-page">
     <header class="design-intro">
       <a class="back-link" href={withBase(isCrate ? '/design/podcasts/#gallery' : '/about/#learning-listening')}>← {isCrate ? 'Back to the original record crate' : 'Back to About'}</a>
       <p class="eyebrow">Design explorations / {isCrate ? 'Record crate collection' : 'September 2026'}</p>
@@ -56,7 +64,7 @@ const concepts = isCrate ? crates : originals;
       <p>Original mockups, informed by open-source interaction patterns from <a href="https://github.com/DIYgod/APlayer" target="_blank" rel="noopener noreferrer">APlayer</a>, <a href="https://www.embla-carousel.com/docs/v8/examples/predefined" target="_blank" rel="noopener noreferrer">Embla</a>, <a href="https://swiperjs.com/demos" target="_blank" rel="noopener noreferrer">Swiper</a>, and <a href="https://v3.shadcn.com/examples/music" target="_blank" rel="noopener noreferrer">shadcn’s music app</a>.</p>
       <p>These are browsing previews. “Open podcast” takes you to the show on Apple Podcasts. Your current About page is unchanged.</p>
     </aside>
-  </div>}
+  </div> : null}
 </SiteLayout>
 
 <style>

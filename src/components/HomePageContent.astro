@@ -1,0 +1,54 @@
+---
+import Hero from './Hero.astro';
+import SectionHeader from './SectionHeader.astro';
+import WorkCard from './WorkCard.astro';
+import ProjectCard from './ProjectCard.astro';
+import LinkButton from './LinkButton.astro';
+import PhotoStack from './PhotoStack.astro';
+import HomeMotion from './HomeMotion.astro';
+import HomeSections from './HomeSections.astro';
+import { getWork, getProjects, homeProjectGroups, homeProjectSummaries, homeProjectThumbnails } from '../lib/content';
+const work = (await getWork()).filter(entry => entry.data.featured);
+const projects = await getProjects();
+const groups = homeProjectGroups.map(group => ({
+  ...group,
+  entries: group.slugs.map(slug => {
+    const entry = projects.find(project => project.data.slug === slug && project.data.category === group.id);
+    if (!entry) throw new Error(`Missing homepage project: ${slug}`);
+    return entry;
+  }),
+}));
+---
+  <div data-home-motion>
+  <Hero />
+  <HomeSections>
+  <section class="home-section" id="experience" data-home-section aria-label="Selected experience" tabindex="-1">
+    <SectionHeader title="Selected experience"><LinkButton href="/work/">View work</LinkButton></SectionHeader>
+    {work.map((entry, index) => <WorkCard entry={entry} index={index} />)}
+  </section>
+  <section class="home-section" id="projects" data-home-section aria-label="Selected projects" tabindex="-1">
+    <SectionHeader title="Selected projects"><LinkButton href="/projects/">All projects</LinkButton></SectionHeader>
+    <p class="section-intro">Independent builds for healthcare workflows and everyday needs.</p>
+    {groups.map(group => <section class="home-project-group" id={group.anchor} data-home-section data-home-project-group={group.title} aria-labelledby={`${group.anchor}-title`} tabindex="-1">
+      <h3 class="home-project-category" id={`${group.anchor}-title`}>{group.title}</h3>
+      <div class="projects-grid home-project-grid">{group.entries.map(entry => <ProjectCard entry={entry} headingLevel="h4" interactiveImage compact overviewSummary={homeProjectSummaries[entry.data.slug]} thumbnail={homeProjectThumbnails[entry.data.slug]} />)}</div>
+    </section>)}
+  </section>
+  <section class="about-strip" id="about" data-home-section aria-labelledby="about-title" tabindex="-1">
+    <PhotoStack id="home-photos" />
+    <div><span class="eyebrow">A little about me</span><h2 id="about-title">Curiosity, made concrete.</h2><p>My background spans economics, healthcare administration, and product development. I’m interested in how better tools can make complex work easier for the people doing it.</p><p>Outside work, I keep building, whether it’s an AI prototype or a small app for the things I cook.</p><LinkButton href="/about/">More about me</LinkButton></div>
+  </section>
+  </HomeSections>
+  </div>
+  <HomeMotion />
+
+<style>
+  #projects > .section-intro { margin-bottom: 24px; }
+  .home-project-group + .home-project-group { margin-top: 40px; }
+  .home-project-category { font: 450 1.6rem / 1.2 var(--font-display); margin: 0 0 20px; letter-spacing: -.02em; }
+  .home-project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px) {
+    .home-project-grid { grid-template-columns: 1fr; }
+    .home-project-category { margin-bottom: 16px; }
+  }
+</style>

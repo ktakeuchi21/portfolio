@@ -7,7 +7,7 @@
     <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#283d31" flood-opacity=".06"/></filter>
     <style>
       .label { font: 700 23px Arial, Helvetica, sans-serif; letter-spacing: 1.6px; }
-      .name { font: 600 47px Arial, Helvetica, sans-serif; fill: #24382e; }
+      .name { font: 600 40px Arial, Helvetica, sans-serif; fill: #24382e; }
       .detail { font: 400 27px Arial, Helvetica, sans-serif; fill: #4f6256; }
       .wire { fill: none; stroke: #4e6c5d; stroke-width: 3; marker-end: url(#arrow); }
       .port { fill: #fafbf8; stroke: #4e6c5d; stroke-width: 3; }

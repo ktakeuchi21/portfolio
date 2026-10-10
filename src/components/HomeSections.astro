@@ -9,7 +9,7 @@ import { homeProjectGroups } from '../lib/content';
       <li class="section-nav-projects">
         <a href="#projects" data-projects-parent>Projects</a>
         <ul class="section-nav-categories" aria-label="Project categories">
-          {homeProjectGroups.map(group => <li><a href={`#${group.anchor}`} aria-controls={group.anchor} data-category-link>{group.title}</a></li>)}
+          {homeProjectGroups.map(group => <li><a href={`#${group.anchor}`}>{group.title}</a></li>)}
         </ul>
       </li>
       <li><a href="#about">About me</a></li>
@@ -30,39 +30,18 @@ import { homeProjectGroups } from '../lib/content';
     const compact = window.matchMedia('(max-width: 1000px)');
     const categories = entries.filter(entry => entry.section.hasAttribute('data-home-project-group'));
     const projects = entries.find(entry => entry.section.id === 'projects')!;
-    let selected = '';
     let frame = 0;
     let current = '';
-
-    const categoryFromHash = () => categories.find(entry => entry.link.hash === location.hash);
-    const selectCategory = (id: string) => {
-      const next = categories.find(entry => entry.section.id === id);
-      if (!next || id === selected) return false;
-      next.section.hidden = false;
-      // History navigation can hide a panel that still contains keyboard focus.
-      if (categories.some(entry => entry !== next && entry.section.contains(document.activeElement))) {
-        next.section.focus({ preventScroll: true });
-      }
-      categories.forEach(entry => {
-        entry.section.hidden = entry !== next;
-        entry.link.toggleAttribute('data-selected', entry === next);
-      });
-      selected = id;
-      document.dispatchEvent(new Event('portfolio:home-project-layout'));
-      return true;
-    };
 
     const update = () => {
       frame = 0;
       // Read section positions together; leave the URL and keyboard focus alone while scrolling.
       const threshold = compact.matches ? Math.max(128, nav.getBoundingClientRect().bottom + 48) : 128;
-      const visible = entries.filter(entry => !entry.section.hidden);
-      const positions = visible.map(entry => entry.section.getBoundingClientRect().top);
-      let active = visible[0];
-      positions.forEach((top, index) => { if (top <= threshold) active = visible[index]; });
-      if (active === projects) active = categories.find(entry => entry.section.id === selected)!;
+      const positions = entries.map(entry => entry.section.getBoundingClientRect().top);
+      let active = entries[0];
+      positions.forEach((top, index) => { if (top <= threshold) active = entries[index]; });
       // A short final section may never reach the threshold on a tall display.
-      if (scrollY > 0 && Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2) active = visible[visible.length - 1];
+      if (scrollY > 0 && Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2) active = entries[entries.length - 1];
       if (active.section.id === current) return;
       current = active.section.id;
       entries.forEach(entry => {
@@ -73,9 +52,7 @@ import { homeProjectGroups } from '../lib/content';
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const scrollTo = (section: HTMLElement, smooth: boolean) => {
-      // Keep the Projects heading in view when changing its category.
-      const target = section.hasAttribute('data-home-project-group') ? projects.section : section;
-      const anchor = target.querySelector('.section-header') ?? target;
+      const anchor = section.querySelector('.section-header') ?? section;
       anchor.scrollIntoView({ block: 'start', behavior: smooth && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
     };
 
@@ -85,26 +62,27 @@ import { homeProjectGroups } from '../lib/content';
       const entry = entries.find(item => item.link === link);
       if (!entry) return;
       event.preventDefault();
-      const changed = selectCategory(entry.section.id);
       if (location.hash !== entry.link.hash) {
-        history.pushState({ ...history.state, homeProjectCategory: selected }, '', entry.link.hash);
+        history.pushState(history.state, '', entry.link.hash);
       }
-      if (changed) document.dispatchEvent(new CustomEvent('portfolio:project-category', { detail: entry.section.dataset.homeProjectGroup }));
-      // Focus without a competing browser scroll, including when Enter activates a link.
-      entry.section.focus({ preventScroll: true });
+      if (categories.includes(entry)) document.dispatchEvent(new CustomEvent('portfolio:project-category', { detail: entry.section.dataset.homeProjectGroup }));
+      // Keyboard navigation lands on the heading, never outlines the entire section.
+      if (event.detail === 0) {
+        const heading = entry.section.querySelector<HTMLElement>('h2, h3');
+        if (heading) {
+          heading.tabIndex = -1;
+          heading.focus({ preventScroll: true });
+        }
+      }
       scrollTo(entry.section, true);
       schedule();
     });
 
     const restore = () => {
-      const category = categoryFromHash();
-      selectCategory(category?.section.id || history.state?.homeProjectCategory || selected);
-      // Reveal before the browser restores its saved scroll position.
+      // Native history restores the reading position; no sections need revealing.
       schedule();
     };
 
-    selectCategory(categoryFromHash()?.section.id || history.state?.homeProjectCategory || categories[0].section.id);
-    history.replaceState({ ...history.state, homeProjectCategory: selected }, '');
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule, { passive: true });
     window.addEventListener('hashchange', restore);
@@ -130,19 +108,18 @@ import { homeProjectGroups } from '../lib/content';
   .home-sections { display: grid; grid-template-columns: 152px minmax(0, 1fr); gap: 32px; margin-top: 64px; }
   .home-sections-body { min-width: 0; }
   .section-nav { position: sticky; top: 32px; align-self: start; }
-  .section-nav > p { color: var(--color-muted); font-size: .75rem; margin-bottom: 14px; }
+  .section-nav > p { color: var(--color-muted); font-size: .75rem; margin-bottom: 14px; padding-inline: 12px; }
   .section-nav ul { list-style: none; padding: 0; margin: 0; }
-  .section-nav-main { border-left: 1px solid var(--color-line); }
-  .section-nav a { display: flex; align-items: center; min-height: 44px; padding: 9px 0 9px 15px; margin-left: -1px; border-left: 2px solid transparent; font-size: .8125rem; color: var(--color-muted); transition: color 160ms ease, border-color 160ms ease; }
+  .section-nav a { display: flex; align-items: center; min-height: 44px; padding: 9px 12px; border-radius: 4px; font-size: .8125rem; color: var(--color-muted); transition: color 160ms ease, background-color 160ms ease; }
   .section-nav a:hover { color: var(--color-accent); text-decoration: underline; }
-  .section-nav a[aria-current="location"] { color: var(--color-accent); border-color: var(--color-accent); font-weight: 650; }
+  .section-nav a[aria-current="location"] { background: var(--color-wash); color: var(--color-accent); font-weight: 650; }
   .section-nav a[data-section-active] { color: var(--color-ink); font-weight: 650; }
-  .section-nav .section-nav-categories { margin: 2px 0 8px 15px; padding-left: 10px; border-left: 1px solid var(--color-line); }
-  .section-nav-categories a { padding: 8px 9px; margin: 0; border: 0; border-radius: 3px; font-size: .8125rem; white-space: nowrap; }
-  .section-nav-categories a[data-selected], .section-nav-categories a[aria-current="location"] { background: var(--color-wash); color: var(--color-accent); font-weight: 650; box-shadow: inset 2px 0 var(--color-accent); }
+  .section-nav .section-nav-categories { margin: 2px 0 8px 16px; }
+  .section-nav-categories a { padding-block: 8px; white-space: nowrap; }
   .section-nav a:focus-visible { outline-offset: 3px; }
   .home-sections-body :global([data-home-section]), .home-sections-body :global(.section-header) { scroll-margin-top: 1rem; }
-  .home-sections-body :global([data-home-section]:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 8px; }
+  .home-sections-body :global([data-home-section]:focus) { outline: none; }
+  .home-sections-body :global(h2[tabindex="-1"]:focus-visible), .home-sections-body :global(h3[tabindex="-1"]:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 5px; }
   .home-sections-body :global(.home-section:first-child) { padding-top: 0; }
   .home-sections-body :global(.about-strip) { gap: 48px; }
 
@@ -159,11 +136,12 @@ import { homeProjectGroups } from '../lib/content';
     .section-nav-projects { display: contents; }
     .section-nav [data-projects-parent] { grid-column: 2; grid-row: 1; }
     .section-nav a { padding: 8px 4px; margin: 0; border-left: 0; border-bottom: 2px solid transparent; }
+    .section-nav a[aria-current="location"] { background: transparent; border-bottom-color: var(--color-accent); }
     .section-nav-main > li > a, .section-nav [data-projects-parent] { justify-content: center; }
     .section-nav .section-nav-categories { display: flex; gap: 8px; grid-column: 1 / -1; grid-row: 2; margin: 5px 0 0; padding: 0; border: 0; }
     .section-nav-categories > li { flex: 1; }
     .section-nav-categories a { justify-content: center; padding-inline: 12px; border: 1px solid var(--color-line); }
-    .section-nav-categories a[data-selected], .section-nav-categories a[aria-current="location"] { border-color: var(--color-accent); box-shadow: none; }
+    .section-nav-categories a[aria-current="location"] { background: var(--color-wash); color: var(--color-accent); font-weight: 650; border-color: var(--color-accent); }
     .home-sections-body :global([data-home-section]), .home-sections-body :global(.section-header) { scroll-margin-top: var(--home-nav-height, 114px); }
   }
   @media (max-width: 640px) {

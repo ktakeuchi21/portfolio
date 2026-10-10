@@ -6,22 +6,22 @@ import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import ProjectTransitions from '../components/ProjectTransitions.astro';
 import { profile, withBase } from '../lib/site';
-interface Props { title?: string; description?: string; noindex?: boolean; }
-const { title, description = 'Kai Takeuchi is a healthcare and AI product leader building 0-to-1 products around complex workflows, enterprise data, and human decision-making.', noindex = false } = Astro.props;
+interface Props { title?: string; description?: string; noindex?: boolean; homePalette?: string; }
+const { title, description = 'Kai Takeuchi is a healthcare and AI product leader building 0-to-1 products around complex workflows, enterprise data, and human decision-making.', noindex = false, homePalette } = Astro.props;
 const pageTitle = title ? `${title} | ${profile.name}` : `${profile.name} | ${profile.positioning}`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const socialImage = new URL(withBase('/images/social-preview.png'), Astro.site ?? Astro.url.origin);
 const socialImageAlt = 'Kai Takeuchi. Healthcare + AI Product Leader. Product strategy & development.';
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-home-palette={homePalette}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ProjectTransitions />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#faf9f6" />
+    <meta name="theme-color" content="#faf8f0" />
     {noindex && <meta name="robots" content="noindex" />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />

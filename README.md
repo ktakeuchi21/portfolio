@@ -6,8 +6,8 @@ A static Astro + TypeScript portfolio for healthcare and AI product building. Ta
 
 ## What’s on the site
 
-- **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order. Below the homepage hero, sticky section navigation tracks Experience, Projects, and About me. Healthcare and Everyday life are nested under Projects, switching between two wider project cards per category. On mobile, both categories stay visible beneath the section links.
-- **Projects:** Healthcare and Everyday life tabs, with seven independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
+- **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order. Below the homepage hero, sticky section navigation tracks Experience, Projects, and About me. Healthcare and Everyday life are nested under Projects and jump to consecutive sections, each with two wider project cards. On mobile, both category links stay visible beneath the section links.
+- **Projects:** Healthcare and Everyday life tabs, with eight independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
 - **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
 
@@ -17,6 +17,7 @@ Employer experience is separate from independent projects. Healthcare describes 
 | --- | --- | --- |
 | Healthcare | [Patient Access Orchestration](https://kaitakeuchi.com/projects/patient-access-orchestration/) | Public synthetic demo |
 | Healthcare | [AI Evaluation & Governance Lab](https://kaitakeuchi.com/projects/ai-evaluation-governance-lab/) | In development; Foundry evaluations, source comparison, saved assessments, and section walkthroughs implemented |
+| Healthcare | [Briefing Room](https://kaitakeuchi.com/projects/briefing-room/) | In development; source-linked pre-call briefs, review controls, and recorded evaluation evidence; third in Healthcare, excluded from the homepage |
 | Healthcare | [Pathway](https://kaitakeuchi.com/projects/pathway/) | Public synthetic demo |
 | Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
 | Everyday life | [What I Made](https://kaitakeuchi.com/projects/what-i-made/) | Private app with a fictional public sample |
@@ -52,7 +53,7 @@ npm run preview
 
 `npm run verify:content` temporarily adds entries in both project categories and employer Work, proves that they generate cards and detail routes, then removes them and restores the normal build. Use it when changing the content infrastructure, not for ordinary copy edits. Avoid running content builds alongside the development server: Astro shares its content cache. Use the production preview after validation to inspect the final catalog.
 
-Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, and the seven case studies listed above. The résumé route is intentionally absent.
+Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, the eight case studies listed above, and `/project-notes/briefing-room/evaluation/`. The résumé route is intentionally absent.
 
 ## Visitor analytics
 
@@ -93,7 +94,7 @@ tags: [Product discovery, Workflow design]
 
 Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
 
-The homepage uses explicit project selections in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab; Everyday life shows Next Chapter and Table for One. Update `homeSelections` to change these pairs. Homepage links `/#healthcare` and `/#everyday-life` open the corresponding category. Back/Forward restores category selection and reading position; without JavaScript, both pairs remain readable as normal sections.
+The homepage uses explicit project selections and short summaries in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab, followed by Everyday life with Next Chapter and Table for One. Update `homeSelections` and `homeProjectSummaries` to change these pairs. Compact homepage cards use equal-height previews, a linked title, and a short description; status, stack, demos, and source links remain in the case studies and full Projects listing. Homepage links `/#healthcare` and `/#everyday-life` scroll to their sections. Back/Forward restores the reading position, and both groups remain visible with or without JavaScript.
 
 Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both use “Independent build” on case studies. The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
 
@@ -105,7 +106,9 @@ Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive ste
 
 `ProjectVisual.astro` renders Product and Under the hood views for published projects. The optional `visualLabel` changes the first tab to Workflow for a diagram. Its three-step summaries live in `src/lib/project-architecture.ts`; keep them aligned with the MDX narrative and clearly distinguish implemented behavior from planned capabilities. Without a summary, a project retains its image. The tabs support arrow keys, Home/End, and visible focus; inactive panels are excluded from keyboard navigation.
 
-Next Chapter uses the original illustrated `public/images/next-chapter-workflow.svg` both as a standalone still image and inline through `NextChapterWorkflow.astro`. Its optional Play/Pause/Replay control runs a six-second GSAP sequence. It pauses offscreen or in a background tab and returns to the complete still when switching views or enabling reduced motion. No animation starts automatically. Keep the public Next Chapter README's copy of the SVG in sync when changing the artwork; the "sync planned" label stays visible throughout.
+Next Chapter uses the original illustrated `public/images/next-chapter-workflow.svg` both as a standalone still image and inline through `NextChapterWorkflow.astro`. Its optional Play/Pause/Replay control runs a six-second GSAP sequence. It pauses offscreen or in a background tab and returns to the complete still when switching views or enabling reduced motion. No animation starts automatically. Keep the public Next Chapter README's copy of the SVG in sync when changing the artwork. The case-study caption identifies automatic sale monitoring and delisting as planned.
+
+Homepage thumbnail overrides in `homeProjectThumbnails` use actual app screenshots for Next Chapter and Table for One. Next Chapter shows its item research and pricing panel; Table for One shows the earlier simulator's order composer. The equal-height thumbnails frame the top of each screenshot. The full Projects listing and case-study covers retain the workflow diagrams.
 
 ### Drafts and external case studies
 
@@ -155,6 +158,34 @@ All pages share `public/images/social-preview.png`, a 1200 × 630 typographic ca
 `FavoriteEpisodes.astro` uses one compact horizontal row beneath two accessible show tabs. `src/data/favoriteEpisodes.ts` holds six Lenny’s Podcast episodes and four How I AI episodes in Kai’s specified order, with verified titles, guests, artwork, and direct destinations. Tabs support arrows and Home/End; cards support Tab, arrows, Home/End, native scrolling, and touch swipes. Previous/next controls move through each show’s row, and hidden panels are excluded from navigation. Full titles remain readable. The Favorite episodes shortcut targets `#learning-episodes`; `#episodes-lenny` and `#episodes-how-i-ai` also select their corresponding panels. Without JavaScript, both labeled rows and all ten episode links remain available. Images are responsive and lazy-loaded.
 
 The selected bookshelf and podcast player use compact cover sizes, title/creator rows, and controls, without extra collection labels or instruction rows. New entries extend the horizontal collections instead of adding rows. Keep full titles readable and transport targets at least 44px when adjusting density.
+
+### Homepage color system
+
+Forest is the selected site theme. `src/styles/global.css` supplies warm ivory `#FAF8F0`, forest ink `#253D2C`, and green `#325E3B` accents across the site. The homepage hero uses deep green `#183B28`, cream `#FFF8E5` type and controls, and a light content area below. Button, hover, selection, and focus colors follow semantic tokens; the favicon and browser theme color match. The approved Forest preview shares the hero styles with the actual homepage, while other explorations keep their own treatments.
+
+### Homepage color explorations
+
+Five live homepage color previews are available at `/design/home-colors/` in development, or with `DESIGN_PREVIEW=1` for a preview build. The bottom selector switches between Cobalt & Chalk, Terracotta & Linen, Mulberry & Porcelain, Petrol & Sea Glass, and Midnight & Amber. Arrow keys and Home/End work within the selector; the `palette` query parameter preserves a shareable choice without affecting the ordinary homepage. A second study at `/design/home-colors-bold/` uses much stronger colored canvases: Acid Press, Tomato Studio, Bubblegum & Espresso, Pool Blue & Oxblood, and Carbon & Signal. Older selectors link to the latest warm palette study. Tokens for all studies live in `src/data/home-palettes.ts`. The preview and production homepage share `HomePageContent.astro`, including current project selections and screenshots. These routes are marked `noindex`, disable analytics, and are omitted from ordinary production builds.
+
+The reference study, `/design/home-colors-references/`, applies five references to the shared homepage. Each option links to the source website. These are adaptations of observed color roles, with some text colors darkened for contrast, rather than exact reproductions:
+
+- [Oura](https://ouraring.com/): sand `#F7F1E8`, charcoal `#4A4741`, and a small olive `#CED4B8` panel. Verified in the live page and public CSS.
+- [Pentagram](https://www.pentagram.com/): white, ink `#1A1A1A`, gray rules, and restrained red details. The site's red token is `#E52222`; this study uses darker `#C7192D` for small text on light surfaces.
+- [Apple](https://www.apple.com/): a black hero over white content, light-gray surfaces, blue `#0071E3` buttons, and `#0066CC` links. The section contrast follows the live homepage's dark and light product sections.
+- [Linear](https://linear.app/): graphite `#08090A`, off-white `#F7F8F8`, light `#E5E5E6` controls, and small lilac `#828FFF` accents. Values inspected in live computed styles.
+- [Stripe](https://stripe.com/): white and navy `#061B31`, violet `#533AFD` controls, and a pale decorative gradient confined to the hero's right edge. The gradient is an original, quieter adaptation of Stripe's colorful hero; the text and control colors were sampled from live styles.
+
+Research inspected on October 10, 2026. Headline, button, and navigation colors are independent tokens in the reference study. Existing layout, project screenshots, and content are preserved. No external code, fonts, or images from these references are loaded into the previews.
+
+The newest study, `/design/home-colors-warm/`, removes blue and purple from the theme tokens and offers Espresso, Forest, Vermilion, Ochre, and Cocoa. The selector labels its sources “Inspired by” because these are original adaptations, not copies of brand specifications:
+
+- Espresso borrows [Aesop](https://www.aesop.com/)’s warm neutral approach, using parchment, dark brown, and a caramel role panel.
+- Forest adapts [Flamingo Estate](https://flamingoestate.com/)’s olive/ivory relationship into a deep green hero over light content. It does not use the reference site's teal announcement strip.
+- Vermilion follows [Leica](https://leica-camera.com/en-US)’s mostly white and charcoal presentation, using red only in controls and small details.
+- Ochre adapts [Mailchimp](https://mailchimp.com/)’s yellow controls and warm dark ink, softening the yellow and keeping it to the primary button and role panel.
+- Cocoa adapts [Ghia](https://drinkghia.com/)’s cream/pink relationship into chocolate, vanilla, and pale rose. The dark brown canvas is original to this preview; Ghia's live site uses cream with burgundy ink.
+
+Sources inspected October 10, 2026. Theme colors, buttons, hero text, and role panels pass normal-text AA contrast checks. Existing project screenshots retain their original colors. These previews share the same local-only build flag and keyboard-accessible selector as the other studies.
 
 ### Podcast design explorations
 
@@ -218,4 +249,4 @@ For custom Actions deployments, GitHub’s Pages setting is authoritative; a sou
 
 ## Content and review status
 
-See `docs/content-status.md` for the seven project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.
+See `docs/content-status.md` for the eight project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.

@@ -7,20 +7,23 @@ import Icon from './Icon.astro';
 import ProjectVisual from './ProjectVisual.astro';
 import { caseStudyPath, projectStatuses } from '../lib/content';
 import { externalLinkAttributes, withBase } from '../lib/site';
-interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3' | 'h4'; interactiveImage?: boolean; }
-const { entry, headingLevel: Heading = 'h3', interactiveImage = false } = Astro.props;
+interface Props { entry: CollectionEntry<'projects'>; headingLevel?: 'h2' | 'h3' | 'h4'; interactiveImage?: boolean; compact?: boolean; overviewSummary?: string; thumbnail?: NonNullable<CollectionEntry<'projects'>['data']['image']>; }
+const { entry, headingLevel: Heading = 'h3', interactiveImage = false, compact = false, overviewSummary, thumbnail } = Astro.props;
 const { title, summary, image, tags, liveDemo, github, slug, status, category } = entry.data;
 const caseStudy = caseStudyPath(entry);
 const primary = caseStudy || liveDemo || github;
 const imageLink = interactiveImage && primary ? primary : undefined;
 const ImageFrame = imageLink ? 'a' : 'div';
 ---
-<article class:list={['project-card', `project-card--${slug}`, { 'project-card--text': !image }]} data-project={slug} data-category={category}>
-  {image && !entry.data.draft ? <ProjectVisual entry={entry} /> : image && <ImageFrame class:list={['project-image', { 'project-image--interactive': imageLink }]} href={imageLink ? withBase(imageLink) : undefined} {...(imageLink ? externalLinkAttributes(imageLink, Astro.site ?? Astro.url) : {})} aria-label={imageLink ? `Explore ${title}` : undefined} draggable={imageLink ? false : undefined}>
+<article class:list={['project-card', `project-card--${slug}`, { 'project-card--text': !image, 'project-card--compact': compact }]} data-project={slug} data-category={category}>
+  {image && !entry.data.draft ? <ProjectVisual entry={entry} compact={compact} thumbnail={thumbnail} /> : image && <ImageFrame class:list={['project-image', { 'project-image--interactive': imageLink }]} href={imageLink ? withBase(imageLink) : undefined} {...(imageLink ? externalLinkAttributes(imageLink, Astro.site ?? Astro.url) : {})} aria-label={imageLink ? `Explore ${title}` : undefined} draggable={imageLink ? false : undefined}>
     <img src={withBase(image.src)} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" draggable={imageLink ? false : undefined} />
     {imageLink && <span class="project-preview-cue" aria-hidden="true">Explore project <Icon kind="arrow" /></span>}
   </ImageFrame>}
-  <div class="project-copy">
+  {compact && caseStudy ? <a class="project-copy project-overview-link" href={withBase(caseStudy)} {...externalLinkAttributes(caseStudy, Astro.site ?? Astro.url)} aria-label={`${title}: read case study`}>
+    <Heading class="card-title">{title}<Icon kind="arrow" /></Heading>
+    <p class="project-summary">{overviewSummary ?? summary}</p>
+  </a> : <div class="project-copy">
     <div class="project-heading">
       <Heading class="card-title">{primary ? <a href={withBase(primary)} {...externalLinkAttributes(primary, Astro.site ?? Astro.url)}>{title}</a> : title}</Heading>
       <p class="project-status">{projectStatuses[status]}</p>
@@ -34,5 +37,19 @@ const ImageFrame = imageLink ? 'a' : 'div';
       {github && <ExternalLink href={github}>GitHub</ExternalLink>}
     </div>
     </div>
-  </div>
+  </div>}
 </article>
+
+<style>
+  .project-overview-link { display: block; padding-top: 16px; }
+  .project-overview-link .card-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 10px; font-size: 1.6rem; }
+  .project-overview-link :global(svg) { width: 18px; height: 18px; flex: none; }
+  .project-overview-link .project-summary { font-size: .9375rem; line-height: 1.6; }
+  .project-overview-link:hover .card-title { color: var(--color-accent); text-decoration: underline; text-underline-offset: .15em; }
+  @media (min-width: 641px) {
+    @supports (grid-template-rows: subgrid) {
+      .project-card.project-card--compact { grid-row: span 3; }
+      .project-card--compact .project-overview-link { display: grid; grid-template-rows: subgrid; grid-row: 2 / span 2; row-gap: 0; }
+    }
+  }
+</style>
