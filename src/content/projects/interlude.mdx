@@ -6,62 +6,59 @@ ownership: independent
 status: private-app
 role: Product direction & prototyping
 audience: A learner using short reading and listening sessions
-summary: "A personal learning companion that connects short, source-based lessons, saved narration, and practice into a learning history."
+summary: "I built a personal learning app to replace some doomscrolling with five-minute lessons in the subjects I care about."
 featured: false
 order: 4
 draft: false
 image:
-  src: /images/interlude-today.jpg
-  alt: "Interlude’s Today view, with a lesson ready to resume, a saved audio position, and a learning-progress summary."
+  src: /images/interlude-library.jpg
+  alt: "Interlude's six-course library, including three AI Engineering companion courses with original diagrams and short lessons."
   width: 1280
-  height: 720
-  caption: "The Today view uses a synthetic Demo profile and learning history."
+  height: 950
+  caption: "The current course library, shown in a local Demo account with no personal learning history."
 tags: [React, Cloudflare D1/R2, Saved narration]
 ---
 
 import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
 import TechnologyStack from '../../components/TechnologyStack.astro';
 
-## The product question
+## Why I built it
 
-A spare five minutes is easy to spend choosing what to learn. Articles, videos, and podcasts offer more material than a small moment can hold. Interlude starts with a narrower question: how can a learning app offer one useful next step and connect those moments over time?
+I kept filling spare moments with doomscrolling, even though there was so much I wanted to learn. I'd tried learning apps, but the subscriptions felt too expensive for what I needed. Videos and podcasts helped, but choosing something and switching apps added friction.
 
-This is a private product exploration, with my role spanning product direction and prototyping. The intended experience moves between an iPhone for everyday listening and a laptop for reading, notes, and course management. A clear stopping point matters as much as an easy start.
+I wanted to learn more about my interests and get better at building applications. So I figured, why not make the app I wanted to use? Interlude gives me a short lesson to pick up on my phone, audio for chores or a walk, and a place to read and reflect on my laptop. A clear stopping point matters as much as an easy start.
 
-## The experience
+## What I can learn
 
-A learner can resume a short lesson, read or listen, inspect its sources, and try an optional recall question or practical reflection. Courses provide continuity; saved topics leave room to explore. A selected listening queue supports a longer session without turning the library into an endless feed.
+The private app now has **six courses and 36 lesson texts**:
 
-Positions, notes, and learning history belong to the lesson version actually used. Revised teaching can become current without erasing an earlier completion or moving a note onto different wording. Publisher video and podcast embeds supplement the original lessons; they remain separate from the saved narration and learning record.
+- **AI for product managers, AI for software development, and AI in pharma and healthcare:** eight lessons each.
+- **AI Engineering: model decisions, evaluate and improve, and reliable systems:** four lessons each, with original diagrams and optional practice.
+
+The newer courses explore concepts from Chip Huyen's *AI Engineering* through original teaching grounded in cited primary sources. Diagram descriptions also appear in the narration scripts. They do not reproduce the book. These lessons are available to read; their audio is pending recovery of an earlier interrupted narration request.
 
 ## How it works
 
 <ArchitectureFlow label="A versioned lesson, from publication to practice" steps={[
-  { title: 'Prepare and review teaching', detail: 'Source-based lesson content is reviewed and released as an explicit version.' },
-  { title: 'Keep content and media durable', detail: 'D1 records lessons and learning state; private R2 storage holds generated narration.' },
-  { title: 'Read, listen, and return', detail: 'The authenticated PWA loads the selected version and saves progress, notes, and practice against it.' }
-]} note="New narration is generated separately from playback. Replaying saved audio does not repeat synthesis." />
-
-The app separates research, lesson preparation, publication, and audio generation. Each operation can preserve completed output when another step fails. Current narration uses Google Chirp 3 HD; previously saved OpenAI audio remains available. Runtime questions and other AI-assisted features have their own bounded provider paths.
-
-## Stack and choices
+  { title: 'Prepare and review teaching', detail: 'Cited lesson content is reviewed and released as an explicit version.' },
+  { title: 'Save content and narration', detail: 'D1 records lessons and learning state; private R2 storage holds generated narration.' },
+  { title: 'Read, listen, and return', detail: 'The authenticated PWA saves progress, notes, and practice against the lesson version used.' }
+]} note="Replaying saved audio does not generate it again." />
 
 <TechnologyStack items={[
-  { layer: 'Experience', tools: 'React · TypeScript · vinext/Vite · Tailwind', purpose: 'Support the reader, persistent player, course controls, and practice in one PWA.' },
-  { layer: 'State and storage', tools: 'Cloudflare Workers · D1 · R2 · Drizzle', purpose: 'Keep private learning records, version history, and saved audio durable.' },
-  { layer: 'Assistance and narration', tools: 'OpenAI APIs · Google Chirp 3 HD', purpose: 'Separate source-based assistance from reusable speech generation.' }
+  { layer: 'Experience', tools: 'React · TypeScript · vinext/Vite · Tailwind', purpose: 'One reader and persistent player across phone and laptop.' },
+  { layer: 'State and storage', tools: 'Cloudflare Workers · D1 · R2 · Drizzle', purpose: 'Keep private progress, lesson history, and saved audio durable.' },
+  { layer: 'Assistance and narration', tools: 'Codex · OpenAI APIs · Google Chirp 3 HD', purpose: 'Prepare content through my Codex task; keep optional runtime AI and reusable narration separate.' }
 ]} />
 
 ## Decisions and design lessons
 
-**Content changes should preserve the learner’s history.** A new lesson version can improve the teaching without silently changing what someone previously completed. Notes, practice, and narration need that same version boundary.
+**Make the next step obvious.** Personal use led to a home screen that resumes my current lesson, a 1.5× audio default, and a footer player that opens the lesson without losing playback.
 
-**Listening and generation are different experiences.** Saved audio makes returning to a lesson predictable. An interrupted provider request should be recoverable without automatically generating and charging for the same material again.
+**Teach directly.** Repeated spoken source introductions got in the way. New lessons explain the idea first and keep routine attribution in the reading view.
 
-**Activity is not proof of understanding.** Reading, completing a supplement, answering a recall question, and applying an idea are different signals. Keeping them separate gives progress a more useful meaning than an undifferentiated completion count.
+**Preserve work when something fails.** Interrupted audio generation needs saved-output recovery and honest cost accounting. A new lesson version should also preserve earlier notes, progress, and audio.
 
 ## Current state and next step
 
-Interlude has a private deployed version with saved narration, and the current source contains three foundation courses. Implementation records document hosted playback checks and provider integration. The broader experience is still evolving; those checks do not establish improved learning outcomes.
-
-I currently prepare and publish new content through a separate research workflow. The app handles runtime AI requests independently of that process. The next evaluation is whether learners can resume after interruptions and retain a concept later, beyond simply finishing a lesson.
+The running-cost target is under $10 a month. The next question is whether regular use helps me remember and apply more, not just finish lessons. I haven't measured that yet. The [public source and build notes](https://github.com/ktakeuchi21/interlude) document the implementation and experiments.
