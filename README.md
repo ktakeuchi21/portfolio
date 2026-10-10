@@ -103,6 +103,8 @@ Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive ste
 
 `ProjectVisual.astro` renders Product and Under the hood views for published projects. The optional `visualLabel` changes the first tab to Workflow for a diagram. Its three-step summaries live in `src/lib/project-architecture.ts`; keep them aligned with the MDX narrative and clearly distinguish implemented behavior from planned capabilities. Without a summary, a project retains its image. The tabs support arrow keys, Home/End, and visible focus; inactive panels are excluded from keyboard navigation.
 
+Next Chapter uses the original illustrated `public/images/next-chapter-workflow.svg` both as a standalone still image and inline through `NextChapterWorkflow.astro`. Its optional Play/Pause/Replay control runs a six-second GSAP sequence. It pauses offscreen or in a background tab and returns to the complete still when switching views or enabling reduced motion. No animation starts automatically. Keep the public Next Chapter README's copy of the SVG in sync when changing the artwork; the "sync planned" label stays visible throughout.
+
 ### Drafts and external case studies
 
 - `draft: true` is the safe default: the MDX body does not become a public route, but its intentionally written summary is visible on the listing page. Draft frontmatter is **not private storage**.

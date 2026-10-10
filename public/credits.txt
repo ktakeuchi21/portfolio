@@ -432,6 +432,7 @@ Local Demo Alpha workspace, authored synthetic fixtures only. No real patient in
 
 next-chapter-workflow.svg
 Original workflow diagram created for the Next Chapter portfolio case study, October 10, 2026.
+Original vector scenes follow a couch from capture to handoff; the portfolio adds optional GSAP playback to the same static artwork used in the project's public README.
 Reference: https://github.com/ktakeuchi21/next-chapter-ds
 Shows the intended resale workflow; automatic sale monitoring and delisting are marked as planned.
 No client photographs, personal records, or third-party artwork are included.
