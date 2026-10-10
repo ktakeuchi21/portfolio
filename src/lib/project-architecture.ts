@@ -13,9 +13,9 @@ export const projectArchitecture: Record<string, ProjectArchitecture> = {
   },
   pathway: {
     steps: [
-      { title: 'Start with the case', technology: 'Web workspace · TypeScript service' },
-      { title: 'Retrieve the evidence', technology: 'PostgreSQL · pgvector' },
-      { title: 'Answer with sources', technology: 'OpenAI Responses · citation checks' },
+      { title: 'Choose a role and case', technology: 'Web workspace · Render' },
+      { title: 'Find relevant passages', technology: 'Supabase · PostgreSQL · pgvector' },
+      { title: 'Answer with sources', technology: 'GPT-5 mini · citation checks' },
     ],
     note: 'Evidence stays attached for human review.',
   },

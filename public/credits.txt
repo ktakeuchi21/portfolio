@@ -2,7 +2,17 @@ Portfolio image sources and credits
 Reviewed 2026-09-15
 
 Screenshots by Kai Takeuchi; reused at his request, without pixel modifications.
-Pathway: https://github.com/ktakeuchi21/case-resolution-agent/blob/main/docs/screenshots/pathway-workspace.png
+Pathway screenshots, captured October 9, 2026 from release 080145a:
+- pathway-agents.png: scenario cards captured from https://case-resolution-frontend.onrender.com/ (1160 × 523).
+- pathway-workspace.png: current interface with retained synthetic answers replayed locally, without new model calls (1440 × 900).
+Capture details: https://github.com/ktakeuchi21/case-resolution-agent/blob/main/docs/screenshots/README.md
+The photographs illustrate AI support roles, not staff, case participants, or endorsers.
+Portrait credits (Pexels License, https://www.pexels.com/license/):
+- Documentation: Ifeyinka Adeyemo, https://www.pexels.com/photo/professional-corporate-headshot-of-smiling-woman-29852895/
+- Access: Augusto Carneiro Junior, https://www.pexels.com/photo/professional-headshot-of-a-young-businesswoman-30468665/
+- Fulfillment: Mikhail Nilov, https://www.pexels.com/photo/headshot-of-a-man-smiling-7625294/
+Original app image preparation: resized/cropped for role avatars and converted to WebP. The portfolio screenshots are copied unchanged.
+Full attribution: https://github.com/ktakeuchi21/case-resolution-agent/blob/main/docs/stock-portraits.md
 Patient Access Orchestration: https://patient-access-orchestration.ktakeuchi.chatgpt.site/assets/workflow-overview-Ch28Rs4H.png
 What I Made: https://github.com/ktakeuchi21/what-i-made/blob/main/docs/assets/readme/map.png
 Interlude: https://github.com/ktakeuchi21/interlude/blob/main/docs/screenshots/today.jpg

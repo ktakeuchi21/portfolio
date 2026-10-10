@@ -6,66 +6,78 @@ ownership: independent
 status: public-demo
 role: Product framing & prototyping
 audience: Pharmaceutical access and patient-support teams
-summary: "An AI case-resolution assistant that keeps case context, supporting evidence, and human review close to every answer."
+summary: "My experiment with avatar-based AI support: a RAG chatbot for fictional healthcare cases, with sources you can inspect."
 featured: true
 order: 3
 draft: false
 image:
-  src: /images/pathway-workspace.png
-  alt: "Pathway’s public workspace: a fictional case snapshot beside a sourced answer about a missing document."
-  width: 1440
-  height: 900
-  caption: "The public Pathway workspace, with a fictional documentation-support case and a saved synthetic answer."
+  src: /images/pathway-agents.png
+  alt: "Three Pathway AI roles with illustrative stock portraits: documentation support, coverage and access, and specialty pharmacy fulfillment."
+  width: 1160
+  height: 523
+  caption: "The three support roles in the public demo. Stock portraits illustrate the agents; the interaction happens through Chat and Email."
 liveDemo: https://case-resolution-frontend.onrender.com/
 github: https://github.com/ktakeuchi21/case-resolution-agent
-tags: [TypeScript, pgvector, OpenAI]
+tags: [RAG, OpenAI, Render, Supabase]
 ---
 
 import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
 import TechnologyStack from '../../components/TechnologyStack.astro';
+import { withBase } from '../../lib/site';
 
-## The product question
+## Why I built it
 
-When a patient-support case stalls, finding a plausible answer is only part of the work. Which document is missing? Does the guidance apply to this case? What can the reviewer actually do next?
+I kept seeing avatar-based AI agents marketed with expensive licenses, and I wanted to try building one myself. Pathway is my experiment with the chatbot underneath that experience.
 
-Pathway is an independent AI case-resolution prototype for non-clinical pharmaceutical access work. My role combines product framing and hands-on prototyping. It explores assistance for office access coordinators, field reimbursement managers, and patient-support case managers, using fictional cases and reference documents throughout.
+It uses retrieval-augmented generation, or RAG: find relevant passages in a selected knowledge base, give them to the language model, and show the sources with the answer. I used three fictional pharmaceutical-support cases to explore how useful that could be for office staff, field reimbursement managers, and patient-support teams.
+
+I try to learn a different tool with each project. For Pathway, I chose Render to host the frontend and application server, and Supabase for PostgreSQL and pgvector. Deploying the app gave me hands-on practice connecting a static site, an API, and a persistent database.
 
 ## The experience
 
-The case snapshot stays beside the conversation. A person can ask what is missing, follow up on why it matters, or prepare an office email and case briefing without losing the recorded context. On mobile, a context drawer keeps the conversation readable.
+Choose a support role and its Knowledge Pack, then ask a question or prepare a draft. The three packs contain 42 synthetic documents covering missing paperwork, coverage and access, and specialty-pharmacy fulfillment. Each agent has a stock portrait to make its role recognizable. The photographed people are not staff or endorsers.
 
-Each answer carries inspectable source passages and retrieval details. Activity shows knowledge search, answer preparation, and reference checks. Drafts remain available for human review; the application does not send them. Saved answers retain their original case and sources when the user changes Knowledge Packs or reloads within the browser session.
+The recorded case snapshot stays beside the conversation. A person can ask what is missing, follow up on why it matters, or prepare an office email without losing context. On mobile, the case details open in a drawer.
+
+<figure>
+  <a href={withBase('/images/pathway-workspace.png')} aria-label="Open the full-size Pathway conversation screenshot">
+    <img src={withBase('/images/pathway-workspace.png')} alt="Documentation Support Agent with a role portrait, fictional case context, and a sourced answer identifying the missing signed office note." width="1440" height="900" loading="lazy" decoding="async" />
+  </a>
+  <figcaption class="case-caption">The current workspace replaying a retained synthetic answer locally. No new model call was made for this capture.</figcaption>
+</figure>
+
+Sources opens the exact supporting passages. Grounding shows what was retrieved. Live activity explains what the application is doing while an answer is prepared. Drafts can be copied or refined, and remain unsent. Earlier answers keep their original case and sources when the user changes knowledge.
 
 ## How it works
 
-<ArchitectureFlow label="From a case question to a reviewable answer" steps={[
-  { title: 'Set the evidence boundary', detail: 'The current case, Knowledge Pack, and source versions determine which passages are eligible.' },
-  { title: 'Retrieve supporting material', detail: 'PostgreSQL and pgvector combine lexical and vector ranking with same-pack conversational context.' },
-  { title: 'Generate and check', detail: 'The Responses API prepares structured output; the service checks its format and cited source IDs.' },
-  { title: 'Keep the evidence attached', detail: 'The workspace saves the answer, exact sources, and activity so a person can inspect and revise it.' }
+<ArchitectureFlow label="From a question to an answer with sources" steps={[
+  { title: 'Choose the case and knowledge', detail: 'The selected case, Knowledge Pack, and current source versions determine which passages are eligible.' },
+  { title: 'Find relevant passages', detail: 'PostgreSQL and pgvector combine keyword and meaning-based search, using recent same-pack conversation to resolve follow-ups.' },
+  { title: 'Generate and check', detail: 'OpenAI GPT-5 mini prepares an answer or draft. The service checks its format and cited source IDs.' },
+  { title: 'Save the answer and evidence', detail: 'The workspace keeps the answer, exact sources, and activity together for inspection and review.' }
 ]} />
 
-Recent conversation resolves references such as “Why?” It does not create new facts about the case. Superseded and unrelated documents are visible in the knowledge browser but are excluded from new answers. A bounded format repair reuses the same evidence rather than opening an unrestricted retry loop.
+Conversation helps interpret questions such as “Why?” It does not create new facts about the case. Superseded and unrelated documents can be inspected in the knowledge browser but are excluded from new answers.
 
 ## Stack and choices
 
 <TechnologyStack items={[
-  { layer: 'Workspace', tools: 'HTML · CSS · JavaScript', purpose: 'A focused interface keeps case context, conversation, and evidence close together.' },
-  { layer: 'Service and retrieval', tools: 'Node.js · TypeScript · PostgreSQL/pgvector', purpose: 'Apply evidence filters and hybrid retrieval before generation.' },
-  { layer: 'Generation', tools: 'OpenAI Responses API', purpose: 'Produce structured answers and drafts from the selected evidence.' },
-  { layer: 'Hosting', tools: 'Render · Supabase PostgreSQL', purpose: 'Separate the static workspace, application service, and persistent retrieval store.' }
+  { layer: 'Workspace', tools: 'HTML · CSS · JavaScript', purpose: 'Keep role context, conversation, and evidence close together in a responsive interface.' },
+  { layer: 'Application', tools: 'Node.js · TypeScript · Render', purpose: 'Host the API and static frontend separately so the homepage can load while the backend wakes.' },
+  { layer: 'Knowledge and history', tools: 'Supabase · PostgreSQL · pgvector', purpose: 'Store conversations and searchable passages, with filters for the selected case and knowledge.' },
+  { layer: 'Generation', tools: 'OpenAI GPT-5 mini · Responses API', purpose: 'Use a lower-cost model to prepare structured answers and reviewable drafts from retrieved evidence.' }
 ]} />
 
 ## Decisions and design lessons
 
-**Case state and conversation need different rules.** A convincing sentence in chat is not evidence that a document arrived or a case progressed. Keeping the recorded snapshot separate protects that distinction.
+**The knowledge base needs useful detail.** Checklists, troubleshooting steps, and communication examples give retrieval more to work with than short topic summaries. Those guides still need to stay separate from the facts recorded for a particular case.
 
-**A valid citation is not the same as a supported claim.** Checking that a cited ID was retrieved catches one failure mode. Reviewing whether the passage supports the actual wording remains a separate evaluation problem.
+**A valid citation does not prove the whole answer.** Checking that a cited passage was retrieved catches one failure mode. Whether it supports the wording of every claim needs separate review.
 
-**Visible progress should help inspection.** Search and validation activity make waiting more understandable, but also leave a useful record after an answer completes. The activity comes from application events rather than additional model calls.
+**Hosting choices shape the experience.** A static frontend can appear before the application server is ready. Database availability also matters, even when the site itself loads. Using Render and Supabase made those dependencies concrete.
 
 ## Current state and next step
 
-The public demo supports questions, follow-ups, source inspection, and reviewable drafts across three synthetic scenarios. The repository documents automated checks and a synthetic conversation evaluation, including partial results and limitations. Those findings do not establish clinical validity or real-world effectiveness.
+The public demo supports questions, follow-ups, source inspection, and drafts across all three scenarios. It uses fictional cases and documents, does not send messages, and does not provide clinical advice or make payer decisions.
 
-The next useful evaluation targets answers that cite the right source but overstate what it establishes. [Source and evaluation notes](https://github.com/ktakeuchi21/case-resolution-agent) provide the implementation detail behind this case study.
+The repository includes automated checks and a synthetic conversation evaluation, with partial results and limitations. My next evaluation focus is answers that cite the right source but overstate what it establishes. [Source, evaluation notes, and photo credits](https://github.com/ktakeuchi21/case-resolution-agent) are available on GitHub.
