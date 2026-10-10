@@ -1,0 +1,11 @@
+{
+  "frozenAt": "2026-10-10T04:02:01.521490+00:00",
+  "beforeGenerationImplementation": true,
+  "files": {
+    "fixtures/cases.json": "d9c7cf199bedd336b378d3c476e8519689a4f0803eb7ee9f5d1bda13ee351bfb",
+    "evaluation/answer-keys.json": "fb99dbc0522834771f0aefe5e0e473cb1f56270151de5bf10e36c2e348b2567e",
+    "evaluation/rubric.md": "7de92dfc5c64d7fae237f5131596881ee332a3e108bb1316006e33d555b668f7"
+  },
+  "plannedRunsPerCasePerPrompt": 2,
+  "reviewMethod": "AI-assisted semantic rubric review; no human or clinical validation"
+}

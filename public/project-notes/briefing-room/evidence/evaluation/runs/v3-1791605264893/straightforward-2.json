@@ -1,0 +1,253 @@
+{
+  "caseId": "straightforward",
+  "repeat": 2,
+  "outcome": "generated",
+  "brief": {
+    "id": "32a77bdc-1ffe-416d-baee-3634d3548faf",
+    "caseId": "straightforward",
+    "synthetic": true,
+    "isReplay": false,
+    "items": [
+      {
+        "category": "situation",
+        "text": "The discharge summary lists discharge to Mira's own home on Oct 7, 2026, with an in-person Juniper Clinic follow-up on Oct 12 at 10:00 AM.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D1",
+            "quote": "SYNTHETIC RECORD. Mira Alder, member SYN-DEMO-001, was discharged on October 7, 2026, to her own home. This document records discharge disposition, not a later home visit."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D2",
+            "quote": "The discharge coordinator scheduled a follow-up appointment at fictional Juniper Clinic for October 12, 2026, at 10:00 AM. The appointment is listed as in person."
+          }
+        ],
+        "id": "item-1",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "situation",
+        "text": "The outreach log documents a first call attempt to Mira on Oct 8 at 9:30 AM; the call was not answered, a callback request was left, and the log contains no member callback as of Oct 9 at 9:00 AM.",
+        "citations": [
+          {
+            "documentId": "outreach",
+            "passageId": "O2",
+            "quote": "The case manager attempted the first outreach call to Mira on October 8 at 9:30 AM. The call was not answered; no conversation with the member occurred."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O3",
+            "quote": "A callback request was left using the synthetic contact channel. This log contains no member callback as of October 9 at 9:00 AM."
+          }
+        ],
+        "id": "item-2",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "situation",
+        "text": "During discharge planning, Mira preferred morning outreach and asked that the first call be directed to her; Eli was listed as the support person and said he would stay through Oct 10.",
+        "citations": [
+          {
+            "documentId": "case-note",
+            "passageId": "C1",
+            "quote": "SYNTHETIC RECORD. During discharge planning, Mira said she expected to return to her own home and preferred outreach in the morning."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C5",
+            "quote": "The case manager recorded the member's preference that the first call be directed to Mira. No preference for contacting Eli first is recorded."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "Mira's fictional adult son, Eli, is listed as the support person. He said he would stay at Mira's home through October 10, 2026."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C3",
+            "quote": "Eli told the case manager he could stay with Mira through October 10. This was a report of his intended availability, not confirmation of his presence at the home."
+          }
+        ],
+        "id": "item-3",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "situation",
+        "text": "Transport for the Oct 12 appointment was listed as arranged through the demo ride service, and the outreach log later records a confirmed reservation with a 9:15 AM pickup at Mira's home.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The discharge handoff lists transport to the October 12 clinic appointment as arranged through the fictional demo ride service, with a planned 9:15 AM pickup. The handoff does not record Mira acknowledging that pickup time."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O1",
+            "quote": "SYNTHETIC RECORD. On October 8, the demo ride service confirmed a reservation for the October 12, 10:00 AM appointment at Juniper Clinic, with pickup at Mira's home at 9:15 AM."
+          }
+        ],
+        "id": "item-4",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "follow_up",
+        "text": "Confirm that Mira received the discharge packet and can find the follow-up appointment details.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The discharge checklist assigns the case manager to confirm that Mira received the discharge packet and can locate the follow-up appointment details during the first outreach call."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "The case manager planned to check receipt of the discharge packet and review appointment logistics at the first successful outreach call."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O4",
+            "quote": "The next documented outreach task is to confirm the appointment and pickup details with Mira, then ask whether she received and can find the discharge packet."
+          }
+        ],
+        "id": "item-5",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "follow_up",
+        "text": "Confirm the appointment and pickup details with Mira.",
+        "citations": [
+          {
+            "documentId": "outreach",
+            "passageId": "O4",
+            "quote": "The next documented outreach task is to confirm the appointment and pickup details with Mira, then ask whether she received and can find the discharge packet."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The discharge handoff lists transport to the October 12 clinic appointment as arranged through the fictional demo ride service, with a planned 9:15 AM pickup. The handoff does not record Mira acknowledging that pickup time."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O1",
+            "quote": "SYNTHETIC RECORD. On October 8, the demo ride service confirmed a reservation for the October 12, 10:00 AM appointment at Juniper Clinic, with pickup at Mira's home at 9:15 AM."
+          }
+        ],
+        "id": "item-6",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "question",
+        "text": "Did Mira receive the discharge packet and can she locate the follow-up appointment details?",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The discharge checklist assigns the case manager to confirm that Mira received the discharge packet and can locate the follow-up appointment details during the first outreach call."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "The case manager planned to check receipt of the discharge packet and review appointment logistics at the first successful outreach call."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O4",
+            "quote": "The next documented outreach task is to confirm the appointment and pickup details with Mira, then ask whether she received and can find the discharge packet."
+          }
+        ],
+        "id": "item-7",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "gap",
+        "text": "The handoff does not record Mira acknowledging the planned 9:15 AM pickup time.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The discharge handoff lists transport to the October 12 clinic appointment as arranged through the fictional demo ride service, with a planned 9:15 AM pickup. The handoff does not record Mira acknowledging that pickup time."
+          }
+        ],
+        "id": "item-8",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      },
+      {
+        "category": "gap",
+        "text": "The log contains no direct confirmation that Eli arrived or stayed at the home; his stay through Oct 10 appears only as an intended availability from discharge planning.",
+        "citations": [
+          {
+            "documentId": "outreach",
+            "passageId": "O5",
+            "quote": "This log contains no direct confirmation that Eli arrived or stayed at the home. The support arrangement remains the plan reported during discharge preparation."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C3",
+            "quote": "Eli told the case manager he could stay with Mira through October 10. This was a report of his intended availability, not confirmation of his presence at the home."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "Mira's fictional adult son, Eli, is listed as the support person. He said he would stay at Mira's home through October 10, 2026."
+          }
+        ],
+        "id": "item-9",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      },
+      {
+        "category": "gap",
+        "text": "As of Oct 9 at 9:00 AM, the log contains no member callback.",
+        "citations": [
+          {
+            "documentId": "outreach",
+            "passageId": "O3",
+            "quote": "A callback request was left using the synthetic contact channel. This log contains no member callback as of October 9 at 9:00 AM."
+          }
+        ],
+        "id": "item-10",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      }
+    ],
+    "generation": {
+      "model": "gpt-5.4-mini-2026-03-17",
+      "provider": "OpenAI",
+      "promptVersion": "v3",
+      "reasoningEffort": "medium",
+      "citationMode": "source-resolved-passages",
+      "generatedAt": "2026-10-10T04:09:13.693Z",
+      "latencyMs": 21125,
+      "inputHash": "2bd7fc51c347a49c72f787d5f6c507a0a71db2b79c759a33ab17854319971aaf",
+      "providerResponseId": "resp_07c4e184c2805f43016ac9ba54c44887d0ad7c5c99e2892a00",
+      "usage": {
+        "input_tokens": 1470,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 1280
+        },
+        "output_tokens": 3552,
+        "output_tokens_details": {
+          "reasoning_tokens": 2822
+        },
+        "total_tokens": 5022
+      }
+    },
+    "validation": {
+      "valid": true,
+      "issues": []
+    },
+    "rawModelOutput": "{\"items\":[{\"category\":\"situation\",\"text\":\"The discharge summary lists discharge to Mira's own home on Oct 7, 2026, with an in-person Juniper Clinic follow-up on Oct 12 at 10:00 AM.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D1\"},{\"documentId\":\"discharge\",\"passageId\":\"D2\"}]},{\"category\":\"situation\",\"text\":\"The outreach log documents a first call attempt to Mira on Oct 8 at 9:30 AM; the call was not answered, a callback request was left, and the log contains no member callback as of Oct 9 at 9:00 AM.\",\"citations\":[{\"documentId\":\"outreach\",\"passageId\":\"O2\"},{\"documentId\":\"outreach\",\"passageId\":\"O3\"}]},{\"category\":\"situation\",\"text\":\"During discharge planning, Mira preferred morning outreach and asked that the first call be directed to her; Eli was listed as the support person and said he would stay through Oct 10.\",\"citations\":[{\"documentId\":\"case-note\",\"passageId\":\"C1\"},{\"documentId\":\"case-note\",\"passageId\":\"C5\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\"},{\"documentId\":\"case-note\",\"passageId\":\"C3\"}]},{\"category\":\"situation\",\"text\":\"Transport for the Oct 12 appointment was listed as arranged through the demo ride service, and the outreach log later records a confirmed reservation with a 9:15 AM pickup at Mira's home.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D5\"},{\"documentId\":\"outreach\",\"passageId\":\"O1\"}]},{\"category\":\"follow_up\",\"text\":\"Confirm that Mira received the discharge packet and can find the follow-up appointment details.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D3\"},{\"documentId\":\"case-note\",\"passageId\":\"C4\"},{\"documentId\":\"outreach\",\"passageId\":\"O4\"}]},{\"category\":\"follow_up\",\"text\":\"Confirm the appointment and pickup details with Mira.\",\"citations\":[{\"documentId\":\"outreach\",\"passageId\":\"O4\"},{\"documentId\":\"discharge\",\"passageId\":\"D5\"},{\"documentId\":\"outreach\",\"passageId\":\"O1\"}]},{\"category\":\"question\",\"text\":\"Did Mira receive the discharge packet and can she locate the follow-up appointment details?\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D3\"},{\"documentId\":\"case-note\",\"passageId\":\"C4\"},{\"documentId\":\"outreach\",\"passageId\":\"O4\"}]},{\"category\":\"gap\",\"text\":\"The handoff does not record Mira acknowledging the planned 9:15 AM pickup time.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D5\"}]},{\"category\":\"gap\",\"text\":\"The log contains no direct confirmation that Eli arrived or stayed at the home; his stay through Oct 10 appears only as an intended availability from discharge planning.\",\"citations\":[{\"documentId\":\"outreach\",\"passageId\":\"O5\"},{\"documentId\":\"case-note\",\"passageId\":\"C3\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\"}]},{\"category\":\"gap\",\"text\":\"As of Oct 9 at 9:00 AM, the log contains no member callback.\",\"citations\":[{\"documentId\":\"outreach\",\"passageId\":\"O3\"}]}]}"
+  }
+}

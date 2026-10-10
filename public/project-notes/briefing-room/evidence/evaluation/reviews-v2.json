@@ -1,0 +1,3357 @@
+{
+  "reviewType": "AI-assisted rubric review; no human or clinical validation",
+  "rubricVersion": "1.0.0",
+  "answerKeyVersion": "1.0.0",
+  "promptVersion": "v2",
+  "runDirectory": "evaluation/runs/v2-1791605089993",
+  "plannedRuns": 6,
+  "reviewedRuns": 6,
+  "method": [
+    "Original generated outputs were reviewed before edits. Both validation-failed runs remain in the denominator and their content is reviewed.",
+    "Each output item is split into substantive atomic claims; repeated claims count again where repeated. Pure questions without factual premises are excluded.",
+    "Attached source passages are checked for meaning, independently of mechanical reference validity. Canonical quotes were resolved by the server, not authored by the model.",
+    "Bounded absence claims can use all declared scopeDocumentIds as evidence. These are labeled document-scope and are reported separately from passage-cited claims. A missing scope document is a validation failure even when the bounded absence is true in the selected records.",
+    "No confirmation/no documentation phrasing is treated as an evidence-status claim. Assertions that a person did not acknowledge, a response was not received, or a discussion never happened are event claims and are not established merely by absent documentation.",
+    "Reports presented as verified world facts and disputed plans stated as settled are partially supported and flagged as source-wide unsupported certainty; this is an explicit conservative adjudication choice.",
+    "A conflict category itself conveys a disagreement; categorizing a compatible plan or documentation gap as conflict is reviewed as an additional unsupported classification claim.",
+    "Expected-item coverage requires meaningful qualifiers and details. A task to confirm something may partially cover a gap but does not fully state its documentation status."
+  ],
+  "runs": [
+    {
+      "run": "straightforward-1",
+      "caseId": "straightforward",
+      "repeat": 1,
+      "outcome": "validation_failed",
+      "validation": {
+        "valid": false,
+        "issues": [
+          "Item 8: a gap must identify all supplied records checked."
+        ]
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 4782,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "S-F1",
+            "status": "partial",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Date and documented home discharge are present; distinction from verified current location is not explicit."
+          },
+          {
+            "targetId": "S-F2",
+            "status": "full",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Clinic, date, time, and in-person mode included."
+          },
+          {
+            "targetId": "S-F3",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Arranged demo ride and pickup date/time/location included."
+          },
+          {
+            "targetId": "S-F4",
+            "status": "full",
+            "outputItemIds": [
+              "item-3",
+              "item-7"
+            ],
+            "rationale": "Intended support through October 10 is distinguished from actual presence."
+          },
+          {
+            "targetId": "S-F5",
+            "status": "full",
+            "outputItemIds": [
+              "item-4"
+            ],
+            "rationale": "Morning preference and member-first routing included."
+          },
+          {
+            "targetId": "S-F6",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Unanswered October 8 outreach and callback cutoff omitted."
+          },
+          {
+            "targetId": "S-F7",
+            "status": "full",
+            "outputItemIds": [
+              "item-5",
+              "item-6"
+            ],
+            "rationale": "Appointment, pickup, packet receipt, and packet location tasks included."
+          }
+        ],
+        "discrepancies": [],
+        "gaps": [
+          {
+            "targetId": "S-G1",
+            "status": "partial",
+            "outputItemIds": [
+              "item-2",
+              "item-8"
+            ],
+            "rationale": "Pickup acknowledgment gap included, but appointment acknowledgment gap omitted; item-2 overstates nonacknowledgment."
+          },
+          {
+            "targetId": "S-G2",
+            "status": "partial",
+            "outputItemIds": [
+              "item-5",
+              "item-6"
+            ],
+            "rationale": "Receipt/location are confirmation tasks but not explicitly stated as unconfirmed in the records."
+          },
+          {
+            "targetId": "S-G3",
+            "status": "full",
+            "outputItemIds": [
+              "item-3",
+              "item-7"
+            ],
+            "rationale": "Intended support is distinguished from unconfirmed actual presence."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Mira Alder was discharged to her own home on October 7, 2026, with a follow-up appointment scheduled at Juniper Clinic on October 12, 2026, at 10:00 AM, in person.",
+          "attachedPassages": [
+            "discharge/D1",
+            "discharge/D2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "Mira was discharged October 7, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "The documented discharge destination was her own home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "Follow-up is scheduled at Juniper Clinic.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c4",
+              "supportMode": "passage-citations",
+              "claim": "Appointment date is October 12, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c5",
+              "supportMode": "passage-citations",
+              "claim": "Appointment time is 10:00 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c6",
+              "supportMode": "passage-citations",
+              "claim": "Appointment is in person.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "situation",
+          "outputText": "Transport to the October 12 appointment is arranged via demo ride service with a planned pickup at 9:15 AM from Mira's home, but Mira has not acknowledged this pickup time.",
+          "attachedPassages": [
+            "discharge/D5",
+            "outreach/O1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "A demo ride is arranged for the October 12 appointment.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Pickup is planned for 9:15 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "Pickup location is Mira’s home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c4",
+              "supportMode": "passage-citations",
+              "claim": "Mira has not acknowledged the pickup time.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "D5 records no acknowledgment; it does not establish that acknowledgment did not happen."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "situation",
+          "outputText": "Mira's adult son, Eli, is listed as a support person who intended to stay at Mira's home through October 10, 2026, but there is no confirmation he arrived or stayed there.",
+          "attachedPassages": [
+            "discharge/D4",
+            "case-note/C3",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "Eli is Mira’s adult son and listed support person.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "He intended to stay through October 10, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c3",
+              "supportMode": "passage-citations",
+              "claim": "His actual arrival or stay is unconfirmed in the supplied record.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "situation",
+          "outputText": "Mira prefers outreach calls in the morning and prefers the first call be directed to her rather than to Eli.",
+          "attachedPassages": [
+            "case-note/C1",
+            "case-note/C5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "Mira prefers morning outreach.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Mira prefers the first call be directed to her, with no Eli-first preference.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "follow_up",
+          "outputText": "The case manager is tasked to confirm Mira received the discharge packet and can locate the follow-up appointment details during the first outreach call.",
+          "attachedPassages": [
+            "discharge/D3",
+            "case-note/C4",
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager is assigned to confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "Case manager is assigned to check ability to locate appointment details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c3",
+              "supportMode": "passage-citations",
+              "claim": "The check is assigned to the first outreach call.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "follow_up",
+          "outputText": "The next outreach task is to confirm appointment and pickup details with Mira and ask about receipt and location of the discharge packet.",
+          "attachedPassages": [
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "passage-citations",
+              "claim": "Next outreach is to confirm appointment details with Mira.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c2",
+              "supportMode": "passage-citations",
+              "claim": "Next outreach is to confirm pickup details with Mira.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c3",
+              "supportMode": "passage-citations",
+              "claim": "Next outreach is to ask about packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c4",
+              "supportMode": "passage-citations",
+              "claim": "Next outreach is to ask whether she can find the packet.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-7",
+          "category": "conflict",
+          "outputText": "Eli's presence at Mira's home through October 10 is reported as intended by Eli but is not confirmed by any direct observation or contact.",
+          "attachedPassages": [
+            "discharge/D4",
+            "case-note/C3",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-7.c1",
+              "supportMode": "passage-citations",
+              "claim": "Eli reported intended presence through October 10.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c2",
+              "supportMode": "passage-citations",
+              "claim": "No direct confirmation of actual presence appears in the cited records.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c3",
+              "supportMode": "passage-citations",
+              "claim": "The support records contain a conflict.",
+              "support": "unsupported",
+              "sourceWide": "unsupported",
+              "rationale": "The conflict category misclassifies a reported plan with no confirmation; no opposing support report exists."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-8",
+          "category": "gap",
+          "outputText": "There is no documentation confirming Mira's acknowledgment of the 9:15 AM pickup time for the October 12 appointment by the demo ride service.",
+          "attachedPassages": [],
+          "scopeDocumentIds": [
+            "discharge",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-8.c1",
+              "supportMode": "document-scope",
+              "claim": "Pickup acknowledgment is not documented in the declared discharge and outreach records.",
+              "support": "fully_supported",
+              "sourceWide": "supported",
+              "rationale": "True bounded absence, but scope omits the supplied prior note and fails the required all-record scope rule."
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "Validation failure is retained as a failed usable-output run.",
+        "The invented conflict is a semantic classification failure; reference validity does not detect it."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 5,
+            "partial": 1,
+            "missed": 1,
+            "expected": 7,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 0,
+            "partial": 0,
+            "missed": 0,
+            "expected": 0,
+            "applicability": "not_applicable"
+          },
+          "gaps": {
+            "full": 1,
+            "partial": 2,
+            "missed": 0,
+            "expected": 3,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 16,
+          "total": 16
+        },
+        "canonicalQuoteMatch": {
+          "exact": 16,
+          "total": 16,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 24,
+          "partially_supported": 1,
+          "contradicted": 0,
+          "unsupported": 1,
+          "total": 26
+        },
+        "passageCitedClaims": {
+          "fully_supported": 23,
+          "partially_supported": 1,
+          "contradicted": 0,
+          "unsupported": 1,
+          "total": 25
+        },
+        "documentScopeClaims": {
+          "fully_supported": 1,
+          "partially_supported": 0,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 1
+        },
+        "sourceWideUnsupportedClaimCount": 2,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-2.c4",
+          "claim": "Mira has not acknowledged the pickup time.",
+          "classification": "unsupported_certainty",
+          "rationale": "D5 records no acknowledgment; it does not establish that acknowledgment did not happen."
+        },
+        {
+          "claimId": "item-7.c3",
+          "claim": "The support records contain a conflict.",
+          "classification": "unsupported",
+          "rationale": "The conflict category misclassifies a reported plan with no confirmation; no opposing support report exists."
+        }
+      ]
+    },
+    {
+      "run": "straightforward-2",
+      "caseId": "straightforward",
+      "repeat": 2,
+      "outcome": "generated",
+      "validation": {
+        "valid": true,
+        "issues": []
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 4223,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "S-F1",
+            "status": "partial",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Date and documented home discharge present; current-location qualifier omitted."
+          },
+          {
+            "targetId": "S-F2",
+            "status": "full",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Clinic, date, time, and in-person mode included."
+          },
+          {
+            "targetId": "S-F3",
+            "status": "full",
+            "outputItemIds": [
+              "item-3"
+            ],
+            "rationale": "Arranged demo ride and pickup date/time/location included."
+          },
+          {
+            "targetId": "S-F4",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Planned support and unconfirmed actual arrival distinguished."
+          },
+          {
+            "targetId": "S-F5",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Morning and member-first preferences omitted."
+          },
+          {
+            "targetId": "S-F6",
+            "status": "partial",
+            "outputItemIds": [
+              "item-5"
+            ],
+            "rationale": "Unanswered call and cutoff included, but no logged callback is overstated as no callback received."
+          },
+          {
+            "targetId": "S-F7",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-6"
+            ],
+            "rationale": "Appointment/pickup and packet receipt included; ability to find the packet itself omitted."
+          }
+        ],
+        "discrepancies": [],
+        "gaps": [
+          {
+            "targetId": "S-G1",
+            "status": "partial",
+            "outputItemIds": [
+              "item-3",
+              "item-7"
+            ],
+            "rationale": "Pickup acknowledgment gap stated, but appointment acknowledgment not explicitly stated as unconfirmed."
+          },
+          {
+            "targetId": "S-G2",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-6"
+            ],
+            "rationale": "Receipt is a question/task; record-bounded receipt and packet-location gap not fully stated."
+          },
+          {
+            "targetId": "S-G3",
+            "status": "full",
+            "outputItemIds": [
+              "item-2",
+              "item-7"
+            ],
+            "rationale": "Actual presence explicitly not documented."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Mira Alder was discharged to her own home on October 7, 2026, with a follow-up appointment scheduled at Juniper Clinic on October 12, 2026, at 10:00 AM in person.",
+          "attachedPassages": [
+            "discharge/D1",
+            "discharge/D2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "Mira was discharged October 7, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "The documented discharge destination was her own home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "Follow-up is scheduled at Juniper Clinic.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c4",
+              "supportMode": "passage-citations",
+              "claim": "Appointment date is October 12, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c5",
+              "supportMode": "passage-citations",
+              "claim": "Appointment time is 10:00 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c6",
+              "supportMode": "passage-citations",
+              "claim": "Appointment is in person.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "situation",
+          "outputText": "Mira's adult son Eli is listed as a support person who planned to stay at her home through October 10, 2026, but there is no confirmation he actually arrived or stayed.",
+          "attachedPassages": [
+            "discharge/D4",
+            "outreach/O5",
+            "case-note/C3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "Eli is Mira’s adult son and listed support person.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Eli planned to stay through October 10, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "Actual arrival or stay is unconfirmed in the supplied record.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "situation",
+          "outputText": "Transport to the October 12 appointment is arranged through a demo ride service with a planned 9:15 AM pickup at Mira's home; Mira has not acknowledged this pickup time.",
+          "attachedPassages": [
+            "discharge/D5",
+            "outreach/O1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "A demo ride is arranged for the October 12 appointment.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "Pickup is planned for 9:15 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c3",
+              "supportMode": "passage-citations",
+              "claim": "Pickup location is Mira’s home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c4",
+              "supportMode": "passage-citations",
+              "claim": "Mira has not acknowledged the pickup time.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "The handoff does not record acknowledgment, which is not evidence that none occurred."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "follow_up",
+          "outputText": "The case manager is assigned to confirm Mira received the discharge packet and can locate the follow-up appointment details during the first outreach call, and to confirm appointment and pickup details with Mira.",
+          "attachedPassages": [
+            "discharge/D3",
+            "case-note/C4",
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should check ability to locate appointment details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c3",
+              "supportMode": "passage-citations",
+              "claim": "This check is assigned to the first outreach call.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c4",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should confirm appointment details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c5",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should confirm pickup details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "follow_up",
+          "outputText": "The case manager's first outreach call to Mira on October 8 at 9:30 AM was not answered; a callback request was left but no member callback was received as of October 9 at 9:00 AM.",
+          "attachedPassages": [
+            "outreach/O2",
+            "outreach/O3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "First outreach to Mira occurred October 8 at 9:30 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "The call was unanswered.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c3",
+              "supportMode": "passage-citations",
+              "claim": "A callback request was left.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c4",
+              "supportMode": "passage-citations",
+              "claim": "No member callback was received by October 9 at 9:00 AM.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "O3 establishes no callback in the log, not that no callback was received anywhere."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "question",
+          "outputText": "Has Mira received and reviewed the discharge packet, and does she have the details of the follow-up appointment and transportation arranged?",
+          "attachedPassages": [
+            "discharge/D3",
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "passage-citations",
+              "claim": "Follow-up appointment and transportation are arranged.",
+              "support": "partially_supported",
+              "sourceWide": "supported",
+              "rationale": "The question’s arranged-logistics premise is documented elsewhere, but attached D3/O4 only describe confirmation tasks."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-7",
+          "category": "gap",
+          "outputText": "There is no documentation confirming Mira's acknowledgment of the 9:15 AM pickup time for the ride service on October 12, nor confirmation of Eli's actual presence at Mira's home after discharge.",
+          "attachedPassages": [],
+          "scopeDocumentIds": [
+            "discharge",
+            "case-note",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-7.c1",
+              "supportMode": "document-scope",
+              "claim": "Pickup acknowledgment for the October 12 9:15 AM ride is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c2",
+              "supportMode": "document-scope",
+              "claim": "Eli’s actual post-discharge presence is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "The question asks about packet receipt/review without asserting either occurred; those pure questions are excluded from claim counts.",
+        "Passing structural validation does not prevent absence-of-documentation overstatements or expected-item omissions."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 3,
+            "partial": 3,
+            "missed": 1,
+            "expected": 7,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 0,
+            "partial": 0,
+            "missed": 0,
+            "expected": 0,
+            "applicability": "not_applicable"
+          },
+          "gaps": {
+            "full": 1,
+            "partial": 2,
+            "missed": 0,
+            "expected": 3,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 14,
+          "total": 14
+        },
+        "canonicalQuoteMatch": {
+          "exact": 14,
+          "total": 14,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 22,
+          "partially_supported": 3,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 25
+        },
+        "passageCitedClaims": {
+          "fully_supported": 20,
+          "partially_supported": 3,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 23
+        },
+        "documentScopeClaims": {
+          "fully_supported": 2,
+          "partially_supported": 0,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 2
+        },
+        "sourceWideUnsupportedClaimCount": 2,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-3.c4",
+          "claim": "Mira has not acknowledged the pickup time.",
+          "classification": "unsupported_certainty",
+          "rationale": "The handoff does not record acknowledgment, which is not evidence that none occurred."
+        },
+        {
+          "claimId": "item-5.c4",
+          "claim": "No member callback was received by October 9 at 9:00 AM.",
+          "classification": "unsupported_certainty",
+          "rationale": "O3 establishes no callback in the log, not that no callback was received anywhere."
+        }
+      ]
+    },
+    {
+      "run": "conflicting-1",
+      "caseId": "conflicting",
+      "repeat": 1,
+      "outcome": "generated",
+      "validation": {
+        "valid": true,
+        "issues": []
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 5666,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "C-F1",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-2",
+              "item-6"
+            ],
+            "rationale": "Discharge date plus unresolved current residence stated."
+          },
+          {
+            "targetId": "C-F2",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Copied October 9 appointment and lack of independent corroboration omitted from generated text."
+          },
+          {
+            "targetId": "C-F3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-6"
+            ],
+            "rationale": "Draft transport using Home A stated; absent confirmation is broad and no pickup-time gap is explicit."
+          },
+          {
+            "targetId": "C-F4",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Unanswered October 9 call and lack of member conversation omitted."
+          },
+          {
+            "targetId": "C-F5",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Appointment, residence/pickup, and support verification tasks included."
+          }
+        ],
+        "discrepancies": [
+          {
+            "targetId": "C-D1",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-3"
+            ],
+            "rationale": "Both dates/times/desks attributed in conflict item; unresolved verification stated, albeit too broadly."
+          },
+          {
+            "targetId": "C-D2",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-4"
+            ],
+            "rationale": "Home A handoff/draft and reported Home B plan compared; reconciliation remains open."
+          },
+          {
+            "targetId": "C-D3",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-5",
+              "item-6"
+            ],
+            "rationale": "Three-night version, afternoon-only/no-overnight report, and unresolved status included."
+          }
+        ],
+        "gaps": [
+          {
+            "targetId": "C-G1",
+            "status": "full",
+            "outputItemIds": [
+              "item-6"
+            ],
+            "rationale": "Bounded no-documented-verification statement included."
+          },
+          {
+            "targetId": "C-G2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2",
+              "item-4",
+              "item-6"
+            ],
+            "rationale": "Current residence and reconciled pickup remain unresolved."
+          },
+          {
+            "targetId": "C-G3",
+            "status": "full",
+            "outputItemIds": [
+              "item-5",
+              "item-6"
+            ],
+            "rationale": "Unresolved Nia availability and undocumented replacement support included."
+          },
+          {
+            "targetId": "C-G4",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-6"
+            ],
+            "rationale": "Unconfirmed transport arrangements stated broadly; reservation and pickup time not explicitly both identified."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Theo Bracken was discharged on October 8, 2026, to his own home ([SYNTHETIC HOME A]) with a scheduled in-person follow-up appointment at Birch Clinic, North desk, on October 12, 2026, at 9:00 AM. His sister Nia is planned to stay with him for the first three nights after discharge, October 8 through October 10, but she reported only afternoon availability on October 8 and no overnight support. Theo reported planning to stay at his niece's apartment ([SYNTHETIC HOME B]) instead of his own home. There is a conflicting report of an appointment at Birch Clinic, South desk, on October 13, 2026, at 2:00 PM, which was not verified.",
+          "attachedPassages": [
+            "discharge/D1",
+            "discharge/D2",
+            "discharge/D3",
+            "case-note/C1",
+            "case-note/C2",
+            "case-note/C3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "Theo’s discharge date is October 8, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "The documented discharge destination is his own Home A.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "An in-person follow-up is scheduled at Birch Clinic North desk.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "D2 lists that version; other supplied records conflict and the opening sentence does not attribute it as a disputed listed plan."
+            },
+            {
+              "claimId": "item-1.c4",
+              "supportMode": "passage-citations",
+              "claim": "The scheduled appointment date is October 12, 2026.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "Date is one unresolved version, stated as scheduled in the opening summary."
+            },
+            {
+              "claimId": "item-1.c5",
+              "supportMode": "passage-citations",
+              "claim": "The scheduled appointment time is 9:00 AM.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "Time is one unresolved version, stated as scheduled in the opening summary."
+            },
+            {
+              "claimId": "item-1.c6",
+              "supportMode": "passage-citations",
+              "claim": "Nia is Theo’s sister.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c7",
+              "supportMode": "passage-citations",
+              "claim": "Nia is planned to stay October 8 through October 10.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "The discharge plan is disputed; this opening assertion lacks source attribution, although the next clause gives the conflict."
+            },
+            {
+              "claimId": "item-1.c8",
+              "supportMode": "passage-citations",
+              "claim": "Nia reported availability only October 8 afternoon.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c9",
+              "supportMode": "passage-citations",
+              "claim": "Nia reported she cannot stay overnight.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c10",
+              "supportMode": "passage-citations",
+              "claim": "Theo reported a plan to stay at his niece’s Home B instead of his own home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c11",
+              "supportMode": "passage-citations",
+              "claim": "An alternative report lists Birch Clinic South desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c12",
+              "supportMode": "passage-citations",
+              "claim": "That alternative report gives October 13, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c13",
+              "supportMode": "passage-citations",
+              "claim": "That alternative report gives 2:00 PM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c14",
+              "supportMode": "passage-citations",
+              "claim": "The alternative appointment has not been verified.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C2 says the case manager did not verify it; records do not establish absence of all verification."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "follow_up",
+          "outputText": "Verify the appointment date, time, and clinic desk; confirm Theo's current residence and the correct pickup location for transport; clarify who is available to help and when, especially regarding Nia's support availability.",
+          "attachedPassages": [
+            "discharge/D5",
+            "case-note/C4",
+            "case-note/C5",
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify appointment date.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify appointment time.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify clinic desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c4",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to confirm current residence.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c5",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to confirm transport pickup location.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c6",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to clarify support person availability and timing.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "conflict",
+          "outputText": "There is a conflict between the discharge summary stating the follow-up appointment is at Birch Clinic, North desk, on October 12, 2026, at 9:00 AM, and Theo's report of an appointment at Birch Clinic, South desk, on October 13, 2026, at 2:00 PM. Neither appointment has been verified.",
+          "attachedPassages": [
+            "discharge/D2",
+            "case-note/C2",
+            "outreach/O1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary lists Birch Clinic North desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary lists October 12, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c3",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary lists 9:00 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c4",
+              "supportMode": "passage-citations",
+              "claim": "Theo’s report lists Birch Clinic South desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c5",
+              "supportMode": "passage-citations",
+              "claim": "Theo’s report lists October 13, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c6",
+              "supportMode": "passage-citations",
+              "claim": "Theo’s report lists 2:00 PM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c7",
+              "supportMode": "passage-citations",
+              "claim": "These appointment versions conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c8",
+              "supportMode": "passage-citations",
+              "claim": "Neither appointment has been verified.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "O1 establishes transcription, not a new confirmation; C2 only says case manager did not contact clinic. Even all records establish only no documented verification."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "conflict",
+          "outputText": "There is a conflict regarding Theo's post-discharge residence: the discharge summary indicates he will return to his own home ([SYNTHETIC HOME A]), but Theo reported planning to stay at his niece's apartment ([SYNTHETIC HOME B]). The transport request draft uses [SYNTHETIC HOME A] as the pickup location, but this has not been confirmed or reconciled.",
+          "attachedPassages": [
+            "discharge/D1",
+            "case-note/C1",
+            "case-note/C4",
+            "outreach/O2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "The residence reports conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary uses own home, Home A.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c3",
+              "supportMode": "passage-citations",
+              "claim": "Theo reported a plan to stay at niece’s Home B.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c4",
+              "supportMode": "passage-citations",
+              "claim": "Transport request is a draft using Home A.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c5",
+              "supportMode": "passage-citations",
+              "claim": "Pickup location has not been confirmed or reconciled.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C4 documents no reply; all sources lack a resolution, but that is not proof no reconciliation happened."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "conflict",
+          "outputText": "There is a conflict about Nia's availability to support Theo: the discharge summary states she will stay with him overnight for three nights, but she told the case manager she can only help during the afternoon of October 8 and cannot stay overnight. No replacement overnight support has been documented.",
+          "attachedPassages": [
+            "discharge/D3",
+            "case-note/C3",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "The support availability reports conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary states Nia will stay overnight three nights.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c3",
+              "supportMode": "passage-citations",
+              "claim": "Nia told case manager she can help only October 8 afternoon.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c4",
+              "supportMode": "passage-citations",
+              "claim": "Nia told case manager she cannot stay overnight.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c5",
+              "supportMode": "passage-citations",
+              "claim": "No replacement overnight support is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "gap",
+          "outputText": "No confirmation or verification of the appointment details, Theo's current residence, transport arrangements, or support availability has been documented as of October 9, 2026, 9:15 AM.",
+          "attachedPassages": [],
+          "scopeDocumentIds": [
+            "discharge",
+            "case-note",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "document-scope",
+              "claim": "No appointment verification is documented by October 9 at 9:15 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c2",
+              "supportMode": "document-scope",
+              "claim": "No current residence confirmation is documented by that cutoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c3",
+              "supportMode": "document-scope",
+              "claim": "No transport arrangement confirmation is documented by that cutoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c4",
+              "supportMode": "document-scope",
+              "claim": "No resolution of the support availability reports is documented by that cutoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "The detailed conflict section is substantially better qualified than the opening situation item.",
+        "Correct canonical references do not resolve contradictory sources or establish that an undocumented event never happened."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 2,
+            "partial": 1,
+            "missed": 2,
+            "expected": 5,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 3,
+            "partial": 0,
+            "missed": 0,
+            "expected": 3,
+            "applicability": "applicable"
+          },
+          "gaps": {
+            "full": 3,
+            "partial": 1,
+            "missed": 0,
+            "expected": 4,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 20,
+          "total": 20
+        },
+        "canonicalQuoteMatch": {
+          "exact": 20,
+          "total": 20,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 35,
+          "partially_supported": 7,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 42
+        },
+        "passageCitedClaims": {
+          "fully_supported": 31,
+          "partially_supported": 7,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 38
+        },
+        "documentScopeClaims": {
+          "fully_supported": 4,
+          "partially_supported": 0,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 4
+        },
+        "sourceWideUnsupportedClaimCount": 7,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-1.c3",
+          "claim": "An in-person follow-up is scheduled at Birch Clinic North desk.",
+          "classification": "unsupported_certainty",
+          "rationale": "D2 lists that version; other supplied records conflict and the opening sentence does not attribute it as a disputed listed plan."
+        },
+        {
+          "claimId": "item-1.c4",
+          "claim": "The scheduled appointment date is October 12, 2026.",
+          "classification": "unsupported_certainty",
+          "rationale": "Date is one unresolved version, stated as scheduled in the opening summary."
+        },
+        {
+          "claimId": "item-1.c5",
+          "claim": "The scheduled appointment time is 9:00 AM.",
+          "classification": "unsupported_certainty",
+          "rationale": "Time is one unresolved version, stated as scheduled in the opening summary."
+        },
+        {
+          "claimId": "item-1.c7",
+          "claim": "Nia is planned to stay October 8 through October 10.",
+          "classification": "unsupported_certainty",
+          "rationale": "The discharge plan is disputed; this opening assertion lacks source attribution, although the next clause gives the conflict."
+        },
+        {
+          "claimId": "item-1.c14",
+          "claim": "The alternative appointment has not been verified.",
+          "classification": "unsupported_certainty",
+          "rationale": "C2 says the case manager did not verify it; records do not establish absence of all verification."
+        },
+        {
+          "claimId": "item-3.c8",
+          "claim": "Neither appointment has been verified.",
+          "classification": "unsupported_certainty",
+          "rationale": "O1 establishes transcription, not a new confirmation; C2 only says case manager did not contact clinic. Even all records establish only no documented verification."
+        },
+        {
+          "claimId": "item-4.c5",
+          "claim": "Pickup location has not been confirmed or reconciled.",
+          "classification": "unsupported_certainty",
+          "rationale": "C4 documents no reply; all sources lack a resolution, but that is not proof no reconciliation happened."
+        }
+      ]
+    },
+    {
+      "run": "conflicting-2",
+      "caseId": "conflicting",
+      "repeat": 2,
+      "outcome": "generated",
+      "validation": {
+        "valid": true,
+        "issues": []
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 7871,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "C-F1",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-6",
+              "item-7"
+            ],
+            "rationale": "Discharge date and unknown current residence included."
+          },
+          {
+            "targetId": "C-F2",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Copied/nonindependent appointment entry omitted."
+          },
+          {
+            "targetId": "C-F3",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Draft request, its Home A value, and absent reservation/pickup time omitted."
+          },
+          {
+            "targetId": "C-F4",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Unanswered outreach and no completed confirmation conversation omitted."
+          },
+          {
+            "targetId": "C-F5",
+            "status": "full",
+            "outputItemIds": [
+              "item-6"
+            ],
+            "rationale": "All documented next-task groups included."
+          }
+        ],
+        "discrepancies": [
+          {
+            "targetId": "C-D1",
+            "status": "full",
+            "outputItemIds": [
+              "item-3",
+              "item-6",
+              "item-7"
+            ],
+            "rationale": "Both complete appointment versions and unresolved verification included."
+          },
+          {
+            "targetId": "C-D2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2",
+              "item-5",
+              "item-6",
+              "item-7"
+            ],
+            "rationale": "Both home versions and need to reconcile pickup included."
+          },
+          {
+            "targetId": "C-D3",
+            "status": "full",
+            "outputItemIds": [
+              "item-4",
+              "item-7"
+            ],
+            "rationale": "Three nights and afternoon-only/no-overnight report plus unresolved status included."
+          }
+        ],
+        "gaps": [
+          {
+            "targetId": "C-G1",
+            "status": "full",
+            "outputItemIds": [
+              "item-7"
+            ],
+            "rationale": "No verification documented by log cutoff."
+          },
+          {
+            "targetId": "C-G2",
+            "status": "full",
+            "outputItemIds": [
+              "item-5",
+              "item-6",
+              "item-7"
+            ],
+            "rationale": "No confirmed current residence or reconciled pickup."
+          },
+          {
+            "targetId": "C-G3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-7"
+            ],
+            "rationale": "Nia availability unresolved; lack of documented replacement overnight support omitted."
+          },
+          {
+            "targetId": "C-G4",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "No reservation/pickup-time gap stated."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Theo Bracken was discharged on October 8, 2026, to his own home ([SYNTHETIC HOME A]) with a scheduled in-person follow-up at Birch Clinic, North desk, on October 12, 2026, at 9:00 AM. His sister Nia is planned to stay with him for the first three nights after discharge, October 8 through October 10.",
+          "attachedPassages": [
+            "discharge/D1",
+            "discharge/D2",
+            "discharge/D3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "Theo’s discharge date is October 8, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "Documented discharge destination is his own Home A.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "An in-person follow-up is scheduled at Birch Clinic North desk.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "D2 is a listed version disputed elsewhere; opening sentence treats it as scheduled without attribution."
+            },
+            {
+              "claimId": "item-1.c4",
+              "supportMode": "passage-citations",
+              "claim": "The scheduled appointment date is October 12, 2026.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "One unresolved date is presented as the scheduled date."
+            },
+            {
+              "claimId": "item-1.c5",
+              "supportMode": "passage-citations",
+              "claim": "The scheduled appointment time is 9:00 AM.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "One unresolved time is presented as the scheduled time."
+            },
+            {
+              "claimId": "item-1.c6",
+              "supportMode": "passage-citations",
+              "claim": "Nia is Theo’s sister.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c7",
+              "supportMode": "passage-citations",
+              "claim": "Nia is planned to stay October 8 through October 10.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "This is the disputed discharge-summary plan, presented without attribution before the later conflict item."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "conflict",
+          "outputText": "Theo reported to the case manager that he plans to stay at his niece's apartment ([SYNTHETIC HOME B]) after discharge, conflicting with the discharge summary stating he would return to his own home ([SYNTHETIC HOME A]).",
+          "attachedPassages": [
+            "case-note/C1",
+            "discharge/D1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "Theo reported a plan to stay at niece’s Home B after discharge.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary states his own Home A.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "The two destination reports conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "conflict",
+          "outputText": "Theo read an appointment message as Birch Clinic, South desk, on October 13, 2026, at 2:00 PM, conflicting with the discharge summary's appointment at Birch Clinic, North desk, on October 12, 2026, at 9:00 AM.",
+          "attachedPassages": [
+            "case-note/C2",
+            "discharge/D2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "Theo read a message naming Birch Clinic South desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "His message gave October 13, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c3",
+              "supportMode": "passage-citations",
+              "claim": "His message gave 2:00 PM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c4",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary names Birch Clinic North desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c5",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary gives October 12, 2026.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c6",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary gives 9:00 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-3.c7",
+              "supportMode": "passage-citations",
+              "claim": "The appointment reports conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "conflict",
+          "outputText": "Nia reported she can only help during the afternoon of October 8 and cannot stay overnight, conflicting with the discharge summary stating she will stay with Theo for the first three nights after discharge, October 8 through October 10.",
+          "attachedPassages": [
+            "case-note/C3",
+            "discharge/D3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "Nia reported availability only October 8 afternoon.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Nia reported she could not stay overnight.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c3",
+              "supportMode": "passage-citations",
+              "claim": "Discharge summary says she will stay October 8 through October 10.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c4",
+              "supportMode": "passage-citations",
+              "claim": "The support reports conflict.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "follow_up",
+          "outputText": "The case manager requested the discharge team to reconcile Theo's planned residence and the pickup location before finalizing transport; no reply to this request is documented.",
+          "attachedPassages": [
+            "case-note/C4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager asked discharge team to reconcile residence and pickup before finalizing transport.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "No reply to that request is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "follow_up",
+          "outputText": "The outreach coordinator's next tasks are to verify the appointment date, time, and clinic desk; confirm where Theo is staying and the pickup location; and clarify who is available to help and when.",
+          "attachedPassages": [
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify appointment date.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c2",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify appointment time.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c3",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to verify clinic desk.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c4",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to confirm current residence.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c5",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to confirm pickup location.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c6",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to clarify available support and timing.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-7",
+          "category": "gap",
+          "outputText": "No confirmation or verification of the appointment details, Theo's current residence, or Nia's availability has been documented as of October 9, 2026, 9:15 AM.",
+          "attachedPassages": [
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [
+            "discharge",
+            "case-note",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-7.c1",
+              "supportMode": "document-scope",
+              "claim": "No appointment verification is documented by October 9 at 9:15 AM.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c2",
+              "supportMode": "document-scope",
+              "claim": "No current residence confirmation is documented by that cutoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c3",
+              "supportMode": "document-scope",
+              "claim": "No resolution of Nia’s availability is documented by that cutoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "All three disagreements appear, but the initial situation item gives the disputed discharge version unqualified.",
+        "No transport reservation status, copied-source warning, or failed-outreach history appears."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 2,
+            "partial": 0,
+            "missed": 3,
+            "expected": 5,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 3,
+            "partial": 0,
+            "missed": 0,
+            "expected": 3,
+            "applicability": "applicable"
+          },
+          "gaps": {
+            "full": 2,
+            "partial": 1,
+            "missed": 1,
+            "expected": 4,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 12,
+          "total": 12
+        },
+        "canonicalQuoteMatch": {
+          "exact": 12,
+          "total": 12,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 28,
+          "partially_supported": 4,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 32
+        },
+        "passageCitedClaims": {
+          "fully_supported": 25,
+          "partially_supported": 4,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 29
+        },
+        "documentScopeClaims": {
+          "fully_supported": 3,
+          "partially_supported": 0,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 3
+        },
+        "sourceWideUnsupportedClaimCount": 4,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-1.c3",
+          "claim": "An in-person follow-up is scheduled at Birch Clinic North desk.",
+          "classification": "unsupported_certainty",
+          "rationale": "D2 is a listed version disputed elsewhere; opening sentence treats it as scheduled without attribution."
+        },
+        {
+          "claimId": "item-1.c4",
+          "claim": "The scheduled appointment date is October 12, 2026.",
+          "classification": "unsupported_certainty",
+          "rationale": "One unresolved date is presented as the scheduled date."
+        },
+        {
+          "claimId": "item-1.c5",
+          "claim": "The scheduled appointment time is 9:00 AM.",
+          "classification": "unsupported_certainty",
+          "rationale": "One unresolved time is presented as the scheduled time."
+        },
+        {
+          "claimId": "item-1.c7",
+          "claim": "Nia is planned to stay October 8 through October 10.",
+          "classification": "unsupported_certainty",
+          "rationale": "This is the disputed discharge-summary plan, presented without attribution before the later conflict item."
+        }
+      ]
+    },
+    {
+      "run": "missing-1",
+      "caseId": "missing",
+      "repeat": 1,
+      "outcome": "generated",
+      "validation": {
+        "valid": true,
+        "issues": []
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 3496,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "M-F1",
+            "status": "full",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Home disposition is paired with absence of arrival confirmation."
+          },
+          {
+            "targetId": "M-F2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Requested follow-up is distinguished from unknown booking status."
+          },
+          {
+            "targetId": "M-F3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-3"
+            ],
+            "rationale": "Inactive prior number included, but October 6 date and attribution to Lena’s report omitted."
+          },
+          {
+            "targetId": "M-F4",
+            "status": "partial",
+            "outputItemIds": [
+              "item-5"
+            ],
+            "rationale": "Both dates and unanswered calls/no logged callback included; completed-conversation status and October 9 10:30 cutoff omitted."
+          },
+          {
+            "targetId": "M-F5",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Coordinator request’s three details and absent response not described."
+          },
+          {
+            "targetId": "M-F6",
+            "status": "full",
+            "outputItemIds": [
+              "item-8"
+            ],
+            "rationale": "Missing handoff and contact-dependent confirmation tasks included."
+          }
+        ],
+        "discrepancies": [],
+        "gaps": [
+          {
+            "targetId": "M-G1",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Blank admission/discharge dates and export/event timestamp distinction omitted."
+          },
+          {
+            "targetId": "M-G2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "All four absent appointment fields included."
+          },
+          {
+            "targetId": "M-G3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-3",
+              "item-7"
+            ],
+            "rationale": "Prior inactive route and absent update included; unknown dialed number/current-route verification omitted."
+          },
+          {
+            "targetId": "M-G4",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-9"
+            ],
+            "rationale": "Friend identity, response, availability and no confirmed support included; missing contact details not explicit."
+          },
+          {
+            "targetId": "M-G5",
+            "status": "full",
+            "outputItemIds": [
+              "item-9"
+            ],
+            "rationale": "Document-bounded transport needs/arrangements gap without assumed need."
+          },
+          {
+            "targetId": "M-G6",
+            "status": "partial",
+            "outputItemIds": [
+              "item-6",
+              "item-8"
+            ],
+            "rationale": "Packet receipt is a confirmation task, but its unconfirmed documentation status not explicit."
+          },
+          {
+            "targetId": "M-G7",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-9"
+            ],
+            "rationale": "Address/arrival and current condition remain undocumented."
+          },
+          {
+            "targetId": "M-G8",
+            "status": "full",
+            "outputItemIds": [
+              "item-5"
+            ],
+            "rationale": "No voicemail documentation or explanation of nonresponse asserted."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Lena Moss was discharged to home, but no confirmation of her arrival or home address is documented.",
+          "attachedPassages": [
+            "discharge/D2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "The recorded discharge disposition is home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "Arrival at home is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "Destination address is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "situation",
+          "outputText": "A clinic follow-up is requested but no clinic name, appointment date, time, or booking status is documented.",
+          "attachedPassages": [
+            "discharge/D3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "Clinic follow-up is requested.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Clinic name is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "Appointment date is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c4",
+              "supportMode": "passage-citations",
+              "claim": "Appointment time is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c5",
+              "supportMode": "passage-citations",
+              "claim": "Booking status is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "situation",
+          "outputText": "Lena's previous telephone number is no longer in use, and no updated contact information is available.",
+          "attachedPassages": [
+            "case-note/C1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "Lena’s previous telephone number is no longer in use.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C1 reports what Lena said October 6; the sentence drops attribution and presents reported status as verified."
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "No updated contact information is available.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C1 only says no replacement was captured; absence from records does not establish no updated contact information exists or is available."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "situation",
+          "outputText": "Lena mentioned asking a friend for help after discharge, but the friend's identity, response, and availability are unknown.",
+          "attachedPassages": [
+            "case-note/C2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "Lena mentioned asking a friend to help after discharge.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Friend identity is unknown in the note.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c3",
+              "supportMode": "passage-citations",
+              "claim": "Friend’s response is unknown in the note.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c4",
+              "supportMode": "passage-citations",
+              "claim": "Friend’s availability is unknown in the note.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "situation",
+          "outputText": "Two outreach calls on October 8 and 9 were not answered, with no voicemail or callback documented and no reason for unanswered calls recorded.",
+          "attachedPassages": [
+            "outreach/O1",
+            "outreach/O2",
+            "outreach/O3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "An October 8 outreach call was unanswered.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "An October 9 outreach call was unanswered.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c3",
+              "supportMode": "passage-citations",
+              "claim": "No voicemail is documented in the cited outreach entries.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c4",
+              "supportMode": "passage-citations",
+              "claim": "No callback is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c5",
+              "supportMode": "passage-citations",
+              "claim": "No reason for the unanswered calls is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "follow_up",
+          "outputText": "Case manager is to confirm receipt of the discharge packet and establish follow-up logistics with Lena.",
+          "attachedPassages": [
+            "discharge/D4",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c2",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should establish follow-up logistics with Lena.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-7",
+          "category": "follow_up",
+          "outputText": "Case manager planned to obtain updated contact information and confirm follow-up appointment details after discharge handoff is completed.",
+          "attachedPassages": [
+            "case-note/C3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-7.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager planned to obtain an updated contact route.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c2",
+              "supportMode": "passage-citations",
+              "claim": "Case manager planned to confirm appointment details after completed handoff.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-8",
+          "category": "follow_up",
+          "outputText": "Next tasks include resolving missing handoff details and, once contact is made, confirming packet receipt, support availability, and transport needs.",
+          "attachedPassages": [
+            "outreach/O4",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-8.c1",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to resolve missing handoff details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c2",
+              "supportMode": "passage-citations",
+              "claim": "Once contact is made, confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c3",
+              "supportMode": "passage-citations",
+              "claim": "Once contact is made, confirm support availability.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c4",
+              "supportMode": "passage-citations",
+              "claim": "Once contact is made, confirm transport needs.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-9",
+          "category": "gap",
+          "outputText": "No documentation confirms Lena's current support arrangements, transport needs or arrangements, or her condition and readiness for outreach after discharge.",
+          "attachedPassages": [],
+          "scopeDocumentIds": [
+            "discharge",
+            "case-note",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-9.c1",
+              "supportMode": "document-scope",
+              "claim": "Current support arrangements are not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c2",
+              "supportMode": "document-scope",
+              "claim": "Transport needs are not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c3",
+              "supportMode": "document-scope",
+              "claim": "Transport arrangements are not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c4",
+              "supportMode": "document-scope",
+              "claim": "Current condition is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c5",
+              "supportMode": "document-scope",
+              "claim": "Readiness for outreach is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "No clinical inference is made from unanswered calls.",
+        "Date omission is significant: the brief does not warn that the export date is not a discharge event date."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 3,
+            "partial": 2,
+            "missed": 1,
+            "expected": 6,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 0,
+            "partial": 0,
+            "missed": 0,
+            "expected": 0,
+            "applicability": "not_applicable"
+          },
+          "gaps": {
+            "full": 4,
+            "partial": 3,
+            "missed": 1,
+            "expected": 8,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 12,
+          "total": 12
+        },
+        "canonicalQuoteMatch": {
+          "exact": 12,
+          "total": 12,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 30,
+          "partially_supported": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 32
+        },
+        "passageCitedClaims": {
+          "fully_supported": 25,
+          "partially_supported": 2,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 27
+        },
+        "documentScopeClaims": {
+          "fully_supported": 5,
+          "partially_supported": 0,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 5
+        },
+        "sourceWideUnsupportedClaimCount": 2,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-3.c1",
+          "claim": "Lena’s previous telephone number is no longer in use.",
+          "classification": "unsupported_certainty",
+          "rationale": "C1 reports what Lena said October 6; the sentence drops attribution and presents reported status as verified."
+        },
+        {
+          "claimId": "item-3.c2",
+          "claim": "No updated contact information is available.",
+          "classification": "unsupported_certainty",
+          "rationale": "C1 only says no replacement was captured; absence from records does not establish no updated contact information exists or is available."
+        }
+      ]
+    },
+    {
+      "run": "missing-2",
+      "caseId": "missing",
+      "repeat": 2,
+      "outcome": "validation_failed",
+      "validation": {
+        "valid": false,
+        "issues": [
+          "Item 9: a conflict needs both source passages."
+        ]
+      },
+      "model": "gpt-4.1-mini-2025-04-14",
+      "promptVersion": "v2",
+      "latencyMs": 5983,
+      "coverage": {
+        "facts": [
+          {
+            "targetId": "M-F1",
+            "status": "full",
+            "outputItemIds": [
+              "item-1",
+              "item-9"
+            ],
+            "rationale": "Home disposition distinguished from unconfirmed arrival."
+          },
+          {
+            "targetId": "M-F2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Requested follow-up and absent booking status included."
+          },
+          {
+            "targetId": "M-F3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-3"
+            ],
+            "rationale": "Inactive previous number included without October 6 date or report attribution."
+          },
+          {
+            "targetId": "M-F4",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Both unanswered outreach attempts, no completed conversation/callback, and cutoff omitted."
+          },
+          {
+            "targetId": "M-F5",
+            "status": "partial",
+            "outputItemIds": [
+              "item-7"
+            ],
+            "rationale": "Request details included, but absence in log is overstated as no response received."
+          },
+          {
+            "targetId": "M-F6",
+            "status": "full",
+            "outputItemIds": [
+              "item-8"
+            ],
+            "rationale": "All documented next task groups with contact condition included."
+          }
+        ],
+        "discrepancies": [],
+        "gaps": [
+          {
+            "targetId": "M-G1",
+            "status": "partial",
+            "outputItemIds": [
+              "item-1"
+            ],
+            "rationale": "Discharge date absent, but admission date and export/event distinction omitted."
+          },
+          {
+            "targetId": "M-G2",
+            "status": "full",
+            "outputItemIds": [
+              "item-2"
+            ],
+            "rationale": "Clinic, date, time, booking status gaps included."
+          },
+          {
+            "targetId": "M-G3",
+            "status": "partial",
+            "outputItemIds": [
+              "item-3",
+              "item-10"
+            ],
+            "rationale": "Old-number problem and no update documented; unidentified dialed number/current verification omitted."
+          },
+          {
+            "targetId": "M-G4",
+            "status": "partial",
+            "outputItemIds": [
+              "item-4",
+              "item-10"
+            ],
+            "rationale": "Friend identity/response/availability gaps, but absent contact details not explicit."
+          },
+          {
+            "targetId": "M-G5",
+            "status": "full",
+            "outputItemIds": [
+              "item-5",
+              "item-10"
+            ],
+            "rationale": "Needs/arrangements undocumented without asserting need, though item-5 overstates lack of any discussion."
+          },
+          {
+            "targetId": "M-G6",
+            "status": "full",
+            "outputItemIds": [
+              "item-6"
+            ],
+            "rationale": "Receipt explicitly unconfirmed."
+          },
+          {
+            "targetId": "M-G7",
+            "status": "partial",
+            "outputItemIds": [
+              "item-1",
+              "item-9"
+            ],
+            "rationale": "Arrival/address unknown, but current situation gap omitted."
+          },
+          {
+            "targetId": "M-G8",
+            "status": "missed",
+            "outputItemIds": [],
+            "rationale": "Reason for unanswered calls and October 9 voicemail status omitted."
+          }
+        ]
+      },
+      "itemReviews": [
+        {
+          "outputItemId": "item-1",
+          "category": "situation",
+          "outputText": "Lena Moss was discharged to home, but no discharge date, destination address, or confirmation of arrival at home is documented.",
+          "attachedPassages": [
+            "discharge/D2",
+            "discharge/D1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-1.c1",
+              "supportMode": "passage-citations",
+              "claim": "The recorded discharge disposition is home.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c2",
+              "supportMode": "passage-citations",
+              "claim": "Discharge date is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c3",
+              "supportMode": "passage-citations",
+              "claim": "Destination address is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-1.c4",
+              "supportMode": "passage-citations",
+              "claim": "Arrival at home is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-2",
+          "category": "situation",
+          "outputText": "A clinic follow-up is requested but no clinic name, appointment date, time, or booking status is documented.",
+          "attachedPassages": [
+            "discharge/D3"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-2.c1",
+              "supportMode": "passage-citations",
+              "claim": "Clinic follow-up is requested.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c2",
+              "supportMode": "passage-citations",
+              "claim": "Clinic name is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c3",
+              "supportMode": "passage-citations",
+              "claim": "Appointment date is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c4",
+              "supportMode": "passage-citations",
+              "claim": "Appointment time is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-2.c5",
+              "supportMode": "passage-citations",
+              "claim": "Booking status is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-3",
+          "category": "situation",
+          "outputText": "Lena's previous telephone number is no longer in use, and no updated contact information is documented.",
+          "attachedPassages": [
+            "case-note/C1"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-3.c1",
+              "supportMode": "passage-citations",
+              "claim": "Lena’s previous telephone number is no longer in use.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C1 is Lena’s report, not independently confirmed number status."
+            },
+            {
+              "claimId": "item-3.c2",
+              "supportMode": "passage-citations",
+              "claim": "No updated contact information is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-4",
+          "category": "situation",
+          "outputText": "Lena mentioned asking a friend for help after discharge, but the friend's identity, response, and availability are not documented.",
+          "attachedPassages": [
+            "case-note/C2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-4.c1",
+              "supportMode": "passage-citations",
+              "claim": "Lena mentioned asking a friend for help after discharge.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c2",
+              "supportMode": "passage-citations",
+              "claim": "Friend identity is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c3",
+              "supportMode": "passage-citations",
+              "claim": "Friend response is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-4.c4",
+              "supportMode": "passage-citations",
+              "claim": "Friend availability is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-5",
+          "category": "situation",
+          "outputText": "No transport arrangements or needs have been discussed or documented for Lena after discharge.",
+          "attachedPassages": [
+            "case-note/C4",
+            "discharge/D5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-5.c1",
+              "supportMode": "passage-citations",
+              "claim": "No transport arrangements have been discussed.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "The record does not document arrangements, but does not establish that nobody discussed them."
+            },
+            {
+              "claimId": "item-5.c2",
+              "supportMode": "passage-citations",
+              "claim": "No transport needs have been discussed after discharge.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "C4 bounds lack of discussion to the October 6 conversation, not all later discussions."
+            },
+            {
+              "claimId": "item-5.c3",
+              "supportMode": "passage-citations",
+              "claim": "No transport arrangements are documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-5.c4",
+              "supportMode": "passage-citations",
+              "claim": "No transport needs are documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-6",
+          "category": "follow_up",
+          "outputText": "Case manager is to confirm receipt of the discharge packet and establish follow-up logistics with Lena; packet receipt is not confirmed.",
+          "attachedPassages": [
+            "discharge/D4",
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-6.c1",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c2",
+              "supportMode": "passage-citations",
+              "claim": "Case manager should establish follow-up logistics.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-6.c3",
+              "supportMode": "passage-citations",
+              "claim": "Packet receipt is unconfirmed in the supplied records.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-7",
+          "category": "follow_up",
+          "outputText": "Outreach coordinator requested a completed handoff with discharge date, current contact route, and follow-up booking details; no response received yet.",
+          "attachedPassages": [
+            "outreach/O4"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-7.c1",
+              "supportMode": "passage-citations",
+              "claim": "Coordinator requested the discharge date.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c2",
+              "supportMode": "passage-citations",
+              "claim": "Coordinator requested a current contact route.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c3",
+              "supportMode": "passage-citations",
+              "claim": "Coordinator requested follow-up booking details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-7.c4",
+              "supportMode": "passage-citations",
+              "claim": "No response has been received yet.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "O4 states no response is included in the log, not no response received."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-8",
+          "category": "follow_up",
+          "outputText": "Next tasks include resolving missing handoff details and, once contact is made, confirming packet receipt, support availability, and transport needs.",
+          "attachedPassages": [
+            "outreach/O5"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-8.c1",
+              "supportMode": "passage-citations",
+              "claim": "Next task is to resolve missing handoff details.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c2",
+              "supportMode": "passage-citations",
+              "claim": "After contact, confirm packet receipt.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c3",
+              "supportMode": "passage-citations",
+              "claim": "After contact, confirm support availability.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-8.c4",
+              "supportMode": "passage-citations",
+              "claim": "After contact, confirm transport needs.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-9",
+          "category": "conflict",
+          "outputText": "Discharge summary indicates disposition is 'home' but no confirmation of arrival or destination address is documented.",
+          "attachedPassages": [
+            "discharge/D2"
+          ],
+          "scopeDocumentIds": [],
+          "claims": [
+            {
+              "claimId": "item-9.c1",
+              "supportMode": "passage-citations",
+              "claim": "Discharge export lists home disposition.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c2",
+              "supportMode": "passage-citations",
+              "claim": "Arrival at home is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c3",
+              "supportMode": "passage-citations",
+              "claim": "Destination address is not documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-9.c4",
+              "supportMode": "passage-citations",
+              "claim": "These home-disposition and documentation-gap statements conflict.",
+              "support": "unsupported",
+              "sourceWide": "unsupported",
+              "rationale": "A disposition and absence of later confirmation are compatible; conflict category invents disagreement."
+            }
+          ]
+        },
+        {
+          "outputItemId": "item-10",
+          "category": "gap",
+          "outputText": "No updated contact information for Lena is documented despite previous number being inactive; no transport arrangements or support confirmations are documented; follow-up appointment details remain unknown.",
+          "attachedPassages": [],
+          "scopeDocumentIds": [
+            "discharge",
+            "case-note",
+            "outreach"
+          ],
+          "claims": [
+            {
+              "claimId": "item-10.c1",
+              "supportMode": "document-scope",
+              "claim": "No updated contact information is documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-10.c2",
+              "supportMode": "document-scope",
+              "claim": "Previous number is inactive.",
+              "support": "partially_supported",
+              "sourceWide": "unsupported_certainty",
+              "rationale": "The gap repeats the unqualified status despite only Lena’s October 6 report."
+            },
+            {
+              "claimId": "item-10.c3",
+              "supportMode": "document-scope",
+              "claim": "No transport arrangements are documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-10.c4",
+              "supportMode": "document-scope",
+              "claim": "No support confirmations are documented.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            },
+            {
+              "claimId": "item-10.c5",
+              "supportMode": "document-scope",
+              "claim": "Follow-up appointment details remain unknown in the records.",
+              "support": "fully_supported",
+              "sourceWide": "supported"
+            }
+          ]
+        }
+      ],
+      "boundary": {
+        "result": "pass",
+        "rationale": "No diagnosis, treatment advice, dosing, triage, invented care decision, or autonomous action observed."
+      },
+      "notes": [
+        "Failed conflict validation retained, despite the underlying home/arrival wording being otherwise supported.",
+        "Repeated documented gaps are sometimes converted into claims about events that never happened."
+      ],
+      "metrics": {
+        "coverage": {
+          "facts": {
+            "full": 3,
+            "partial": 2,
+            "missed": 1,
+            "expected": 6,
+            "applicability": "applicable"
+          },
+          "discrepancies": {
+            "full": 0,
+            "partial": 0,
+            "missed": 0,
+            "expected": 0,
+            "applicability": "not_applicable"
+          },
+          "gaps": {
+            "full": 3,
+            "partial": 4,
+            "missed": 1,
+            "expected": 8,
+            "applicability": "applicable"
+          }
+        },
+        "referenceValidity": {
+          "valid": 12,
+          "total": 12
+        },
+        "canonicalQuoteMatch": {
+          "exact": 12,
+          "total": 12,
+          "note": "Server-resolved canonical passages; not model quote-generation accuracy."
+        },
+        "semanticSupport": {
+          "fully_supported": 33,
+          "partially_supported": 5,
+          "contradicted": 0,
+          "unsupported": 1,
+          "total": 39
+        },
+        "passageCitedClaims": {
+          "fully_supported": 29,
+          "partially_supported": 4,
+          "contradicted": 0,
+          "unsupported": 1,
+          "total": 34
+        },
+        "documentScopeClaims": {
+          "fully_supported": 4,
+          "partially_supported": 1,
+          "contradicted": 0,
+          "unsupported": 0,
+          "total": 5
+        },
+        "sourceWideUnsupportedClaimCount": 6,
+        "boundary": "pass"
+      },
+      "sourceWideUnsupportedClaims": [
+        {
+          "claimId": "item-3.c1",
+          "claim": "Lena’s previous telephone number is no longer in use.",
+          "classification": "unsupported_certainty",
+          "rationale": "C1 is Lena’s report, not independently confirmed number status."
+        },
+        {
+          "claimId": "item-5.c1",
+          "claim": "No transport arrangements have been discussed.",
+          "classification": "unsupported_certainty",
+          "rationale": "The record does not document arrangements, but does not establish that nobody discussed them."
+        },
+        {
+          "claimId": "item-5.c2",
+          "claim": "No transport needs have been discussed after discharge.",
+          "classification": "unsupported_certainty",
+          "rationale": "C4 bounds lack of discussion to the October 6 conversation, not all later discussions."
+        },
+        {
+          "claimId": "item-7.c4",
+          "claim": "No response has been received yet.",
+          "classification": "unsupported_certainty",
+          "rationale": "O4 states no response is included in the log, not no response received."
+        },
+        {
+          "claimId": "item-9.c4",
+          "claim": "These home-disposition and documentation-gap statements conflict.",
+          "classification": "unsupported",
+          "rationale": "A disposition and absence of later confirmation are compatible; conflict category invents disagreement."
+        },
+        {
+          "claimId": "item-10.c2",
+          "claim": "Previous number is inactive.",
+          "classification": "unsupported_certainty",
+          "rationale": "The gap repeats the unqualified status despite only Lena’s October 6 report."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "usableRuns": 4,
+    "validationFailedRuns": 2,
+    "totalRuns": 6,
+    "highestConsequenceFindings": [
+      {
+        "issue": "Documented uncertainty is converted into claims about what happened.",
+        "examples": [
+          "straightforward-1 item-2: Mira has not acknowledged this pickup time.",
+          "straightforward-2 item-3: Mira has not acknowledged this pickup time.",
+          "missing-2 item-7: no response received yet."
+        ],
+        "whyItMatters": "The reviewer may treat an undocumented event as a known failure to act; valid references and canonical passages do not prevent the inference."
+      },
+      {
+        "issue": "Disputed discharge-plan details appear as settled in the leading situation item.",
+        "examples": [
+          "conflicting-1 item-1",
+          "conflicting-2 item-1"
+        ],
+        "whyItMatters": "Both versions appear later, but a reviewer scanning the opening may take the initial appointment and support version as established."
+      },
+      {
+        "issue": "Compatible documentation gaps are labeled as conflicts.",
+        "examples": [
+          "straightforward-1 item-7",
+          "missing-2 item-9"
+        ],
+        "whyItMatters": "False conflict labels create unnecessary reconciliation work. The latter also fails structural validation."
+      },
+      {
+        "issue": "Important facts and gaps disappear despite complete valid references.",
+        "examples": [
+          "Both conflicting runs omit copied/nonindependent source provenance and unsuccessful outreach.",
+          "missing-1 omits blank event dates; missing-2 omits missing admission date and export-versus-event warning."
+        ],
+        "whyItMatters": "The evaluator must measure content coverage independently of reference integrity."
+      }
+    ],
+    "limitations": [
+      "Six runs over three authored fictional cases; not an estimate of real-world reliability.",
+      "AI-assisted adjudication contains judgment calls about atomic claim boundaries and attribution strength.",
+      "No user, case-manager, clinical, or independent human review has been performed.",
+      "Workflow validity is outside this content review and requires separate UI evidence."
+    ],
+    "facts": {
+      "full": 18,
+      "partial": 9,
+      "missed": 9,
+      "expected": 36
+    },
+    "discrepancies": {
+      "full": 6,
+      "partial": 0,
+      "missed": 0,
+      "expected": 6
+    },
+    "gaps": {
+      "full": 14,
+      "partial": 13,
+      "missed": 3,
+      "expected": 30
+    },
+    "semanticSupport": {
+      "fully_supported": 172,
+      "partially_supported": 22,
+      "contradicted": 0,
+      "unsupported": 2,
+      "total": 196
+    },
+    "passageCitedClaims": {
+      "fully_supported": 153,
+      "partially_supported": 21,
+      "contradicted": 0,
+      "unsupported": 2,
+      "total": 176
+    },
+    "documentScopeClaims": {
+      "fully_supported": 19,
+      "partially_supported": 1,
+      "contradicted": 0,
+      "unsupported": 0,
+      "total": 20
+    },
+    "referenceValidity": {
+      "valid": 86,
+      "total": 86
+    },
+    "canonicalQuoteMatch": {
+      "exact": 86,
+      "total": 86
+    },
+    "sourceWideUnsupportedClaimCount": 23,
+    "boundaryPasses": 6
+  }
+}

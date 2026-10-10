@@ -1,0 +1,86 @@
+---
+title: Briefing Room
+slug: briefing-room
+category: professional
+ownership: independent
+status: in-development
+role: Product framing, evaluation design & development
+audience: Case managers preparing post-discharge outreach
+summary: "A case-manager workspace for preparing post-discharge calls, with source-linked briefs, visible information gaps, and review before saving."
+featured: true
+order: 2.5
+draft: false
+date: 2026-10-10
+image:
+  src: /images/briefing-room-workspace.jpg
+  alt: "Briefing Room showing a member's source documents alongside an editable pre-call brief and evidence review controls."
+  width: 1440
+  height: 1000
+  caption: "The review workspace keeps the brief, original source passages, and approval controls together."
+tags: [React, Node.js, OpenAI, AI evaluation]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+import { withBase } from '../../lib/site';
+
+## The product question
+
+What does a case manager need before the next member call? A discharge summary, an earlier case-management note, and an outreach log can each hold part of the answer. Briefing Room explores whether a concise brief can bring useful facts and open questions together while preserving their evidence and uncertainty.
+
+This is an independent study inspired by SCAN Health Plan’s publicly described AI work. SCAN was not the employer or client for this project. All records are fictional.
+
+I started by defining three cases: a straightforward discharge, conflicting records, and missing information. Expected facts, discrepancies, gaps, and prohibited inferences were written before generation. Those answer keys stay separate from the records sent to the model.
+
+## The experience
+
+Choose a member, inspect the three documents, and generate a brief covering the documented situation, follow-up tasks, unresolved questions, and missing or conflicting information. Each citation opens the exact original passage beside the draft.
+
+The reviewer can edit or remove items, filter for unchecked evidence, and move to the next unchecked item. Approval applies to the current version; an edit invalidates it. Saving preserves the reviewed text, sources, and generation metadata, with a readable download for the approved brief. Recorded model runs are clearly distinguished from new live requests.
+
+## How it works
+
+<ArchitectureFlow label="From source records to an approved brief" steps={[
+  { title: 'Choose and inspect', detail: 'Load one case and its three versioned records. Expected answers remain outside the generation input.' },
+  { title: 'Generate and resolve sources', detail: 'One OpenAI Responses API call returns structured items and passage IDs. Code resolves canonical quotations and checks the references.' },
+  { title: 'Review and approve', detail: 'A person checks evidence, edits the draft, and approves that version before the brief and its provenance are saved locally.' }
+]} />
+
+All three records fit in one request. That made a single generation flow sufficient for testing the core workflow, without agents, retrieval infrastructure, or production integrations.
+
+## What evaluation revealed
+
+Three prompt versions, three cases, and two repeats produced **18 evaluated generations**. Original outputs were retained, including four that failed validation.
+
+The first version produced two quotations that were not exact source excerpts. Returning passage IDs and letting code copy the source text removed that error mechanism. It did not establish that the attached evidence supported the claim.
+
+Across the final six runs:
+
+| Measure | Observed result |
+| --- | --- |
+| Valid cited references | 161 / 161 |
+| Claim support ratings | 216 / 218 fully supported; 1 partial; 1 unsupported |
+| Expected facts fully covered | 29 / 36 |
+| Expected gaps fully covered | 16 / 30 |
+
+The most revealing failure assigned **9:15 AM** to an unanswered outreach call. The cited passage gave only a date; 9:15 was the log’s timestamp. The recorded run preserves that mistake so the walkthrough can show the reviewer checking the passage and removing the unsupported time.
+
+These were AI-assisted assessments, not human validation. Model, prompt, and schema changed together, so the iterations cannot identify a controlled winner. Two final outputs exceeded the 350-word target; one reached 436 words while still omitting an important gap.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Review workspace', tools: 'React · Vite · Inter', purpose: 'Keep documents, evidence inspection, editing, and review progress in one workspace.' },
+  { layer: 'Generation and checks', tools: 'Node.js · OpenAI Responses API · JSON Schema', purpose: 'Generate one structured draft and resolve its passage references against the supplied records.' },
+  { layer: 'Approval and evaluation', tools: 'Content hashes · Local JSON · Frozen answer keys', purpose: 'Tie approval to a version and preserve outputs for separate coverage and claim-support assessment.' }
+]} />
+
+The interface adapts the public marketing style to an internal reading task: white surfaces, muted Mist blue controls, Inter throughout, and small yellow evidence accents. The goal is to make sustained reading and source comparison easier to follow.
+
+## Current state and next step
+
+The local prototype completes the generation-to-approval flow. It does not establish clinical validity, production readiness, or staff time savings.
+
+Next, I would interview case managers, observe preparation, and assess editing burden and comprehension. Independently authored holdout cases would test timestamp errors, copied evidence, and missing information before further tuning. Repeated needs could then inform shared source-provenance, evaluation, and approval capabilities.
+
+<a href={withBase('/documents/briefing-room-case-study.pdf')}>Read the one-page case study</a> or <a href={withBase('/project-notes/briefing-room/evaluation/')}>inspect the evaluation report and original runs</a>.

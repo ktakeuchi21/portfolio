@@ -1,0 +1,160 @@
+{
+  "caseId": "missing",
+  "repeat": 1,
+  "outcome": "validation_failed",
+  "brief": {
+    "id": "cb95c3d8-690e-42ad-a81c-54aee450751a",
+    "caseId": "missing",
+    "synthetic": true,
+    "isReplay": false,
+    "items": [
+      {
+        "category": "situation",
+        "text": "Lena Moss was discharged to home, but no discharge date, arrival confirmation, or destination address is documented. The discharge packet receipt is unconfirmed. No current telephone or support-person contact information is available. Outreach calls on October 8 and 9 were not answered, and no voicemail or callback is recorded. Lena's transport needs and support arrangements after discharge are unknown.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D2",
+            "quote": "The disposition field says 'home.' No destination address or confirmation of arrival at home is included in this export."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "The handoff checklist asks the case manager to confirm receipt of the discharge packet and establish follow-up logistics with Lena. The packet-received checkbox is blank."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The member telephone and support-person contact fields are blank in this export. No transport arrangement is documented in the transport field."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O1",
+            "quote": "On October 8 at 10:00 AM, an outreach call using the previously stored contact route was not answered. The entry does not show the telephone number dialed or confirm that it was current."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O2",
+            "quote": "On October 9 at 10:00 AM, a second outreach call was not answered. The entry does not document whether a voicemail was left."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O3",
+            "quote": "No completed member conversation or member callback is recorded through October 9 at 10:30 AM. The reason the calls were unanswered is not documented."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C1",
+            "quote": "At the October 6 planning conversation, Lena said her previous telephone number was no longer in use. No replacement number was captured in this note."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C2",
+            "quote": "Lena said she would ask a friend whether they could help after discharge. The note does not identify the friend or record the friend's response or availability."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "Lena's transport needs had not yet been discussed during this conversation. This note does not establish whether she needs a ride or has one arranged."
+          }
+        ],
+        "scopeDocumentIds": [],
+        "id": "item-1"
+      },
+      {
+        "category": "follow_up",
+        "text": "The case manager is tasked to confirm receipt of the discharge packet, establish follow-up logistics with Lena, obtain an updated contact route, confirm follow-up appointment details, and clarify transport needs once contact is made. The outreach coordinator requested a completed handoff with discharge date, current contact, and follow-up booking details.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The follow-up field says 'clinic follow-up requested.' The clinic name, appointment date, appointment time, and booking status fields are blank."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "The handoff checklist asks the case manager to confirm receipt of the discharge packet and establish follow-up logistics with Lena."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C3",
+            "quote": "The case manager planned to obtain an updated contact route and confirm the follow-up appointment details after the discharge team completed the handoff."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O4",
+            "quote": "The coordinator requested a completed handoff containing the discharge date, a current contact route, and follow-up booking details."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O5",
+            "quote": "The next documented tasks are to resolve the missing handoff details and, once contact is made, confirm packet receipt, support availability, and transport needs."
+          }
+        ],
+        "scopeDocumentIds": [],
+        "id": "item-2"
+      },
+      {
+        "category": "question",
+        "text": "What is Lena Moss's current telephone number or preferred contact method? Has the discharge packet been received by Lena? What are the details and booking status of the requested clinic follow-up appointment? Has Lena arranged support or transport after discharge, and who is the identified support person? What is the actual discharge date and confirmation of arrival at home?",
+        "citations": [
+          {
+            "documentId": "case-note",
+            "passageId": "C1",
+            "quote": "Lena said her previous telephone number was no longer in use. No replacement number was captured in this note."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "The handoff checklist asks the case manager to confirm receipt of the discharge packet."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The follow-up field says 'clinic follow-up requested.' The clinic name, appointment date, appointment time, and booking status fields are blank."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C2",
+            "quote": "Lena said she would ask a friend whether they could help after discharge. The note does not identify the friend or record the friend's response or availability."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D2",
+            "quote": "No destination address or confirmation of arrival at home is included in this export."
+          }
+        ],
+        "scopeDocumentIds": [],
+        "id": "item-3"
+      }
+    ],
+    "generation": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "provider": "OpenAI",
+      "promptVersion": "v1",
+      "generatedAt": "2026-10-10T04:03:25.165Z",
+      "latencyMs": 8627,
+      "inputHash": "72c70f8685805ef9c262d4bc64c2322094f5ed91229e75dde388e5fec5778a3a",
+      "providerResponseId": "resp_0d3c14fba2fde8a7016ac9b904c16487d082635a4fcc3163fd",
+      "usage": {
+        "input_tokens": 1247,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1071,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2318
+      }
+    },
+    "validation": {
+      "valid": false,
+      "issues": [
+        "Item 3: quotation must be an exact nonempty substring of its passage."
+      ]
+    },
+    "rawModelOutput": "{\"items\":[{\"category\":\"situation\",\"text\":\"Lena Moss was discharged to home, but no discharge date, arrival confirmation, or destination address is documented. The discharge packet receipt is unconfirmed. No current telephone or support-person contact information is available. Outreach calls on October 8 and 9 were not answered, and no voicemail or callback is recorded. Lena's transport needs and support arrangements after discharge are unknown.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D2\",\"quote\":\"The disposition field says 'home.' No destination address or confirmation of arrival at home is included in this export.\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\",\"quote\":\"The handoff checklist asks the case manager to confirm receipt of the discharge packet and establish follow-up logistics with Lena. The packet-received checkbox is blank.\"},{\"documentId\":\"discharge\",\"passageId\":\"D5\",\"quote\":\"The member telephone and support-person contact fields are blank in this export. No transport arrangement is documented in the transport field.\"},{\"documentId\":\"outreach\",\"passageId\":\"O1\",\"quote\":\"On October 8 at 10:00 AM, an outreach call using the previously stored contact route was not answered. The entry does not show the telephone number dialed or confirm that it was current.\"},{\"documentId\":\"outreach\",\"passageId\":\"O2\",\"quote\":\"On October 9 at 10:00 AM, a second outreach call was not answered. The entry does not document whether a voicemail was left.\"},{\"documentId\":\"outreach\",\"passageId\":\"O3\",\"quote\":\"No completed member conversation or member callback is recorded through October 9 at 10:30 AM. The reason the calls were unanswered is not documented.\"},{\"documentId\":\"case-note\",\"passageId\":\"C1\",\"quote\":\"At the October 6 planning conversation, Lena said her previous telephone number was no longer in use. No replacement number was captured in this note.\"},{\"documentId\":\"case-note\",\"passageId\":\"C2\",\"quote\":\"Lena said she would ask a friend whether they could help after discharge. The note does not identify the friend or record the friend's response or availability.\"},{\"documentId\":\"case-note\",\"passageId\":\"C4\",\"quote\":\"Lena's transport needs had not yet been discussed during this conversation. This note does not establish whether she needs a ride or has one arranged.\"}],\"scopeDocumentIds\":[]},{\"category\":\"follow_up\",\"text\":\"The case manager is tasked to confirm receipt of the discharge packet, establish follow-up logistics with Lena, obtain an updated contact route, confirm follow-up appointment details, and clarify transport needs once contact is made. The outreach coordinator requested a completed handoff with discharge date, current contact, and follow-up booking details.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D3\",\"quote\":\"The follow-up field says 'clinic follow-up requested.' The clinic name, appointment date, appointment time, and booking status fields are blank.\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\",\"quote\":\"The handoff checklist asks the case manager to confirm receipt of the discharge packet and establish follow-up logistics with Lena.\"},{\"documentId\":\"case-note\",\"passageId\":\"C3\",\"quote\":\"The case manager planned to obtain an updated contact route and confirm the follow-up appointment details after the discharge team completed the handoff.\"},{\"documentId\":\"outreach\",\"passageId\":\"O4\",\"quote\":\"The coordinator requested a completed handoff containing the discharge date, a current contact route, and follow-up booking details.\"},{\"documentId\":\"outreach\",\"passageId\":\"O5\",\"quote\":\"The next documented tasks are to resolve the missing handoff details and, once contact is made, confirm packet receipt, support availability, and transport needs.\"}],\"scopeDocumentIds\":[]},{\"category\":\"question\",\"text\":\"What is Lena Moss's current telephone number or preferred contact method? Has the discharge packet been received by Lena? What are the details and booking status of the requested clinic follow-up appointment? Has Lena arranged support or transport after discharge, and who is the identified support person? What is the actual discharge date and confirmation of arrival at home?\",\"citations\":[{\"documentId\":\"case-note\",\"passageId\":\"C1\",\"quote\":\"Lena said her previous telephone number was no longer in use. No replacement number was captured in this note.\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\",\"quote\":\"The handoff checklist asks the case manager to confirm receipt of the discharge packet.\"},{\"documentId\":\"discharge\",\"passageId\":\"D3\",\"quote\":\"The follow-up field says 'clinic follow-up requested.' The clinic name, appointment date, appointment time, and booking status fields are blank.\"},{\"documentId\":\"case-note\",\"passageId\":\"C2\",\"quote\":\"Lena said she would ask a friend whether they could help after discharge. The note does not identify the friend or record the friend's response or availability.\"},{\"documentId\":\"discharge\",\"passageId\":\"D2\",\"quote\":\"No destination address or confirmation of arrival at home is included in this export.\"}],\"scopeDocumentIds\":[]}]}"
+  }
+}

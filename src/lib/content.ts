@@ -7,7 +7,7 @@ export const projectCategories = [
 
 // Homepage curation is independent of the complete Projects listing.
 const homeSelections = {
-  professional: { anchor: 'healthcare', slugs: ['patient-access-orchestration', 'ai-evaluation-governance-lab'] },
+  professional: { anchor: 'healthcare', slugs: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'briefing-room'] },
   personal: { anchor: 'everyday-life', slugs: ['next-chapter', 'table-for-one'] },
 } as const;
 

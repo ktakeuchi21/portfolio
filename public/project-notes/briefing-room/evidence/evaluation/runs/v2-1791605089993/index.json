@@ -1,0 +1,43 @@
+{
+  "promptVersion": "v2",
+  "planned": 6,
+  "completed": 6,
+  "runs": [
+    {
+      "filename": "straightforward-1.json",
+      "caseId": "straightforward",
+      "repeat": 1,
+      "outcome": "validation_failed"
+    },
+    {
+      "filename": "conflicting-1.json",
+      "caseId": "conflicting",
+      "repeat": 1,
+      "outcome": "generated"
+    },
+    {
+      "filename": "missing-1.json",
+      "caseId": "missing",
+      "repeat": 1,
+      "outcome": "generated"
+    },
+    {
+      "filename": "straightforward-2.json",
+      "caseId": "straightforward",
+      "repeat": 2,
+      "outcome": "generated"
+    },
+    {
+      "filename": "conflicting-2.json",
+      "caseId": "conflicting",
+      "repeat": 2,
+      "outcome": "generated"
+    },
+    {
+      "filename": "missing-2.json",
+      "caseId": "missing",
+      "repeat": 2,
+      "outcome": "validation_failed"
+    }
+  ]
+}

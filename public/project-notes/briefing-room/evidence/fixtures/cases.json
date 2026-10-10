@@ -1,0 +1,146 @@
+[
+  {
+    "id": "straightforward",
+    "label": "Clear plan, one open confirmation",
+    "scenario": "Entirely fictional synthetic training case. Records mostly agree; the next outreach call should confirm the documented appointment and transport plan with the member. No real patient, provider, address, or telephone number is represented.",
+    "member": { "name": "Mira Alder (fictional)", "age": 72, "id": "SYN-DEMO-001" },
+    "asOf": "2026-10-09T12:00:00-06:00",
+    "documents": [
+      {
+        "id": "discharge",
+        "title": "Synthetic discharge summary",
+        "datedAt": "2026-10-07T14:00:00-06:00",
+        "author": "Fictional discharge coordinator",
+        "passages": [
+          { "id": "D1", "text": "SYNTHETIC RECORD. Mira Alder, member SYN-DEMO-001, was discharged on October 7, 2026, to her own home. This document records discharge disposition, not a later home visit." },
+          { "id": "D2", "text": "The discharge coordinator scheduled a follow-up appointment at fictional Juniper Clinic for October 12, 2026, at 10:00 AM. The appointment is listed as in person." },
+          { "id": "D3", "text": "The discharge checklist assigns the case manager to confirm that Mira received the discharge packet and can locate the follow-up appointment details during the first outreach call." },
+          { "id": "D4", "text": "Mira's fictional adult son, Eli, is listed as the support person. He said he would stay at Mira's home through October 10, 2026." },
+          { "id": "D5", "text": "The discharge handoff lists transport to the October 12 clinic appointment as arranged through the fictional demo ride service, with a planned 9:15 AM pickup. The handoff does not record Mira acknowledging that pickup time." }
+        ]
+      },
+      {
+        "id": "case-note",
+        "title": "Synthetic prior case-management note",
+        "datedAt": "2026-10-07T11:00:00-06:00",
+        "author": "Fictional case manager",
+        "passages": [
+          { "id": "C1", "text": "SYNTHETIC RECORD. During discharge planning, Mira said she expected to return to her own home and preferred outreach in the morning." },
+          { "id": "C2", "text": "Mira asked for help arranging a ride to the follow-up appointment because she was not planning to drive herself." },
+          { "id": "C3", "text": "Eli told the case manager he could stay with Mira through October 10. This was a report of his intended availability, not confirmation of his presence at the home." },
+          { "id": "C4", "text": "The case manager planned to check receipt of the discharge packet and review appointment logistics at the first successful outreach call." },
+          { "id": "C5", "text": "The case manager recorded the member's preference that the first call be directed to Mira. No preference for contacting Eli first is recorded." }
+        ]
+      },
+      {
+        "id": "outreach",
+        "title": "Synthetic outreach log",
+        "datedAt": "2026-10-09T09:00:00-06:00",
+        "author": "Fictional outreach coordinator",
+        "passages": [
+          { "id": "O1", "text": "SYNTHETIC RECORD. On October 8, the demo ride service confirmed a reservation for the October 12, 10:00 AM appointment at Juniper Clinic, with pickup at Mira's home at 9:15 AM." },
+          { "id": "O2", "text": "The case manager attempted the first outreach call to Mira on October 8 at 9:30 AM. The call was not answered; no conversation with the member occurred." },
+          { "id": "O3", "text": "A callback request was left using the synthetic contact channel. This log contains no member callback as of October 9 at 9:00 AM." },
+          { "id": "O4", "text": "The next documented outreach task is to confirm the appointment and pickup details with Mira, then ask whether she received and can find the discharge packet." },
+          { "id": "O5", "text": "This log contains no direct confirmation that Eli arrived or stayed at the home. The support arrangement remains the plan reported during discharge preparation." }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "conflicting",
+    "label": "Conflicting appointment and home plans",
+    "scenario": "Entirely fictional synthetic training case. The records disagree about the appointment, support availability, and destination. Later documentation does not establish which version is correct. Bracketed home labels are synthetic placeholders, not real addresses.",
+    "member": { "name": "Theo Bracken (fictional)", "age": 76, "id": "SYN-DEMO-002" },
+    "asOf": "2026-10-09T12:00:00-06:00",
+    "documents": [
+      {
+        "id": "discharge",
+        "title": "Synthetic discharge summary",
+        "datedAt": "2026-10-08T15:00:00-06:00",
+        "author": "Fictional discharge coordinator",
+        "passages": [
+          { "id": "D1", "text": "SYNTHETIC RECORD. The discharge summary lists Theo Bracken, member SYN-DEMO-002, as discharged on October 8, 2026, to his own home, labeled [SYNTHETIC HOME A]." },
+          { "id": "D2", "text": "The appointment section lists an in-person follow-up at fictional Birch Clinic, North desk, on October 12, 2026, at 9:00 AM." },
+          { "id": "D3", "text": "The support section states that Theo's fictional sister, Nia, will stay with him for the first three nights after discharge, October 8 through October 10." },
+          { "id": "D4", "text": "The transport handoff uses [SYNTHETIC HOME A] as the pickup location and the October 12, 9:00 AM appointment at Birch Clinic, North desk, as the destination." },
+          { "id": "D5", "text": "The discharge checklist asks the case manager to verify follow-up logistics and the member's support arrangements at the first outreach call. No member acknowledgment of these final handoff details is attached." }
+        ]
+      },
+      {
+        "id": "case-note",
+        "title": "Synthetic prior case-management note",
+        "datedAt": "2026-10-08T10:00:00-06:00",
+        "author": "Fictional case manager",
+        "passages": [
+          { "id": "C1", "text": "SYNTHETIC RECORD. Theo told the case manager that he planned to stay at his fictional niece's apartment, labeled [SYNTHETIC HOME B], after discharge instead of returning to his own home." },
+          { "id": "C2", "text": "Theo read an appointment message aloud as: Birch Clinic, South desk, October 13, 2026, at 2:00 PM. The case manager did not contact the clinic to verify that message." },
+          { "id": "C3", "text": "Nia told the case manager she could help only during the afternoon of October 8 and could not stay overnight. No replacement overnight support was recorded in this note." },
+          { "id": "C4", "text": "The case manager asked the discharge team to reconcile Theo's planned destination and the pickup location before finalizing transport. This note does not contain a reply to that request." },
+          { "id": "C5", "text": "The case manager flagged the appointment details, intended residence, and Nia's availability for confirmation. These entries describe reported plans and unresolved questions." }
+        ]
+      },
+      {
+        "id": "outreach",
+        "title": "Synthetic outreach log",
+        "datedAt": "2026-10-09T09:15:00-06:00",
+        "author": "Fictional outreach coordinator",
+        "passages": [
+          { "id": "O1", "text": "SYNTHETIC RECORD. On October 9 at 8:45 AM, the coordinator copied the discharge summary's October 12, 9:00 AM North-desk appointment into the outreach queue. This was a transcription, not a new confirmation from the clinic or member." },
+          { "id": "O2", "text": "A transport request remains in draft using [SYNTHETIC HOME A]. No ride reservation or pickup time is confirmed in this log." },
+          { "id": "O3", "text": "The October 9 outreach attempt was not answered. No conversation establishing Theo's current location or support availability occurred." },
+          { "id": "O4", "text": "The coordinator recorded the next tasks: verify the appointment date, time, and clinic desk; confirm where Theo is staying and the pickup location; clarify who is available to help and when." },
+          { "id": "O5", "text": "As of October 9 at 9:15 AM, this log contains no clinic verification, no confirmed current residence, and no resolution of the different reports about Nia's availability." }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "missing",
+    "label": "Incomplete handoff and unanswered outreach",
+    "scenario": "Entirely fictional synthetic training case. The discharge event date, follow-up logistics, current contact details, and support plan are incomplete. Document export timestamps must not be substituted for missing event dates. No real contact information is present.",
+    "member": { "name": "Lena Moss (fictional)", "age": 69, "id": "SYN-DEMO-003" },
+    "asOf": "2026-10-09T12:00:00-06:00",
+    "documents": [
+      {
+        "id": "discharge",
+        "title": "Synthetic discharge-summary export",
+        "datedAt": "2026-10-08T16:00:00-06:00",
+        "author": "Fictional records export",
+        "passages": [
+          { "id": "D1", "text": "SYNTHETIC RECORD. This discharge-summary export concerns Lena Moss, member SYN-DEMO-003. The export was created October 8, 2026, at 4:00 PM. The admission-date and discharge-date fields are blank; the export time is not the discharge event time." },
+          { "id": "D2", "text": "The disposition field says 'home.' No destination address or confirmation of arrival at home is included in this export." },
+          { "id": "D3", "text": "The follow-up field says 'clinic follow-up requested.' The clinic name, appointment date, appointment time, and booking status fields are blank." },
+          { "id": "D4", "text": "The handoff checklist asks the case manager to confirm receipt of the discharge packet and establish follow-up logistics with Lena. The packet-received checkbox is blank." },
+          { "id": "D5", "text": "The member telephone and support-person contact fields are blank in this export. No transport arrangement is documented in the transport field." }
+        ]
+      },
+      {
+        "id": "case-note",
+        "title": "Synthetic prior case-management note",
+        "datedAt": "2026-10-06T11:00:00-06:00",
+        "author": "Fictional case manager",
+        "passages": [
+          { "id": "C1", "text": "SYNTHETIC RECORD. At the October 6 planning conversation, Lena said her previous telephone number was no longer in use. No replacement number was captured in this note." },
+          { "id": "C2", "text": "Lena said she would ask a friend whether they could help after discharge. The note does not identify the friend or record the friend's response or availability." },
+          { "id": "C3", "text": "The case manager planned to obtain an updated contact route and confirm the follow-up appointment details after the discharge team completed the handoff." },
+          { "id": "C4", "text": "Lena's transport needs had not yet been discussed during this conversation. This note does not establish whether she needs a ride or has one arranged." },
+          { "id": "C5", "text": "The note contains no assessment of Lena's situation after discharge and no completed confirmation of her planned support arrangements." }
+        ]
+      },
+      {
+        "id": "outreach",
+        "title": "Synthetic outreach log",
+        "datedAt": "2026-10-09T10:30:00-06:00",
+        "author": "Fictional outreach coordinator",
+        "passages": [
+          { "id": "O1", "text": "SYNTHETIC RECORD. On October 8 at 10:00 AM, an outreach call using the previously stored contact route was not answered. The entry does not show the telephone number dialed or confirm that it was current." },
+          { "id": "O2", "text": "On October 9 at 10:00 AM, a second outreach call was not answered. The entry does not document whether a voicemail was left." },
+          { "id": "O3", "text": "No completed member conversation or member callback is recorded through October 9 at 10:30 AM. The reason the calls were unanswered is not documented." },
+          { "id": "O4", "text": "The coordinator requested a completed handoff containing the discharge date, a current contact route, and follow-up booking details. No response is included in this log." },
+          { "id": "O5", "text": "The next documented tasks are to resolve the missing handoff details and, once contact is made, confirm packet receipt, support availability, and transport needs. No current member condition or readiness for outreach is established by this log." }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,150 @@
+---
+import SiteLayout from '../../../../layouts/SiteLayout.astro';
+import { withBase } from '../../../../lib/site';
+
+const evidenceHref = (path: string) => withBase(`/project-notes/briefing-room/evidence/${path}`);
+const versions = [
+  { id: 'v1', label: 'V1', directory: 'v1-1791604981414', usable: '4/6', references: '96/96', quotes: '94/96', support: '135/158', partial: 9, unsupported: 14, flags: 10 },
+  { id: 'v2', label: 'V2', directory: 'v2-1791605089993', usable: '4/6', references: '86/86', quotes: '86/86', support: '172/196', partial: 22, unsupported: 2, flags: 23 },
+  { id: 'v3', label: 'V3', directory: 'v3-1791605264893', usable: '6/6', references: '161/161', quotes: '161/161', support: '216/218', partial: 1, unsupported: 1, flags: 2 },
+];
+const finalCoverage = [
+  { measure: 'Expected facts', full: '29/36', partial: 7, missed: 0 },
+  { measure: 'Discrepancies', full: '5/6', partial: 1, missed: 0 },
+  { measure: 'Missing-information gaps', full: '16/30', partial: 13, missed: 1 },
+];
+const finalRuns = [
+  { file: 'straightforward-1', label: 'Mira · run 1', support: '27/27', references: '22/22', flags: 0, words: 274 },
+  { file: 'straightforward-2', label: 'Mira · run 2', support: '26/26', references: '24/24', flags: 0, words: 219 },
+  { file: 'conflicting-1', label: 'Theo · run 1', support: '35/36', references: '29/29', flags: 1, words: 337 },
+  { file: 'conflicting-2', label: 'Theo · run 2', support: '38/38', references: '21/21', flags: 0, words: 356 },
+  { file: 'missing-1', label: 'Lena · run 1', support: '54/54', references: '39/39', flags: 0, words: 436 },
+  { file: 'missing-2', label: 'Lena · run 2', support: '36/37', references: '26/26', flags: 1, words: 295 },
+];
+const finalRunHref = (file: string) => evidenceHref(`evaluation/runs/v3-1791605264893/${file}.json`);
+---
+
+<SiteLayout title="Briefing Room evaluation" description="What 18 generations revealed about source references, claim support, missing information, and human review in Briefing Room.">
+  <article class="page-width">
+    <a class="case-back" href={withBase('/projects/briefing-room/')}>← Back to Briefing Room</a>
+    <header class="page-intro case-intro">
+      <p class="eyebrow">Briefing Room · Evaluation notes</p>
+      <h1>Valid references.<br />An unsupported call time.</h1>
+      <p>All six final outputs passed mechanical validation. One still invented an outreach time, and useful information remained incomplete. The evaluation kept those findings separate.</p>
+      <dl class="case-facts">
+        <div><dt>Sample</dt><dd>18 generations · 3 cases · 3 iterations</dd></div>
+        <div><dt>Review method</dt><dd>AI-assisted, claim-by-claim rubric assessment</dd></div>
+        <div><dt>Evidence</dt><dd>Original outputs, frozen records, separate answer keys</dd></div>
+      </dl>
+      <nav class="case-links" aria-label="Evaluation resources">
+        <a class="link-button" href={withBase('/documents/briefing-room-case-study.pdf')}>One-page case study (PDF)</a>
+        <a class="link-button" href="#evidence">Inspect the evidence</a>
+      </nav>
+    </header>
+
+    <div class="case-body evaluation-body">
+      <div class="prose">
+        <h2>Define the expected answer first</h2>
+        <p>Three fictional cases cover a clear discharge plan, conflicting records, and missing information. Records, expected facts, discrepancies, gaps, and prohibited inferences were frozen before generation. Answer keys stayed outside the model input.</p>
+        <p>Two repeats per case and prompt version produced 18 outputs. All remain in the evaluation, including four validation failures. Substantive items were split into claims; pure questions without factual premises were excluded. Coverage, reference integrity, and claim support were assessed separately.</p>
+
+        <h2>Three iterations</h2>
+        <ul>
+          <li><strong>V1:</strong> gpt-4.1-mini-2025-04-14, temperature 0.2; model-written quotations and document scopes.</li>
+          <li><strong>V2:</strong> the same model, revised instructions, and exact source passages resolved by code.</li>
+          <li><strong>V3:</strong> gpt-5.4-mini-2026-03-17, medium reasoning; stronger attribution instructions, simpler schema, and scopes supplied by code.</li>
+        </ul>
+        <div class="evaluation-table-wrap" role="region" aria-label="Results across three iterations" tabindex="0">
+          <table class="evaluation-table iteration-table">
+            <caption>Each iteration links to its complete AI-assisted review.</caption>
+            <thead><tr><th scope="col">Iteration</th><th scope="col">Usable runs</th><th scope="col">Valid IDs</th><th scope="col">Exact quotes</th><th scope="col">Fully supported claims</th><th scope="col">Source-wide flags</th></tr></thead>
+            <tbody>{versions.map(version => (
+              <tr><th scope="row"><a href={evidenceHref(`evaluation/reviews-${version.id}.json`)}>{version.label}</a></th><td>{version.usable}</td><td>{version.references}</td><td>{version.quotes}</td><td><strong>{version.support}</strong><span class="cell-note">{version.partial} partial · {version.unsupported} unsupported</span></td><td>{version.flags}</td></tr>
+            ))}</tbody>
+          </table>
+        </div>
+        <p>“Usable” means structurally accepted. V1 failed twice on nonexact quotations; V2 failed on incomplete gap scope and a one-source conflict. V3 had no mechanical failures.</p>
+        <p>Support ratings use attached evidence, including declared document scopes for bounded absence claims. Source-wide flags identify claims unsupported anywhere in the records; they overlap the support ratings. Repeated claims count again.</p>
+        <p><strong>No controlled winner:</strong> model, prompt, schema, and evidence rendering changed together. Reviewer judgment and claim granularity also affect comparisons.</p>
+
+        <h2>Final coverage</h2>
+        <div class="evaluation-table-wrap" role="region" aria-label="Final iteration expected-information coverage" tabindex="0">
+          <table class="evaluation-table coverage-table">
+            <caption>Final six runs: fully covered / expected. Partial credit stays separate.</caption>
+            <thead><tr><th scope="col">Measure</th><th scope="col">Fully covered</th><th scope="col">Partial</th><th scope="col">Missed</th></tr></thead>
+            <tbody>{finalCoverage.map(row => (<tr><th scope="row">{row.measure}</th><td>{row.full}</td><td>{row.partial}</td><td>{row.missed}</td></tr>))}</tbody>
+          </table>
+        </div>
+        <p>Discrepancies apply only to Theo; other cases have none expected. Two final briefs exceeded the 350-word target. Lena run 1 reached <strong>436 words and 15 items</strong> while missing the address, arrival-at-home, and current-situation gap.</p>
+        <details class="evaluation-details">
+          <summary>Inspect the six final runs</summary>
+          <div class="evaluation-table-wrap" role="region" aria-label="Final six individual run results" tabindex="0">
+            <table class="evaluation-table final-table">
+              <caption>All six passed mechanical validation. Links open original, unedited responses.</caption>
+              <thead><tr><th scope="col">Case / repeat</th><th scope="col">Full support</th><th scope="col">Valid IDs</th><th scope="col">Flags</th><th scope="col">Words</th></tr></thead>
+              <tbody>{finalRuns.map(run => (<tr><th scope="row"><a href={finalRunHref(run.file)}>{run.label}</a></th><td>{run.support}</td><td>{run.references}</td><td>{run.flags}</td><td>{run.words}{run.words > 350 ? '*' : ''}</td></tr>))}</tbody>
+            </table>
+          </div>
+          <p class="evaluation-note">* Above target. Words count item text, excluding citations and headings.</p>
+        </details>
+
+        <h2>A timestamp became a call time</h2>
+        <blockquote><p>“The discharge summary lists an October 8 discharge, and the outreach log records an unanswered outreach attempt on October 9 at 9:15 AM.”</p></blockquote>
+        <p><a href={finalRunHref('conflicting-1')}>Theo’s first V3 response</a> adds <strong>9:15 AM</strong>. Cited passage O3 gives only a date; the time belongs to the log timestamp. Valid references and exact quotations did not support that inference. The recorded walkthrough retains the error for correction.</p>
+        <p><a href={finalRunHref('missing-2')}>Lena run 2</a> also called a checkbox’s state undocumented although the source says it is blank. That ambiguous wording received partial support. Earlier <a href={evidenceHref('evaluation/reviews-v2.json')}>V2 outputs</a> overstated missing documentation and labeled unconfirmed plans as conflicts.</p>
+
+        <h2>Limits and next steps</h2>
+        <p>This is AI-assisted assessment, with no human or clinical validation. The results establish neither staff time savings nor production readiness. All 18 passed the assessed care-action boundary check.</p>
+        <p>Separate workflow checks exercised evidence opening, editing, approval invalidation, and saving. One additional live generation supported UI verification and is outside the 18 scored outputs.</p>
+        <p>Next: interview case managers, observe preparation, assess comprehension and editing effort, and add independently authored holdouts with human review. Keep the timestamp failure as a regression case while reducing repetition without losing useful uncertainty.</p>
+
+        <h2 id="evidence" tabindex="-1">Inspect the evidence</h2>
+        <ul>
+          <li><a href={evidenceHref('fixtures/cases.json')}>Source cases</a> · <a href={evidenceHref('evaluation/answer-keys.json')}>Answer keys</a> · <a href={evidenceHref('evaluation/rubric.md')}>Rubric</a> · <a href={evidenceHref('evaluation/freeze-manifest.json')}>Freeze manifest</a></li>
+          {versions.map(version => (<li><a href={evidenceHref(`evaluation/reviews-${version.id}.json`)}>{version.label} claim review</a> · <a href={evidenceHref(`evaluation/runs/${version.directory}/index.json`)}>{version.label} run index</a></li>))}
+        </ul>
+        <details class="evaluation-details">
+          <summary>Open any of the 18 original runs</summary>
+          {versions.map(version => (
+            <section class="run-evidence-group" aria-label={`${version.label} original responses`}>
+              <h3>{version.label}</h3>
+              <ul>{finalRuns.map(run => (<li><a href={evidenceHref(`evaluation/runs/${version.directory}/${run.file}.json`)}>{run.label}</a></li>))}</ul>
+            </section>
+          ))}
+        </details>
+      </div>
+      <nav class="case-end" aria-label="More about Briefing Room">
+        <a class="link-button" href={withBase('/projects/briefing-room/')}>← Return to the case study</a>
+        <a class="link-button" href={withBase('/documents/briefing-room-case-study.pdf')}>One-page PDF</a>
+      </nav>
+    </div>
+  </article>
+</SiteLayout>
+
+<style>
+  .evaluation-body { margin-top: 0; }
+  .evaluation-table-wrap { max-width: 100%; overflow-x: auto; margin: 25px 0; }
+  .evaluation-table-wrap:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  .evaluation-table { width: 100%; border-collapse: collapse; font-size: .8125rem; line-height: 1.5; }
+  .iteration-table { min-width: 640px; }
+  .coverage-table { min-width: 460px; }
+  .final-table { min-width: 520px; }
+  .evaluation-table caption { text-align: left; color: var(--color-muted); font-size: .8125rem; padding-bottom: 14px; line-height: 1.6; }
+  .evaluation-table th, .evaluation-table td { padding: 13px 13px 13px 0; border-bottom: 1px solid var(--color-line); text-align: left; vertical-align: top; }
+  .evaluation-table thead th { font-weight: 550; color: var(--color-ink); border-top: 1px solid var(--color-line); }
+  .evaluation-table tbody th { font-weight: 500; }
+  .evaluation-table td { color: var(--color-muted); }
+  .cell-note { display: block; margin-top: 5px; font-size: .6875rem; line-height: 1.5; white-space: nowrap; color: var(--color-muted); }
+  .evaluation-details { border-block: 1px solid var(--color-line); margin: 26px 0; }
+  .evaluation-details summary { cursor: pointer; min-height: 52px; padding: 14px 0; font-size: .875rem; font-weight: 550; color: var(--color-ink); }
+  .evaluation-details summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  .evaluation-details .evaluation-table-wrap { margin-top: 10px; }
+  .prose .evaluation-note { font-size: .8125rem; }
+  .run-evidence-group { padding-bottom: 8px; }
+  .run-evidence-group h3 { margin: 13px 0 6px; }
+  .run-evidence-group ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+  @media (max-width: 480px) {
+    .run-evidence-group ul { grid-template-columns: 1fr; }
+    .evaluation-table { font-size: .75rem; }
+  }
+</style>

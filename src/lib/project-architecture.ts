@@ -20,6 +20,14 @@ export const projectArchitecture: Record<string, ProjectArchitecture> = {
     ],
     note: 'A browser simulation. No runtime backend.',
   },
+  'briefing-room': {
+    steps: [
+      { title: 'Inspect the case packet', technology: 'Three records · frozen cases' },
+      { title: 'Generate with sources', technology: 'OpenAI Responses API · reference checks' },
+      { title: 'Review, approve & save', technology: 'React · exact passages · local JSON' },
+    ],
+    note: 'One model call. Expected answers stay outside the prompt.',
+  },
   pathway: {
     steps: [
       { title: 'Choose a role and case', technology: 'Web workspace · Render' },

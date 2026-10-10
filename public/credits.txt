@@ -445,3 +445,13 @@ table-for-one-workflow.svg
 Original 1200 × 960 workflow diagram created for the Table for One portfolio case study, October 10, 2026.
 The n8n-inspired node layout illustrates the implemented v8 candidate, which is not yet deployed. Table for One runs on custom TypeScript and AWS services, without an n8n runtime.
 This is a diagram, not an app screenshot. It contains no personal order data, payment credentials, or third-party artwork. The repository and app remain private.
+
+
+briefing-room-workspace.jpg
+Screenshot of Kai Takeuchi’s independent Briefing Room prototype, captured October 10, 2026.
+Actual application view using fictional records and a retained model-generated brief.
+The Mist blue workspace uses white surfaces and restrained blue accents. No SCAN logo, real member information, third-party artwork, or endorsement is represented.
+
+briefing-room-case-study.pdf and project-notes/briefing-room/evidence/
+Original case-study document and frozen project evaluation artifacts. All cases and records are fictional.
+AI-assisted assessment of 18 retained generations; not an independent clinical evaluation.

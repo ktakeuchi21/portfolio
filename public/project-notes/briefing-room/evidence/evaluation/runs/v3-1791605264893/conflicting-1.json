@@ -1,0 +1,294 @@
+{
+  "caseId": "conflicting",
+  "repeat": 1,
+  "outcome": "generated",
+  "brief": {
+    "id": "06fad5ff-72b7-4ea9-9da0-c15abc1bdf53",
+    "caseId": "conflicting",
+    "synthetic": true,
+    "isReplay": false,
+    "items": [
+      {
+        "category": "situation",
+        "text": "The discharge summary lists an October 8 discharge, and the outreach log records an unanswered outreach attempt on October 9 at 9:15 AM.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D1",
+            "quote": "SYNTHETIC RECORD. The discharge summary lists Theo Bracken, member SYN-DEMO-002, as discharged on October 8, 2026, to his own home, labeled [SYNTHETIC HOME A]."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O3",
+            "quote": "The October 9 outreach attempt was not answered. No conversation establishing Theo's current location or support availability occurred."
+          }
+        ],
+        "id": "item-1",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "situation",
+        "text": "The outreach log shows that, on October 9 at 8:45 AM, the discharge-summary appointment was copied into the outreach queue as a transcription rather than a new confirmation.",
+        "citations": [
+          {
+            "documentId": "outreach",
+            "passageId": "O1",
+            "quote": "SYNTHETIC RECORD. On October 9 at 8:45 AM, the coordinator copied the discharge summary's October 12, 9:00 AM North-desk appointment into the outreach queue. This was a transcription, not a new confirmation from the clinic or member."
+          }
+        ],
+        "id": "item-2",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "follow_up",
+        "text": "Verify the appointment date, time, and clinic desk; confirm where Theo is staying and the pickup location; reconcile destination/pickup details before transport finalization; and clarify who is available to help and when at the first outreach call.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The discharge checklist asks the case manager to verify follow-up logistics and the member's support arrangements at the first outreach call. No member acknowledgment of these final handoff details is attached."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "The case manager asked the discharge team to reconcile Theo's planned destination and the pickup location before finalizing transport. This note does not contain a reply to that request."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O4",
+            "quote": "The coordinator recorded the next tasks: verify the appointment date, time, and clinic desk; confirm where Theo is staying and the pickup location; clarify who is available to help and when."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C5",
+            "quote": "The case manager flagged the appointment details, intended residence, and Nia's availability for confirmation. These entries describe reported plans and unresolved questions."
+          }
+        ],
+        "id": "item-3",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "conflict",
+        "text": "The discharge summary lists Theo as discharged to his own home [SYNTHETIC HOME A], while the prior case note says Theo planned to stay at his niece's apartment [SYNTHETIC HOME B] after discharge.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D1",
+            "quote": "SYNTHETIC RECORD. The discharge summary lists Theo Bracken, member SYN-DEMO-002, as discharged on October 8, 2026, to his own home, labeled [SYNTHETIC HOME A]."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C1",
+            "quote": "SYNTHETIC RECORD. Theo told the case manager that he planned to stay at his fictional niece's apartment, labeled [SYNTHETIC HOME B], after discharge instead of returning to his own home."
+          }
+        ],
+        "id": "item-4",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "conflict",
+        "text": "The discharge summary lists an in-person follow-up at Birch Clinic, North desk, on October 12 at 9:00 AM, while the prior case note records Birch Clinic, South desk, on October 13 at 2:00 PM.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D2",
+            "quote": "The appointment section lists an in-person follow-up at fictional Birch Clinic, North desk, on October 12, 2026, at 9:00 AM."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C2",
+            "quote": "Theo read an appointment message aloud as: Birch Clinic, South desk, October 13, 2026, at 2:00 PM. The case manager did not contact the clinic to verify that message."
+          }
+        ],
+        "id": "item-5",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "conflict",
+        "text": "The discharge summary says Nia will stay for the first three nights after discharge, while the prior case note says Nia could help only during the afternoon of October 8 and could not stay overnight.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The support section states that Theo's fictional sister, Nia, will stay with him for the first three nights after discharge, October 8 through October 10."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C3",
+            "quote": "Nia told the case manager she could help only during the afternoon of October 8 and could not stay overnight. No replacement overnight support was recorded in this note."
+          }
+        ],
+        "id": "item-6",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "question",
+        "text": "Which appointment date, time, and clinic desk should the reviewer treat as current for outreach planning, given the discharge summary and prior case note list different Birch Clinic details?",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D2",
+            "quote": "The appointment section lists an in-person follow-up at fictional Birch Clinic, North desk, on October 12, 2026, at 9:00 AM."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C2",
+            "quote": "Theo read an appointment message aloud as: Birch Clinic, South desk, October 13, 2026, at 2:00 PM. The case manager did not contact the clinic to verify that message."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O1",
+            "quote": "SYNTHETIC RECORD. On October 9 at 8:45 AM, the coordinator copied the discharge summary's October 12, 9:00 AM North-desk appointment into the outreach queue. This was a transcription, not a new confirmation from the clinic or member."
+          }
+        ],
+        "id": "item-7",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "question",
+        "text": "Which residence should guide the transport plan, given the discharge summary uses [SYNTHETIC HOME A] while the prior case note names [SYNTHETIC HOME B] and asks to reconcile destination and pickup?",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D1",
+            "quote": "SYNTHETIC RECORD. The discharge summary lists Theo Bracken, member SYN-DEMO-002, as discharged on October 8, 2026, to his own home, labeled [SYNTHETIC HOME A]."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C1",
+            "quote": "SYNTHETIC RECORD. Theo told the case manager that he planned to stay at his fictional niece's apartment, labeled [SYNTHETIC HOME B], after discharge instead of returning to his own home."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "The case manager asked the discharge team to reconcile Theo's planned destination and the pickup location before finalizing transport. This note does not contain a reply to that request."
+          },
+          {
+            "documentId": "discharge",
+            "passageId": "D4",
+            "quote": "The transport handoff uses [SYNTHETIC HOME A] as the pickup location and the October 12, 9:00 AM appointment at Birch Clinic, North desk, as the destination."
+          }
+        ],
+        "id": "item-8",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "question",
+        "text": "What support arrangement should the reviewer use for outreach, given the discharge summary's three-night stay for Nia and the prior note's same-day-only, no-overnight account?",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D3",
+            "quote": "The support section states that Theo's fictional sister, Nia, will stay with him for the first three nights after discharge, October 8 through October 10."
+          },
+          {
+            "documentId": "case-note",
+            "passageId": "C3",
+            "quote": "Nia told the case manager she could help only during the afternoon of October 8 and could not stay overnight. No replacement overnight support was recorded in this note."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O5",
+            "quote": "As of October 9 at 9:15 AM, this log contains no clinic verification, no confirmed current residence, and no resolution of the different reports about Nia's availability."
+          }
+        ],
+        "id": "item-9",
+        "scopeDocumentIds": []
+      },
+      {
+        "category": "gap",
+        "text": "The supplied records do not document clinic verification, and the outreach log contains no confirmed ride reservation or pickup time.",
+        "citations": [
+          {
+            "documentId": "case-note",
+            "passageId": "C2",
+            "quote": "Theo read an appointment message aloud as: Birch Clinic, South desk, October 13, 2026, at 2:00 PM. The case manager did not contact the clinic to verify that message."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O2",
+            "quote": "A transport request remains in draft using [SYNTHETIC HOME A]. No ride reservation or pickup time is confirmed in this log."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O5",
+            "quote": "As of October 9 at 9:15 AM, this log contains no clinic verification, no confirmed current residence, and no resolution of the different reports about Nia's availability."
+          }
+        ],
+        "id": "item-10",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      },
+      {
+        "category": "gap",
+        "text": "The discharge checklist contains no attached member acknowledgment of the final handoff details.",
+        "citations": [
+          {
+            "documentId": "discharge",
+            "passageId": "D5",
+            "quote": "The discharge checklist asks the case manager to verify follow-up logistics and the member's support arrangements at the first outreach call. No member acknowledgment of these final handoff details is attached."
+          }
+        ],
+        "id": "item-11",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      },
+      {
+        "category": "gap",
+        "text": "The prior case note contains no reply to the request to reconcile destination and pickup location, and the outreach log contains no conversation establishing Theo's current location or support availability.",
+        "citations": [
+          {
+            "documentId": "case-note",
+            "passageId": "C4",
+            "quote": "The case manager asked the discharge team to reconcile Theo's planned destination and the pickup location before finalizing transport. This note does not contain a reply to that request."
+          },
+          {
+            "documentId": "outreach",
+            "passageId": "O3",
+            "quote": "The October 9 outreach attempt was not answered. No conversation establishing Theo's current location or support availability occurred."
+          }
+        ],
+        "id": "item-12",
+        "scopeDocumentIds": [
+          "discharge",
+          "case-note",
+          "outreach"
+        ]
+      }
+    ],
+    "generation": {
+      "model": "gpt-5.4-mini-2026-03-17",
+      "provider": "OpenAI",
+      "promptVersion": "v3",
+      "reasoningEffort": "medium",
+      "citationMode": "source-resolved-passages",
+      "generatedAt": "2026-10-10T04:08:42.192Z",
+      "latencyMs": 37717,
+      "inputHash": "c8a09b85e10d6601999d80448276510bfb85e9b6b62b36b4995a41645cb7400f",
+      "providerResponseId": "resp_0671aa43d882ea8e016ac9ba24ae3087d08ec00160419bf1aa",
+      "usage": {
+        "input_tokens": 1536,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 6066,
+        "output_tokens_details": {
+          "reasoning_tokens": 5086
+        },
+        "total_tokens": 7602
+      }
+    },
+    "validation": {
+      "valid": true,
+      "issues": []
+    },
+    "rawModelOutput": "{\"items\":[{\"category\":\"situation\",\"text\":\"The discharge summary lists an October 8 discharge, and the outreach log records an unanswered outreach attempt on October 9 at 9:15 AM.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D1\"},{\"documentId\":\"outreach\",\"passageId\":\"O3\"}]},{\"category\":\"situation\",\"text\":\"The outreach log shows that, on October 9 at 8:45 AM, the discharge-summary appointment was copied into the outreach queue as a transcription rather than a new confirmation.\",\"citations\":[{\"documentId\":\"outreach\",\"passageId\":\"O1\"}]},{\"category\":\"follow_up\",\"text\":\"Verify the appointment date, time, and clinic desk; confirm where Theo is staying and the pickup location; reconcile destination/pickup details before transport finalization; and clarify who is available to help and when at the first outreach call.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D5\"},{\"documentId\":\"case-note\",\"passageId\":\"C4\"},{\"documentId\":\"outreach\",\"passageId\":\"O4\"},{\"documentId\":\"case-note\",\"passageId\":\"C5\"}]},{\"category\":\"conflict\",\"text\":\"The discharge summary lists Theo as discharged to his own home [SYNTHETIC HOME A], while the prior case note says Theo planned to stay at his niece's apartment [SYNTHETIC HOME B] after discharge.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D1\"},{\"documentId\":\"case-note\",\"passageId\":\"C1\"}]},{\"category\":\"conflict\",\"text\":\"The discharge summary lists an in-person follow-up at Birch Clinic, North desk, on October 12 at 9:00 AM, while the prior case note records Birch Clinic, South desk, on October 13 at 2:00 PM.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D2\"},{\"documentId\":\"case-note\",\"passageId\":\"C2\"}]},{\"category\":\"conflict\",\"text\":\"The discharge summary says Nia will stay for the first three nights after discharge, while the prior case note says Nia could help only during the afternoon of October 8 and could not stay overnight.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D3\"},{\"documentId\":\"case-note\",\"passageId\":\"C3\"}]},{\"category\":\"question\",\"text\":\"Which appointment date, time, and clinic desk should the reviewer treat as current for outreach planning, given the discharge summary and prior case note list different Birch Clinic details?\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D2\"},{\"documentId\":\"case-note\",\"passageId\":\"C2\"},{\"documentId\":\"outreach\",\"passageId\":\"O1\"}]},{\"category\":\"question\",\"text\":\"Which residence should guide the transport plan, given the discharge summary uses [SYNTHETIC HOME A] while the prior case note names [SYNTHETIC HOME B] and asks to reconcile destination and pickup?\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D1\"},{\"documentId\":\"case-note\",\"passageId\":\"C1\"},{\"documentId\":\"case-note\",\"passageId\":\"C4\"},{\"documentId\":\"discharge\",\"passageId\":\"D4\"}]},{\"category\":\"question\",\"text\":\"What support arrangement should the reviewer use for outreach, given the discharge summary's three-night stay for Nia and the prior note's same-day-only, no-overnight account?\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D3\"},{\"documentId\":\"case-note\",\"passageId\":\"C3\"},{\"documentId\":\"outreach\",\"passageId\":\"O5\"}]},{\"category\":\"gap\",\"text\":\"The supplied records do not document clinic verification, and the outreach log contains no confirmed ride reservation or pickup time.\",\"citations\":[{\"documentId\":\"case-note\",\"passageId\":\"C2\"},{\"documentId\":\"outreach\",\"passageId\":\"O2\"},{\"documentId\":\"outreach\",\"passageId\":\"O5\"}]},{\"category\":\"gap\",\"text\":\"The discharge checklist contains no attached member acknowledgment of the final handoff details.\",\"citations\":[{\"documentId\":\"discharge\",\"passageId\":\"D5\"}]},{\"category\":\"gap\",\"text\":\"The prior case note contains no reply to the request to reconcile destination and pickup location, and the outreach log contains no conversation establishing Theo's current location or support availability.\",\"citations\":[{\"documentId\":\"case-note\",\"passageId\":\"C4\"},{\"documentId\":\"outreach\",\"passageId\":\"O3\"}]}]}"
+  }
+}

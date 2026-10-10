@@ -119,3 +119,12 @@ Kai requested an n8n-style workflow thumbnail and supplied the AWS rationale: be
 Kai supplied the family-business motivation and the pending eBay developer approval status. The implementation account is grounded in the [public Next Chapter source](https://github.com/ktakeuchi21/next-chapter-ds), revision `bced5f22420b08af89130f94238676fb2e84eb8b`, including its README and marketplace setup documentation.
 
 The narrative separates implemented capture, research, listing preparation, and order/removal foundations from live integration validation. Etsy transfers produce unpublished drafts; Facebook publication remains seller-controlled. Live order polling, automatic delisting, and shipping-label purchases are not enabled. The workflow illustration is an original SVG with those boundaries called out, rather than a screenshot of private inventory. No business outcomes or customer endorsements are inferred.
+
+
+## Briefing Room (October 10, 2026)
+
+The case study describes Kai’s independent post-discharge briefing prototype, inspired by public descriptions of SCAN Health Plan’s AI work. SCAN was not the employer or client. The source material is three fictional cases with frozen expected answers, not member data. The local implementation completes generation, exact-passage inspection, editing, approval, and local saving. No public app or private repository link is offered.
+
+The retained evaluation includes 18 generations across three iterations. The final six runs contain 161 valid references and 218 assessed atomic claims: 216 fully supported, one partially supported, and one unsupported. Ratings were AI-assisted; no independent human or clinical validation is claimed. Prompt, model, and schema changes were confounded. The unsupported outreach timestamp remains in the recorded example. Source records, expected answers, rubrics, outputs, and assessments are included alongside the native evaluation notes for inspection.
+
+`briefing-room-workspace.jpg` is a 1440 × 1000 browser capture of the actual Mist blue workspace on October 10, 2026. The member and all passages are fictional. The downloadable PDF is the project’s one-page case study. Neither the case study nor the evaluation establishes production readiness or staff time savings.
