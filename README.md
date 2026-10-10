@@ -7,7 +7,7 @@ A static Astro + TypeScript portfolio for healthcare and AI product leadership. 
 ## What’s on the site
 
 - **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order.
-- **Projects:** Healthcare and Everyday life tabs, with six independent builds. Product and Under the hood views pair screenshots with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
+- **Projects:** Healthcare and Everyday life tabs, with seven independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
 - **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
 
@@ -18,6 +18,7 @@ Employer experience is separate from independent projects. Healthcare describes 
 | Healthcare | [Patient Access Orchestration](https://kaitakeuchi.com/projects/patient-access-orchestration/) | Public synthetic demo |
 | Healthcare | [AI Evaluation & Governance Lab](https://kaitakeuchi.com/projects/ai-evaluation-governance-lab/) | In development; synthetic case workspace implemented, agent runs and evaluation planned |
 | Healthcare | [Pathway](https://kaitakeuchi.com/projects/pathway/) | Public synthetic demo |
+| Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
 | Everyday life | [What I Made](https://kaitakeuchi.com/projects/what-i-made/) | Private app with a fictional public sample |
 | Everyday life | [Interlude](https://kaitakeuchi.com/projects/interlude/) | Private app |
 | Everyday life | [Table for One](https://kaitakeuchi.com/projects/table-for-one/) | In development |
@@ -51,7 +52,7 @@ npm run preview
 
 `npm run verify:content` temporarily adds entries in both project categories and employer Work, proves that they generate cards and detail routes, then removes them and restores the normal build. Use it when changing the content infrastructure, not for ordinary copy edits. Avoid running content builds alongside the development server: Astro shares its content cache. Use the production preview after validation to inspect the final catalog.
 
-Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, and the six case studies listed above. The résumé route is intentionally absent.
+Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, and the seven case studies listed above. The résumé route is intentionally absent.
 
 ## Visitor analytics
 
@@ -100,7 +101,7 @@ For employer Work, use `type: professional`, `organization`, and `role` in `src/
 
 Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive steps and an optional boundary note) and `TechnologyStack.astro` (layer, tools, and purpose). Import these in MDX as shown in the existing entries. Explain product decisions and source-grounded design takeaways; keep unconfirmed firsthand reflections in ignored local notes.
 
-`ProjectVisual.astro` renders Product and Under the hood views for published projects. Its three-step summaries live in `src/lib/project-architecture.ts`; keep them aligned with the MDX narrative and clearly distinguish implemented behavior from planned capabilities. Without a summary, a project retains its screenshot. The tabs support arrow keys, Home/End, and visible focus; inactive panels are excluded from keyboard navigation.
+`ProjectVisual.astro` renders Product and Under the hood views for published projects. The optional `visualLabel` changes the first tab to Workflow for a diagram. Its three-step summaries live in `src/lib/project-architecture.ts`; keep them aligned with the MDX narrative and clearly distinguish implemented behavior from planned capabilities. Without a summary, a project retains its image. The tabs support arrow keys, Home/End, and visible focus; inactive panels are excluded from keyboard navigation.
 
 ### Drafts and external case studies
 
@@ -213,4 +214,4 @@ For custom Actions deployments, GitHub’s Pages setting is authoritative; a sou
 
 ## Content and review status
 
-See `docs/content-status.md` for the six project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.
+See `docs/content-status.md` for the seven project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.

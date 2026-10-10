@@ -1,8 +1,17 @@
 interface ArchitectureStep { title: string; technology: string; }
-interface ProjectArchitecture { steps: [ArchitectureStep, ArchitectureStep, ArchitectureStep]; note: string; }
+interface ProjectArchitecture { steps: [ArchitectureStep, ArchitectureStep, ArchitectureStep]; note: string; visualLabel?: string; }
 
 // Short visual summaries of the corresponding MDX case studies, not new technical claims.
 export const projectArchitecture: Record<string, ProjectArchitecture> = {
+  'next-chapter': {
+    visualLabel: 'Workflow',
+    steps: [
+      { title: 'Capture and keep context', technology: 'React · D1 · private R2 media' },
+      { title: 'Research and propose', technology: 'OpenAI · durable Cloudflare Workflows' },
+      { title: 'Review and hand off', technology: 'Etsy drafts · Chrome helper' },
+    ],
+    note: 'eBay approval pending. Live sale sync and automatic delisting are planned.',
+  },
   'patient-access-orchestration': {
     steps: [
       { title: 'Define the policy', technology: 'Python rules & measurement' },

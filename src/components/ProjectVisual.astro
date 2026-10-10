@@ -12,10 +12,10 @@ const href = variant === 'card' ? caseStudyPath(entry) : undefined;
 const Frame = href ? 'a' : 'div';
 const id = `visual-${slug}`;
 ---
-{image && <div class:list={['project-visual', `project-visual--${variant}`]} data-project-visual>
+{image && <div class:list={['project-visual', `project-visual--${variant}`, { 'project-visual--workflow': architecture?.visualLabel === 'Workflow' }]} data-project-visual>
   {architecture && <div class="visual-toolbar" hidden>
     <div class="visual-tabs" data-visual-tabs aria-label={`${title} view`}>
-      <button type="button" id={`${id}-product-tab`} aria-controls={`${id}-product`}>Product</button>
+      <button type="button" id={`${id}-product-tab`} aria-controls={`${id}-product`}>{architecture.visualLabel ?? 'Product'}</button>
       <button type="button" id={`${id}-architecture-tab`} aria-controls={`${id}-architecture`}>Under the hood</button>
     </div>
   </div>}
@@ -146,5 +146,11 @@ const id = `visual-${slug}`;
   }
   @media (max-width: 360px) {
     .project-visual--card.is-ready { min-height: 300px; }
+  }
+  .project-visual--workflow.project-visual--card.is-ready { aspect-ratio: 1.15; height: auto; }
+  .project-visual--workflow.project-visual--card .project-image { padding: 14px; }
+  .project-visual--workflow .project-preview-cue { display: none; }
+  @media (max-width: 640px) {
+    .project-visual--workflow.project-visual--card.is-ready { aspect-ratio: 1; }
   }
 </style>

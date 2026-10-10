@@ -105,3 +105,9 @@ Kai requested this project second in Healthcare and Clinician Matching last. Cli
 Kai supplied the first-person motivation: Saturday visits with his son to a nearby children's museum where they have a membership, followed by STK cheeseburgers. Repeated explanations to the restaurant's voice AI made ordering two cheeseburgers take too long. The narrative uses that account without naming an uncertain museum or claiming the assistant already handles those trips.
 
 The private project's current code and release documentation support the v8 feature description, 379 passing automated tests, and 19 local simulated-call scenarios. V8 is built but not deployed; the older STK v7 AWS release has calling disabled. Real-model conversation evaluation, controlled audio calls, and physical iPhone dictation still need validation. Automatic real-card payment is not implemented. No private repository or live-app link was added.
+
+## Next Chapter (October 10, 2026)
+
+Kai supplied the family-business motivation and the pending eBay developer approval status. The implementation account is grounded in the [public Next Chapter source](https://github.com/ktakeuchi21/next-chapter-ds), revision `bced5f22420b08af89130f94238676fb2e84eb8b`, including its README and marketplace setup documentation.
+
+The narrative separates implemented capture, research, listing preparation, and order/removal foundations from live integration validation. Etsy transfers produce unpublished drafts; Facebook publication remains seller-controlled. Live order polling, automatic delisting, and shipping-label purchases are not enabled. The workflow illustration is an original SVG with those boundaries called out, rather than a screenshot of private inventory. No business outcomes or customer endorsements are inferred.

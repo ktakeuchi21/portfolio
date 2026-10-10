@@ -429,3 +429,9 @@ ai-evaluation-workspace.png
 Screenshot of Kai Takeuchi's AI Evaluation & Governance Lab, captured September 16, 2026.
 Reference: https://github.com/ktakeuchi21/ai-evaluation-governance-lab
 Local Demo Alpha workspace, authored synthetic fixtures only. No real patient information.
+
+next-chapter-workflow.svg
+Original workflow diagram created for the Next Chapter portfolio case study, October 10, 2026.
+Reference: https://github.com/ktakeuchi21/next-chapter-ds
+Shows the intended resale workflow; automatic sale monitoring and delisting are marked as planned.
+No client photographs, personal records, or third-party artwork are included.

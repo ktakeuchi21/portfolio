@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="840" viewBox="0 0 1000 840" role="img" aria-labelledby="title desc">
+  <title id="title">Next Chapter: from intake to a new home</title>
+  <desc id="desc">An end-to-end workflow: capture photos and voice, understand the item, research its price, prepare listings, sell and sync, then fulfill through shipping or pickup. Automatic sale monitoring and delisting are planned. Listing publication remains assisted.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M2 1 8 5 2 9" fill="none" stroke="#3b594c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1000" height="840" rx="12" fill="#faf9f6"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#27332e">
+    <text x="48" y="53" font-size="21" font-weight="700" letter-spacing="3" fill="#3b594c">NEXT CHAPTER</text>
+    <text x="48" y="111" font-family="Georgia, serif" font-size="49">From intake to a new home.</text>
+    <text x="48" y="153" font-size="25" fill="#60675f">One item record. Every step connected.</text>
+
+    <g fill="none" stroke="#3b594c" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M466 293H530"/>
+      <path d="M744 382V418"/>
+      <path d="M534 511H470"/>
+      <path d="M256 600V636"/>
+      <path d="M466 729H530"/>
+    </g>
+
+    <g fill="#edf0e9" stroke="#c7d1c3" stroke-width="2">
+      <rect x="48" y="204" width="418" height="178" rx="12"/>
+      <rect x="534" y="204" width="418" height="178" rx="12"/>
+      <rect x="534" y="422" width="418" height="178" rx="12"/>
+      <rect x="48" y="422" width="418" height="178" rx="12"/>
+      <rect x="534" y="640" width="418" height="178" rx="12"/>
+    </g>
+    <rect x="48" y="640" width="418" height="178" rx="12" fill="#f7efdf" stroke="#97712f" stroke-width="2" stroke-dasharray="9 7"/>
+
+    <g font-size="23" font-weight="700" fill="#3b594c">
+      <text x="76" y="245">01</text><text x="562" y="245">02</text>
+      <text x="562" y="463">03</text><text x="76" y="463">04</text>
+      <text x="76" y="681" fill="#76551e">05</text><text x="562" y="681">06</text>
+    </g>
+    <g font-size="40" font-weight="600">
+      <text x="76" y="302">Capture</text><text x="562" y="302">Understand</text>
+      <text x="562" y="520">Price</text><text x="76" y="520">Prepare listings</text>
+      <text x="76" y="738">Sell + sync</text><text x="562" y="738">Fulfill</text>
+    </g>
+    <g font-size="26" fill="#505c53">
+      <text x="76" y="349">Photos + voice notes</text>
+      <text x="562" y="349">Parse fields + identify</text>
+      <text x="562" y="567">Research + compare</text>
+      <text x="76" y="567">Channel, copy + review</text>
+      <text x="76" y="785" fill="#76551e">Monitor sales + delist</text>
+      <text x="562" y="785">Shipping or pickup</text>
+    </g>
+    <rect x="217" y="657" width="223" height="35" rx="17" fill="#ead8b3"/>
+    <text x="328" y="681" text-anchor="middle" font-size="20" font-weight="700" fill="#684a19">SYNC PLANNED</text>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+---
+title: Next Chapter
+slug: next-chapter
+category: personal
+ownership: independent
+status: private-app
+role: Product design & development
+audience: Small senior downsizing and resale businesses
+summary: "A resale assistant for my wife’s aunt’s senior downsizing business. Photos and voice notes become organized inventory, researched prices, and reviewed listing drafts."
+featured: false
+order: 2
+draft: false
+image:
+  src: /images/next-chapter-workflow.svg
+  alt: "Next Chapter workflow: capture photos and voice, understand the item, research a price, prepare listings, sell and sync, then fulfill. Automatic sale monitoring and delisting are marked as planned."
+  width: 1000
+  height: 840
+  caption: "The end-to-end workflow. Listing publication is assisted; automatic sale monitoring and delisting are planned."
+github: https://github.com/ktakeuchi21/next-chapter-ds
+tags: [React, Cloudflare, OpenAI, Chrome extension]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## Why I built it
+
+My wife’s aunt runs a senior downsizing business. Helping someone move also means finding new homes for their belongings: furniture, appliances, collectibles, and objects that nobody can quite identify.
+
+Selling each item meant repeating the same manual work: take photos, figure out what it is, research a price, write a description, and post it on a marketplace. After a sale, she still had to find the physical item, arrange pickup or shipping, and remove any other listings.
+
+I wanted to connect those tasks. Next Chapter is an orchestration layer around one item record, carrying its photos, notes, research, location, and selling history through the process.
+
+## The experience
+
+Capture starts at a client’s house. Choose the client once, then add one item or a batch of photos. Speak a note while looking at the objects. The app transcribes it and proposes which details belong to which items and fields, ready for review.
+
+An item can start with just a photo. It gets a short permanent code that can go on a handwritten label, plus a location so it can be found later. AI research can suggest a name, description, price range, asking price, and suitable marketplace. A seller or client’s estimate stays separate from the researched value.
+
+The aim is a natural next step: “This looks like an Instant Pot Duo. Here is the evidence, a suggested description, and a starting price for a quicker sale.” Uncertain details stay visible and editable.
+
+## How it works
+
+<ArchitectureFlow label="One item record, from intake to handoff" steps={[
+  { title: 'Capture', detail: 'Photos and voice notes inherit the client visit. An item code and storage location connect the digital record to the physical object.' },
+  { title: 'Understand', detail: 'Transcription becomes reviewable fields. Images and notes give the research process a starting point, even without an item name.' },
+  { title: 'Price', detail: 'Research proposes an identity, comparisons, a value range, and an asking price, with sources and assumptions for the seller to review.' },
+  { title: 'Prepare listings', detail: 'Choose a channel and review the copy and photos. Etsy receives an unpublished draft; a Chrome helper is built to prepare Facebook’s form for seller review and publication.' },
+  { title: 'Sell and sync', detail: 'Record listing links and sales. Order review and removal tasks are built; live sale monitoring and automatic removal from other marketplaces remain planned.' },
+  { title: 'Fulfill', detail: 'Use the item’s code and location to retrieve it, then follow pickup or packing tasks. Shipping-label purchases are a future integration.' }
+]} note="This shows the intended complete loop. Today, the seller still confirms marketplace actions and tracks the handoff; unattended selling is not enabled." />
+
+Facebook is the local-pickup path for bulky items. Etsy is an option for eligible vintage pieces. I also want to support eBay, particularly for shippable items, but I’m currently waiting for eBay developer approval.
+
+## Stack and choices
+
+<TechnologyStack items={[
+  { layer: 'Workspace', tools: 'React · TypeScript · Vite', purpose: 'Bring capture, inventory, research, and selling tasks into one interface.' },
+  { layer: 'Records and media', tools: 'Hono · Cloudflare Workers · D1 · R2', purpose: 'Keep item and task state in a database, with private media storage and scheduled backups.' },
+  { layer: 'Research and processing', tools: 'OpenAI · Cloudflare Workflows', purpose: 'Transcribe notes, research images and web sources, and retain progress for work that outlasts a page visit.' },
+  { layer: 'Marketplace handoff', tools: 'Etsy API · Chrome Manifest V3 · eBay adapters', purpose: 'Prepare provider-specific drafts and connect the app to a browser helper. Activate each integration after account setup and live checks.' }
+]} />
+
+## Decisions and design lessons
+
+**The item record is the center.** A marketplace listing is one representation of an item. Keeping ownership, location, photos, and sale tasks together makes it possible to coordinate several channels without losing track of the object.
+
+**Capture should not wait for certainty.** A photo and a spoken observation can be enough to begin. Identification and pricing become reviewable proposals, rather than prerequisites for saving an item.
+
+**Preparing a listing is different from publishing it.** The browser helper transfers reviewed information; the seller remains in control of publication. Sale detection and delisting need confirmed provider responses before the app can call those tasks complete.
+
+## Current state and next step
+
+The private app supports capture, structured notes, inventory, research, listing preparation, and fulfillment tasks. The Etsy unpublished-draft transfer and Facebook Chrome helper are built, with seller-account and live-form validation still to complete. Etsy developer access is approved; eBay developer approval is pending.
+
+The next step is to validate each marketplace handoff with the seller’s account, then enable and test live order syncing and cross-marketplace delisting. The full loop is the direction of the project, with each connection added and verified in stages.
+
+The [public repository](https://github.com/ktakeuchi21/next-chapter-ds) documents the implementation, setup, and integration boundaries.

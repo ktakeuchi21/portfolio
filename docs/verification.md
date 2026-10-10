@@ -291,3 +291,12 @@ Kai authorized publishing the reviewed changes. This release includes external l
 - The production build with `SITE_URL=https://kaitakeuchi.com` and `BASE_PATH=/` passed verification for 11 pages and 381 local asset/link targets. No experimental design routes are generated. `git diff --check` passed.
 - Desktop, tablet, 390px, and 320px browser checks for the interactions are recorded in `docs/design-toolkit-review.md`. These include keyboard tab controls, photo selection, project navigation, browser Back restoration, focus visibility, and responsive layouts. Reduced-motion and JavaScript-free fallback behavior for the latest interactions was reviewed in source rather than separately browser-emulated.
 - Publishing uses the existing `main` branch and GitHub Pages workflow. Its deployment run is the authoritative completion record; the live site is checked after that run succeeds.
+
+## Next Chapter addition, October 10, 2026
+
+- Added the personal-project card, case study, original SVG workflow thumbnail, and an optional Workflow label for the first visual tab. The narrative distinguishes implemented assistance from planned live sale monitoring and automatic delisting, and states that eBay developer approval is pending.
+- Astro/TypeScript checked 52 files with zero errors, warnings, or hints. Analytics behavioral checks passed. The production build for `https://kaitakeuchi.com/` verified 12 pages and 400 local asset/link targets.
+- Browser checks covered the listing and detail page at 320, 390, 768, and 1440 pixels without horizontal overflow. The mobile diagram was enlarged and its overlaid preview badge removed so the fulfillment step stays readable.
+- The card opens the case study; returning restores Everyday life. Home/End keys switch Workflow and Under the hood correctly. The source action points to the public Next Chapter repository with the expected new-tab attributes.
+- A JavaScript-disabled mobile context loaded the complete case study and diagram, including the pending-approval and planned-integration text. The browser reported a view-transition opt-in abort during ordinary navigation, but destination loading and return navigation succeeded.
+- Review screenshots are retained in ignored `output/playwright/next-chapter-*.png`. The existing GitHub Pages workflow validates and publishes the committed revision; its Actions run records deployment completion.

@@ -1,12 +1,13 @@
 # Content status
 
-Updated September 16, 2026. This release includes Healthcare and Everyday life project tabs and six complete case-study narratives. Kai requested the reviewed changes be merged and deployed, including the supplied portrait and personal images. GitHub Actions publishes this revision after it reaches `main`; deployment completion is recorded in the repository’s Actions history.
+Updated October 10, 2026. The site includes Healthcare and Everyday life project tabs and seven complete case-study narratives. Kai requested the reviewed changes be merged and deployed, including the supplied portrait and personal images. GitHub Actions publishes revisions after they reach `main`; deployment completion is recorded in the repository’s Actions history.
 
 | Item | Release content | Remaining content |
 | --- | --- | --- |
 | Patient Access Orchestration | Healthcare; local narrative, public synthetic demo, stack, architecture and design lessons | Optional firsthand reflection; repository remains private |
 | AI Evaluation & Governance Lab | Healthcare, second; local narrative, synthetic workspace screenshot, public source link, architecture and stack | In development; agent execution and evaluation remain planned |
 | Pathway | Healthcare; existing URL retained and narrative revised | Optional firsthand reflection; no duplicate Pathway Agent entry |
+| Next Chapter | Everyday life, first; supplied family-business motivation, original workflow diagram, public source link, stack and staged integration status | Seller-account validation, eBay developer approval, live order sync and automatic delisting |
 | What I Made | Everyday life; local narrative, private-app status and fictional public sample | Optional firsthand reflection |
 | Interlude | Everyday life; local narrative reflecting newer private deployment/narration records | Optional firsthand reflection; no verified public app/repository action |
 | Table for One | Everyday life; supplied Saturday museum/cheeseburger story, v8 voice-order composer screenshot, in-development status | V8 deployment, model/audio and iPhone validation; repository and app remain private |
@@ -18,11 +19,17 @@ Updated September 16, 2026. This release includes Healthcare and Everyday life p
 | Favorite episodes | One horizontal row with show tabs; six Lenny’s Podcast episodes and four How I AI episodes in Kai’s requested order | None |
 | Clinician Matching | Not included in this release | Repository link needed to verify the project before adding it last under Healthcare |
 
-Product maturity is separate from narrative visibility. All six project narratives use `draft: false`; private apps and unfinished products can still have useful case studies. Every project is labeled “Independent build.” The internal category values and existing `#professional`/`#personal` links remain stable while the visible labels describe the subject. Employer experience remains under Work.
+Product maturity is separate from narrative visibility. All seven project narratives use `draft: false`; private apps and unfinished products can still have useful case studies. Every project is labeled “Independent build.” The internal category values and existing `#professional`/`#personal` links remain stable while the visible labels describe the subject. Employer experience remains under Work.
 
 Case-study bodies are concise accounts of the product question, experience, architecture, technology, decisions, and current state. Design lessons are grounded in implementation and documentation. The October 9 Table for One update includes Kai's supplied first-person motivation. Other design lessons remain grounded in project documentation. Questions and detailed local-source references are retained in ignored `artifacts/project-content-review.md`.
 
-Application PDFs remain reference-only. No private phone numbers, patient data, real card details, private application links, or internal employer architecture were introduced. Interlude uses its real Today screenshot with synthetic demo data, What I Made uses its refreshed fictional-sample map, Table for One uses the desktop order screenshot from its local simulator with demo details and dummy payments, and AI Eval uses its synthetic Demo Alpha workspace. All six project cards and case studies have screenshots, with image attribution preserved. Experimental design routes are excluded from ordinary production builds.
+Application PDFs remain reference-only. No private phone numbers, patient data, real card details, private application links, or internal employer architecture were introduced. Interlude uses its real Today screenshot with synthetic demo data, What I Made uses its refreshed fictional-sample map, Table for One uses the desktop order screenshot from its local simulator with demo details and dummy payments, and AI Eval uses its synthetic Demo Alpha workspace. Six project cards and case studies have screenshots; Next Chapter uses an original workflow diagram. Image attribution is preserved. Experimental design routes are excluded from ordinary production builds.
+
+## Next Chapter addition, October 10, 2026
+
+Kai supplied the high-level motivation: helping his wife's aunt with the manual work of listing items from a senior downsizing business. The case study describes photo and voice capture, reviewable field extraction, identification and pricing, channel selection, reviewed listing preparation, and pickup or shipping tasks. The original SVG thumbnail shows the complete intended loop and marks automatic sale monitoring and delisting as planned.
+
+The public source supports the capture, inventory, research, Etsy unpublished-draft runner, Facebook Chrome helper, and order/removal foundations. The story distinguishes those implementations from live seller-account validation and unattended operation. Etsy developer access is approved; eBay developer approval remains pending, as Kai stated. No client photos, names, addresses, private app URL, sale outcomes, or time-saving metrics are published.
 
 
 ## Table for One update, October 9, 2026
