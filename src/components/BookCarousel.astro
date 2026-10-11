@@ -1,9 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import CarouselRotation from './CarouselRotation.astro';
 import { bookCategories, learningResources } from '../data/learning';
-interface Props { variant?: 'overlap' | 'turn' | 'pocket' | 'lean'; headingId?: string; headingLevel?: 2 | 3; withCategories?: boolean; }
-const { variant = 'overlap', headingId, headingLevel = 3, withCategories = false } = Astro.props;
+interface Props { variant?: 'overlap' | 'turn' | 'pocket' | 'lean'; headingId?: string; headingLevel?: 2 | 3; withCategories?: boolean; autoRotate?: boolean; }
+const { variant = 'overlap', headingId, headingLevel = 3, withCategories = false, autoRotate = false } = Astro.props;
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const BookHeading = headingLevel === 2 ? 'h3' : 'h4';
 const books = learningResources.filter(item => item.kind === 'book');
@@ -14,7 +15,7 @@ const categories = [{ id: 'all', label: 'All books' }, ...bookCategories];
 const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach', lean: 'Room for another favorite' };
 ---
 <div class:list={['shelf-rail', `shelf-${variant}`]} data-shelf-rail={variant} data-initial={initial} style={`--widest-cover:${widestCover}`}>
-  <header class="rail-heading"><div>{labels[variant] && <p class="rail-eyebrow">{labels[variant]}</p>}<Heading id={headingId} tabindex={headingId ? -1 : undefined}>Favorites on my shelf.</Heading></div><p class="library-size"><strong data-library-size>{books.length}</strong> <span>books</span></p></header>
+  <header class="rail-heading">{autoRotate && <CarouselRotation collection="books" />}<div>{labels[variant] && <p class="rail-eyebrow">{labels[variant]}</p>}<Heading id={headingId} tabindex={headingId ? -1 : undefined}>Favorites on my shelf.</Heading></div><p class="library-size"><strong data-library-size>{books.length}</strong> <span>books</span></p></header>
   {withCategories && <div class="shelf-topics" data-shelf-topics role="tablist" aria-label="Book topics" hidden>
     {categories.map(category => <button type="button" role="tab" id={`${panelId}-${category.id}`} data-shelf-category={category.id} aria-controls={panelId} aria-selected={category.id === 'all' ? 'true' : 'false'} tabindex={category.id === 'all' ? 0 : -1}>{category.label}<span>{category.id === 'all' ? books.length : books.filter(book => book.category === category.id).length}</span></button>)}
   </div>}
@@ -48,6 +49,8 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
 </div>
 
 <script>
+  import { gsap } from 'gsap';
+  import { setupCarouselRotation, stabilizeCarouselCaption } from '../lib/carousel-rotation';
   document.querySelectorAll<HTMLElement>('[data-shelf-rail]').forEach(shelf => {
     const viewport = shelf.querySelector<HTMLElement>('[data-shelf-viewport]')!;
     const allBooks = [...shelf.querySelectorAll<HTMLAnchorElement>('[data-shelf-book]')];
@@ -61,6 +64,9 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
     const creator = shelf.querySelector<HTMLElement>('[data-shelf-creator]')!;
     const count = shelf.querySelector<HTMLElement>('[data-shelf-count]')!;
     const destination = shelf.querySelector<HTMLAnchorElement>('[data-shelf-open]')!;
+    const caption = shelf.querySelector<HTMLElement>('.rail-selection')!;
+    let rotationTween: gsap.core.Tween | undefined;
+    let direction = 1;
     let selected = Number(shelf.dataset.initial) || 0;
     let hoverTimer: ReturnType<typeof setTimeout>;
     let lastPointer = { x: -1, y: -1 };
@@ -69,7 +75,14 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
     let lastScroll = 0;
     let drag: { x: number; left: number; id: number } | undefined;
     let dragged = false;
-    const show = (value: number, position: 'stay' | 'reveal' | 'center' = 'stay', instant = false) => {
+    const stopRotation = () => {
+      rotationTween?.kill();
+      rotationTween = undefined;
+      shelf.classList.remove('is-rotating');
+    };
+    const show = (value: number, position: 'stay' | 'reveal' | 'center' = 'stay', instant = false, automatic = false) => {
+      stopRotation();
+      shelf.classList.toggle('is-rotating', automatic);
       selected = (value + books.length) % books.length;
       slots.forEach((slot, i) => {
         slot.style.setProperty('--after', String(i > selected ? 1 : 0));
@@ -93,7 +106,9 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
       else if (left + width > target + viewport.clientWidth - 22) target = left + width - viewport.clientWidth + 22;
       target = Math.max(0, Math.min(target, viewport.scrollWidth - viewport.clientWidth));
       const smooth = !instant && !reduced.matches && Math.abs(target - viewport.scrollLeft) < viewport.clientWidth * 1.5;
-      viewport.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
+      if (automatic && smooth) {
+        rotationTween = gsap.to(viewport, { scrollLeft: target, duration: .9, ease: 'sine.inOut', onComplete: stopRotation });
+      } else viewport.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
     };
     shelf.classList.add('shelf-ready');
     shelf.setAttribute('role','group');
@@ -187,6 +202,18 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
     // Escape stops a pending hover and keeps the current cover open for reading.
     shelf.addEventListener('keydown',event=>{if(event.key==='Escape'){clearTimeout(hoverTimer);if(pointerOver)hoverIndex=selected;}});
     show(selected,'center',true);
+    if (shelf.querySelector('[data-carousel-rotation]')) {
+      stabilizeCarouselCaption(caption, allBooks.map(book => ({ title: book.dataset.title!, creator: book.dataset.creator! })));
+      setupCarouselRotation({
+        root: shelf, caption, stop: stopRotation, canAdvance: () => books.length > 1,
+        advance: () => {
+          // Reverse gently at the ends instead of sweeping across the entire shelf.
+          if (selected >= books.length - 1) direction = -1;
+          else if (selected <= 0) direction = 1;
+          show(selected + direction, 'center', false, true);
+        },
+      });
+    }
   });
 </script>
 
@@ -194,6 +221,8 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
   .shelf-rail { --cover: 174px; --book-height: 244px; --stride: 88px; --opening: calc(var(--cover) - var(--stride) + 14px); --stage-height: 312px; --muted: #666b60; --rule: #d4d7c9; --lift: 25px; color: #29382e; background: linear-gradient(120deg,#eeeee4,#f7f5ed 60%,#efeee3); border: 1px solid #d9dccc; border-radius: 12px; overflow: hidden; }
   .shelf-rail [hidden] { display: none !important; }
   .rail-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 32px 0; }
+  .rail-heading > div { flex: 1; min-width: 0; }
+  .shelf-rail.is-rotating .shelf-slot, .shelf-rail.is-rotating .shelf-jacket { transition-duration: .9s; transition-timing-function: ease-in-out; }
   .rail-eyebrow { color: var(--muted); text-transform: uppercase; letter-spacing: .13em; font-size: .625rem; margin-bottom: 10px; }
   .rail-heading :is(h2,h3) { font: 400 2.1rem/1.12 var(--font-display); letter-spacing: -.025em; }
   .library-size { text-align: right; font: 400 1.5rem/1 var(--font-display); }
@@ -260,6 +289,7 @@ const labels = { overlap: '', turn: 'A closer look', pocket: 'Within easy reach'
   .shelf-overlap .shelf-topics { margin-top: 12px; }
   .shelf-overlap .rail-bottom { padding: 16px 32px 22px; align-items: center; gap: 22px; }
   .shelf-overlap .rail-selection { min-height: 0; }
+  .shelf-overlap:has([data-carousel-rotation]) .rail-selection { flex: 1; }
   .shelf-overlap .rail-selection :is(h3,h4) { font-size: 1.55rem; margin: 0 0 7px; }
   .selection-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 16px; }
   .selection-meta .selection-count { white-space: nowrap; }

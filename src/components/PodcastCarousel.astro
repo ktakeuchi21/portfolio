@@ -1,9 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import CarouselRotation from './CarouselRotation.astro';
 import { learningResources } from '../data/learning';
-interface Props { variant?: 'fan' | 'coverflow' | 'rail' | 'sleeves'; headingId?: string; headingLevel?: 2 | 3; }
-const { variant = 'coverflow', headingId, headingLevel = 3 } = Astro.props;
+interface Props { variant?: 'fan' | 'coverflow' | 'rail' | 'sleeves'; headingId?: string; headingLevel?: 2 | 3; autoRotate?: boolean; }
+const { variant = 'coverflow', headingId, headingLevel = 3, autoRotate = false } = Astro.props;
 const Heading = headingLevel === 2 ? 'h2' : 'h3';
 const ShowHeading = headingLevel === 2 ? 'h3' : 'h4';
 const podcasts = learningResources.filter(item => item.kind === 'podcast');
@@ -13,6 +14,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
 ---
 <div class:list={['crate', `crate-${variant}`]} data-crate={variant}>
   <div class="crate-heading">
+    {autoRotate && <CarouselRotation collection="podcasts" />}
     <div>{labels[variant] && <p class="small-label">{labels[variant]}</p>}<Heading id={headingId} tabindex={headingId ? -1 : undefined}>What I tune into.</Heading></div>
     <span class="collection-count">{totalLabel} <span>favorites</span></span>
   </div>
@@ -43,6 +45,8 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
 </div>
 
 <script>
+  import { gsap } from 'gsap';
+  import { setupCarouselRotation, stabilizeCarouselCaption } from '../lib/carousel-rotation';
   document.querySelectorAll<HTMLElement>('[data-crate]').forEach(crate => {
     const reel = crate.querySelector<HTMLElement>('[data-crate-reel]')!;
     const track = reel.querySelector<HTMLElement>('.crate-track')!;
@@ -54,6 +58,8 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
     const creator = crate.querySelector<HTMLElement>('[data-crate-creator]')!;
     const count = crate.querySelector<HTMLElement>('[data-crate-count]')!;
     const open = crate.querySelector<HTMLAnchorElement>('[data-crate-open]')!;
+    const caption = crate.querySelector<HTMLElement>('.current-show')!;
+    let rotationTween: gsap.core.Tween | undefined;
     let active = total;
     let requested = total;
     let selected = -1;
@@ -110,7 +116,9 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
       });
       if (!moving) metadata(closest);
     };
-    const go = (index: number, instant = false) => {
+    const go = (index: number, instant = false, automatic = false) => {
+      rotationTween?.kill();
+      rotationTween = undefined;
       if (index < 1 || index >= records.length - 1) index = total + logical(index);
       requested = index;
       moving = !(instant || reduced.matches);
@@ -119,7 +127,9 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
       reel.classList.toggle('is-moving', moving);
       reel.scrollTo({ left: reel.scrollLeft, behavior: 'instant' });
       metadata(index);
-      reel.scrollTo({ left: position(index), behavior: moving ? 'smooth' : 'instant' });
+      if (automatic && moving) {
+        rotationTween = gsap.to(reel, { scrollLeft: position(index), duration: .9, ease: 'sine.inOut', onComplete: () => { rotationTween = undefined; settle(); } });
+      } else reel.scrollTo({ left: position(index), behavior: moving ? 'smooth' : 'instant' });
       if (!moving) paint();
     };
     const settle = () => {
@@ -164,7 +174,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(paint);
       clearTimeout(settleTimer);
-      settleTimer = setTimeout(settle, 160);
+      if (!rotationTween) settleTimer = setTimeout(settle, 160);
     }, { passive: true });
     reel.addEventListener('wheel', () => { moving = false; reel.classList.remove('is-moving'); }, { passive: true });
     reel.addEventListener('pointerdown', event => {
@@ -198,6 +208,21 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
     crate.style.setProperty('--reel-width', `${reel.clientWidth}px`);
     measure();
     go(total, true);
+    if (crate.querySelector('[data-carousel-rotation]')) {
+      stabilizeCarouselCaption(caption, originals.map(record => ({ title: record.dataset.title!, creator: record.dataset.creator! })));
+      setupCarouselRotation({
+        root: crate, caption, canAdvance: () => total > 1, interval: 5200,
+        advance: () => go(active + 1, false, true),
+        stop: () => {
+          if (!rotationTween) return;
+          rotationTween.kill();
+          rotationTween = undefined;
+          clearTimeout(settleTimer);
+          // Settle at the nearest cover before handing scrolling back to the visitor.
+          settle();
+        },
+      });
+    }
   });
 </script>
 
@@ -249,6 +274,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
 
   .crate-coverflow { --cover: 208px; --gap: -58px; --rule: #4d5656; --subtle: #bac4bf; background: radial-gradient(ellipse at 50% 48%, #384743, #1d2927 68%); }
   .crate-coverflow .crate-heading { text-align: center; justify-content: center; padding-top: 22px; }
+  .crate-coverflow:has([data-carousel-rotation]:not([hidden])) .crate-heading > div { flex: 1; padding-left: 64px; }
   .crate-coverflow .collection-count { display: none; }
   .crate-coverflow.crate-ready .crate-track { padding-block: 28px 40px; }
   .crate-coverflow.crate-ready .album { transform: perspective(900px) rotateY(var(--turn, 0deg)) scale(calc(1 - var(--depth, 0) * .10)); filter: brightness(calc(1 - var(--depth, 0) * .16)); }
@@ -256,6 +282,7 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
   .crate-coverflow .crate-bottom { align-items: center; text-align: left; padding: 8px 32px 22px; gap: 22px; }
   .crate-coverflow .crate-actions { gap: 24px; }
   .crate-coverflow .current-show { min-height: 0; max-width: min(100%, 680px); }
+  .crate-coverflow:has([data-carousel-rotation]) .current-show { flex: 1; }
   .crate-coverflow .current-show :is(h3,h4) { font-size: 1.65rem; margin: 0 0 7px; }
   .show-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 16px; }
   .show-meta .show-count { white-space: nowrap; }
@@ -289,6 +316,8 @@ const labels = { fan: 'In good company', coverflow: '', rail: 'Always in rotatio
     .crate-bottom { align-items: start; flex-direction: column; gap: 22px; }
     .crate-actions { width: 100%; justify-content: space-between; }
     .crate-coverflow .crate-actions { justify-content: space-between; }
+    .crate-coverflow:has([data-carousel-rotation]:not([hidden])) .crate-heading { text-align: left; }
+    .crate-coverflow:has([data-carousel-rotation]:not([hidden])) .crate-heading > div { padding-left: 0; }
     .crate-coverflow .crate-bottom { align-items: stretch; gap: 12px; }
     .current-show :is(h3, h4) { font-size: 2rem; }
   }

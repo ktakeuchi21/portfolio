@@ -1,0 +1,16 @@
+---
+interface Props { collection: 'books' | 'podcasts'; }
+const { collection } = Astro.props;
+---
+<button class="rotation-control" type="button" data-carousel-rotation data-collection={collection} aria-label={`Pause ${collection} rotation`} title={`Pause ${collection} rotation`} hidden>
+  <span data-rotation-pause aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 5v14M16 5v14" /></svg></span>
+  <span data-rotation-play aria-hidden="true" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m8 5 11 7-11 7z" /></svg></span>
+</button>
+
+<style>
+  .rotation-control { order: 2; flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: 50%; color: inherit; cursor: pointer; }
+  .rotation-control:hover { background: #87987e1c; }
+  .rotation-control:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .rotation-control:disabled { opacity: .5; cursor: default; }
+  .rotation-control[hidden], .rotation-control [hidden] { display: none; }
+</style>
