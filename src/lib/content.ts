@@ -8,7 +8,7 @@ export const projectCategories = [
 // Homepage curation is independent of the complete Projects listing.
 const homeSelections = {
   professional: { anchor: 'healthcare', slugs: ['patient-access-orchestration', 'ai-evaluation-governance-lab'] },
-  personal: { anchor: 'everyday-life', slugs: ['next-chapter', 'oahu-flow-lab'] },
+  personal: { anchor: 'everyday-life', slugs: ['oahu-flow-lab', 'table-for-one'] },
 } as const;
 
 export const homeProjectGroups = projectCategories.map(category => ({ ...category, ...homeSelections[category.id] }));

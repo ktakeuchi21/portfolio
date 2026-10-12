@@ -132,7 +132,7 @@ const listing = await readFile(path.join(root, 'projects/index.html'), 'utf8');
 const professionalStart = listing.indexOf('id="professional"');
 const personalStart = listing.indexOf('id="personal"');
 assert(professionalStart >= 0 && personalStart > professionalStart, 'Project category sections are missing or out of order');
-for (const [category, slugs] of Object.entries({professional: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'pathway'], personal: ['next-chapter', 'oahu-flow-lab', 'what-i-made', 'interlude', 'table-for-one']})) {
+for (const [category, slugs] of Object.entries({professional: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'pathway'], personal: ['oahu-flow-lab', 'table-for-one', 'what-i-made', 'interlude', 'next-chapter']})) {
   const section = category === 'professional' ? listing.slice(professionalStart, personalStart) : listing.slice(personalStart);
   let previousCard = -1;
   for (const slug of slugs) {

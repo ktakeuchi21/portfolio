@@ -19,11 +19,11 @@ Employer experience is separate from independent projects. Healthcare describes 
 | Healthcare | [AI Evaluation & Governance Lab](https://kaitakeuchi.com/projects/ai-evaluation-governance-lab/) | In development; Foundry evaluations, source comparison, saved assessments, and section walkthroughs implemented |
 | Healthcare | [Briefing Room](https://kaitakeuchi.com/projects/briefing-room/) | In development; source-linked pre-call briefs, review controls, and recorded evaluation evidence; third in Healthcare, excluded from the homepage |
 | Healthcare | [Pathway](https://kaitakeuchi.com/projects/pathway/) | Public synthetic demo |
-| Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
-| Everyday life | [Oʻahu Flow Lab](https://kaitakeuchi.com/projects/oahu-flow-lab/) | Private app; public case study, second in Everyday life |
+| Everyday life | [Oʻahu Flow Lab](https://kaitakeuchi.com/projects/oahu-flow-lab/) | Private app; public case study, first in Everyday life |
+| Everyday life | [Table for One](https://kaitakeuchi.com/projects/table-for-one/) | In development |
 | Everyday life | [What I Made](https://kaitakeuchi.com/projects/what-i-made/) | Private app with a fictional public sample |
 | Everyday life | [Interlude](https://kaitakeuchi.com/projects/interlude/) | Private app |
-| Everyday life | [Table for One](https://kaitakeuchi.com/projects/table-for-one/) | In development |
+| Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
 
 ## Stack
 
@@ -95,7 +95,7 @@ tags: [Product discovery, Workflow design]
 
 Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
 
-The homepage uses explicit project selections and short summaries in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab, followed by Everyday life with Next Chapter and Oʻahu Flow Lab. Update `homeSelections` and `homeProjectSummaries` to change these pairs. Compact homepage cards use equal-height previews, a linked title, and a short description; status, stack, demos, and source links remain in the case studies and full Projects listing. Homepage links `/#healthcare` and `/#everyday-life` scroll to their sections. Back/Forward restores the reading position, and both groups remain visible with or without JavaScript.
+The homepage uses explicit project selections and short summaries in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab, followed by Everyday life with Oʻahu Flow Lab and Table for One. The complete Everyday life listing is ordered Oʻahu Flow Lab, Table for One, What I Made, Interlude, and Next Chapter. Update `homeSelections` and `homeProjectSummaries` to change the homepage pairs, and each project's `order` to change the full listing. Compact homepage cards use equal-height previews, a linked title, and a short description; status, stack, demos, and source links remain in the case studies and full Projects listing. Homepage links `/#healthcare` and `/#everyday-life` scroll to their sections. Back/Forward restores the reading position, and both groups remain visible with or without JavaScript.
 
 Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both use “Independent build” on case studies. The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
 
@@ -109,7 +109,7 @@ Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive ste
 
 Next Chapter uses the original illustrated `public/images/next-chapter-workflow.svg` both as a standalone still image and inline through `NextChapterWorkflow.astro`. Its optional Play/Pause/Replay control runs a six-second GSAP sequence. It pauses offscreen or in a background tab and returns to the complete still when switching views or enabling reduced motion. No animation starts automatically. Keep the public Next Chapter README's copy of the SVG in sync when changing the artwork. The case-study caption identifies automatic sale monitoring and delisting as planned.
 
-The homepage shows actual app screenshots for Next Chapter and Oʻahu Flow Lab. `homeProjectThumbnails` retains overrides for Next Chapter and Table for One; Oʻahu Flow Lab uses its case-study image. Next Chapter shows its item research and pricing panel; Table for One shows the earlier simulator's order composer. The equal-height thumbnails frame the top of each screenshot. The full Projects listing and case-study covers retain the workflow diagrams.
+The homepage shows actual app screenshots for Oʻahu Flow Lab and Table for One. Oʻahu Flow Lab uses its case-study image; Table for One uses the earlier simulator's order composer through `homeProjectThumbnails`. That mapping also retains Next Chapter's item research screenshot for future curation. The equal-height thumbnails frame the top of each screenshot. The full Projects listing and case-study covers retain the workflow diagrams for Next Chapter and Table for One.
 
 ### Drafts and external case studies
 
