@@ -3,6 +3,14 @@ interface ProjectArchitecture { steps: [ArchitectureStep, ArchitectureStep, Arch
 
 // Short visual summaries of the corresponding MDX case studies, not new technical claims.
 export const projectArchitecture: Record<string, ProjectArchitecture> = {
+  'oahu-flow-lab': {
+    steps: [
+      { title: 'Map the island', technology: 'Leaflet · roads · transit schedules' },
+      { title: 'Design connections', technology: 'Rail · bus · ferry · Three.js stations' },
+      { title: 'Compare the journey', technology: 'Travel time · capacity · fleet · cost' },
+    ],
+    note: 'Editable service assumptions connect the map to the comparison.',
+  },
   'next-chapter': {
     visualLabel: 'Workflow',
     steps: [

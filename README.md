@@ -7,7 +7,7 @@ A static Astro + TypeScript portfolio for healthcare and AI product building. Ta
 ## What’s on the site
 
 - **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order. Below the homepage hero, sticky section navigation tracks Experience, Projects, and About me. Healthcare and Everyday life are nested under Projects and jump to consecutive sections, each with two wider project cards. On mobile, both category links stay visible beneath the section links.
-- **Projects:** Healthcare and Everyday life tabs, with eight independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
+- **Projects:** Healthcare and Everyday life tabs, with nine independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
 - **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
 
@@ -20,6 +20,7 @@ Employer experience is separate from independent projects. Healthcare describes 
 | Healthcare | [Briefing Room](https://kaitakeuchi.com/projects/briefing-room/) | In development; source-linked pre-call briefs, review controls, and recorded evaluation evidence; third in Healthcare, excluded from the homepage |
 | Healthcare | [Pathway](https://kaitakeuchi.com/projects/pathway/) | Public synthetic demo |
 | Everyday life | [Next Chapter](https://kaitakeuchi.com/projects/next-chapter/) | Private app; staged marketplace integrations, eBay approval pending |
+| Everyday life | [Oʻahu Flow Lab](https://kaitakeuchi.com/projects/oahu-flow-lab/) | Private app; public case study, second in Everyday life |
 | Everyday life | [What I Made](https://kaitakeuchi.com/projects/what-i-made/) | Private app with a fictional public sample |
 | Everyday life | [Interlude](https://kaitakeuchi.com/projects/interlude/) | Private app |
 | Everyday life | [Table for One](https://kaitakeuchi.com/projects/table-for-one/) | In development |
@@ -53,7 +54,7 @@ npm run preview
 
 `npm run verify:content` temporarily adds entries in both project categories and employer Work, proves that they generate cards and detail routes, then removes them and restores the normal build. Use it when changing the content infrastructure, not for ordinary copy edits. Avoid running content builds alongside the development server: Astro shares its content cache. Use the production preview after validation to inspect the final catalog.
 
-Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, the eight case studies listed above, and `/project-notes/briefing-room/evaluation/`. The résumé route is intentionally absent.
+Routes include `/`, `/work/`, `/projects/`, `/about/`, `/404.html`, the nine case studies listed above, and `/project-notes/briefing-room/evaluation/`. The résumé route is intentionally absent.
 
 ## Visitor analytics
 
@@ -94,7 +95,7 @@ tags: [Product discovery, Workflow design]
 
 Write the narrative below the frontmatter. The route `/projects/a-new-product/` and listing card are generated automatically. Images and external URLs are optional, as is `date`; do not create dates just to fill metadata.
 
-The homepage uses explicit project selections and short summaries in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab, followed by Everyday life with Next Chapter and Table for One. Update `homeSelections` and `homeProjectSummaries` to change these pairs. Compact homepage cards use equal-height previews, a linked title, and a short description; status, stack, demos, and source links remain in the case studies and full Projects listing. Homepage links `/#healthcare` and `/#everyday-life` scroll to their sections. Back/Forward restores the reading position, and both groups remain visible with or without JavaScript.
+The homepage uses explicit project selections and short summaries in `src/lib/content.ts`, independent of listing order and the legacy project `featured` field. Healthcare shows Patient Access Orchestration and AI Evaluation & Governance Lab, followed by Everyday life with Next Chapter and Oʻahu Flow Lab. Update `homeSelections` and `homeProjectSummaries` to change these pairs. Compact homepage cards use equal-height previews, a linked title, and a short description; status, stack, demos, and source links remain in the case studies and full Projects listing. Homepage links `/#healthcare` and `/#everyday-life` scroll to their sections. Back/Forward restores the reading position, and both groups remain visible with or without JavaScript.
 
 Projects use `category: professional` for the **Healthcare** tab and `category: personal` for **Everyday life**, with `ownership: independent` for their origin. Both use “Independent build” on case studies. The existing `/projects/#professional` and `/projects/#personal` links select the corresponding tab; without JavaScript, both sections and their anchor links remain available. Category names, descriptions, and status labels live in `src/lib/content.ts`.
 
@@ -108,7 +109,7 @@ Case studies support reusable `ArchitectureFlow.astro` (numbered, responsive ste
 
 Next Chapter uses the original illustrated `public/images/next-chapter-workflow.svg` both as a standalone still image and inline through `NextChapterWorkflow.astro`. Its optional Play/Pause/Replay control runs a six-second GSAP sequence. It pauses offscreen or in a background tab and returns to the complete still when switching views or enabling reduced motion. No animation starts automatically. Keep the public Next Chapter README's copy of the SVG in sync when changing the artwork. The case-study caption identifies automatic sale monitoring and delisting as planned.
 
-Homepage thumbnail overrides in `homeProjectThumbnails` use actual app screenshots for Next Chapter and Table for One. Next Chapter shows its item research and pricing panel; Table for One shows the earlier simulator's order composer. The equal-height thumbnails frame the top of each screenshot. The full Projects listing and case-study covers retain the workflow diagrams.
+The homepage shows actual app screenshots for Next Chapter and Oʻahu Flow Lab. `homeProjectThumbnails` retains overrides for Next Chapter and Table for One; Oʻahu Flow Lab uses its case-study image. Next Chapter shows its item research and pricing panel; Table for One shows the earlier simulator's order composer. The equal-height thumbnails frame the top of each screenshot. The full Projects listing and case-study covers retain the workflow diagrams.
 
 ### Drafts and external case studies
 
@@ -251,4 +252,4 @@ For custom Actions deployments, GitHub’s Pages setting is authoritative; a sou
 
 ## Content and review status
 
-See `docs/content-status.md` for the eight project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.
+See `docs/content-status.md` for the nine project narratives and deferred content, `docs/verification.md` for validation evidence and limits, and `docs/deployment.md` for hosting configuration. Clinician Matching is pending a verified repository link. Private content questions are in ignored `artifacts/project-content-review.md`; browser review scripts, captures, and research downloads are excluded from Git.

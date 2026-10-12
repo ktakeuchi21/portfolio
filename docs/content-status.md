@@ -1,6 +1,6 @@
 # Content status
 
-Updated October 10, 2026. The site includes Healthcare and Everyday life project tabs and eight complete case-study narratives. Kai requested the reviewed changes be merged and deployed, including the supplied portrait and personal images. GitHub Actions publishes revisions after they reach `main`; deployment completion is recorded in the repository’s Actions history.
+Updated October 12, 2026. The site includes Healthcare and Everyday life project tabs and nine complete case-study narratives. Kai requested the reviewed changes be merged and deployed, including the supplied portrait and personal images. GitHub Actions publishes revisions after they reach `main`; deployment completion is recorded in the repository’s Actions history.
 
 | Item | Release content | Remaining content |
 | --- | --- | --- |
@@ -9,6 +9,7 @@ Updated October 10, 2026. The site includes Healthcare and Everyday life project
 | Briefing Room | Healthcare, third; source-linked pre-call brief workspace, review controls, fictional records, and recorded evaluation evidence; excluded from the homepage | In development; evaluations are AI-assisted assessments, not human validation or production evidence |
 | Pathway | Healthcare; existing URL retained and narrative revised | Optional firsthand reflection; no duplicate Pathway Agent entry |
 | Next Chapter | Everyday life, first; supplied family-business motivation, original workflow diagram, public source link, stack and staged integration status | Seller-account validation, eBay developer approval, live order sync and automatic delisting |
+| Oʻahu Flow Lab | Everyday life, second in listing and homepage; Kai’s Kapolei/Japan motivation, real app map screenshot, connected bus/rail/ferry design, architecture and cost questions | Better demand and cost evidence; app remains private with no public-demo action |
 | What I Made | Everyday life; local narrative, private-app status and fictional public sample | Optional firsthand reflection |
 | Interlude | Everyday life; local narrative reflecting newer private deployment/narration records | Optional firsthand reflection; no verified public app/repository action |
 | Table for One | Everyday life; supplied Saturday museum/two-cheeseburger story, original workflow diagram, AWS learning rationale, in-development status | V8 deployment, model/audio and iPhone validation; repository and app remain private |
@@ -20,7 +21,7 @@ Updated October 10, 2026. The site includes Healthcare and Everyday life project
 | Favorite episodes | One horizontal row with show tabs; six Lenny’s Podcast episodes and four How I AI episodes in Kai’s requested order | None |
 | Clinician Matching | Not included in this release | Repository link needed to verify the project before adding it last under Healthcare |
 
-Product maturity is separate from narrative visibility. All eight project narratives use `draft: false`; private apps and unfinished products can still have useful case studies. Every case study is labeled “Independent build”; listing cards omit the repeated label. The internal category values and existing `#professional`/`#personal` links remain stable while the visible labels describe the subject. Employer experience remains under Work.
+Product maturity is separate from narrative visibility. All nine project narratives use `draft: false`; private apps and unfinished products can still have useful case studies. Every case study is labeled “Independent build”; listing cards omit the repeated label. The internal category values and existing `#professional`/`#personal` links remain stable while the visible labels describe the subject. Employer experience remains under Work.
 
 Case-study bodies are concise accounts of the product question, experience, architecture, technology, decisions, and current state. Design lessons are grounded in implementation and documentation. The October 9 Table for One update includes Kai's supplied first-person motivation. Other design lessons remain grounded in project documentation. Questions and detailed local-source references are retained in ignored `artifacts/project-content-review.md`.
 

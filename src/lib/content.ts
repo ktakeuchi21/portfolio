@@ -8,7 +8,7 @@ export const projectCategories = [
 // Homepage curation is independent of the complete Projects listing.
 const homeSelections = {
   professional: { anchor: 'healthcare', slugs: ['patient-access-orchestration', 'ai-evaluation-governance-lab'] },
-  personal: { anchor: 'everyday-life', slugs: ['next-chapter', 'table-for-one'] },
+  personal: { anchor: 'everyday-life', slugs: ['next-chapter', 'oahu-flow-lab'] },
 } as const;
 
 export const homeProjectGroups = projectCategories.map(category => ({ ...category, ...homeSelections[category.id] }));
@@ -17,6 +17,7 @@ export const homeProjectSummaries: Record<string, string> = {
   'patient-access-orchestration': 'Exploring the decisions and human handoffs between a prescription and therapy initiation.',
   'ai-evaluation-governance-lab': 'Testing AI case preparation with source evidence, prompt comparisons, and human review.',
   'next-chapter': 'Turning photos and voice notes into inventory, pricing research, and resale listing drafts.',
+  'oahu-flow-lab': 'Exploring how rail, buses, and ferries could work together to reduce traffic on the island where I grew up.',
   'table-for-one': 'A takeout assistant that turns a spoken request into a reviewed order and a delegated call.',
 };
 

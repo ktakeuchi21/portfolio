@@ -129,3 +129,12 @@ The case study describes Kai’s independent post-discharge briefing prototype, 
 The retained evaluation includes 18 generations across three iterations. The final six runs contain 161 valid references and 218 assessed atomic claims: 216 fully supported, one partially supported, and one unsupported. Ratings were AI-assisted; no independent human or clinical validation is claimed. Prompt, model, and schema changes were confounded. The unsupported outreach timestamp remains in the recorded example. Source records, expected answers, rubrics, outputs, and assessments are included alongside the native evaluation notes for inspection.
 
 `briefing-room-workspace.jpg` is a 1440 × 1000 browser capture of the actual Mist blue workspace on October 10, 2026. The member and all passages are fictional. The downloadable PDF is the project’s one-page case study. Neither the case study nor the evaluation establishes production readiness or staff time savings.
+
+
+## Oʻahu Flow Lab (October 12, 2026)
+
+The first-person story comes from Kai’s request: growing up in Kapolei, car dependence and traffic, being priced out of Hawaiʻi, spending a long time living in Japan, respect for development opposition, and interest in the societal return from better transport. No commute statistics, measured traffic reductions, construction estimates, or ROI results were invented.
+
+The feature and stack descriptions were checked against the Oʻahu Flow Lab application source: browser JavaScript, Leaflet maps, Three.js station scenes, rail service design, bus connections, ferries, shared-track compatibility, and scenario costs. The North Shore description preserves the proposed Haleʻiwa/Dole rail branch while describing bus improvements beyond that connection.
+
+`public/images/oahu-flow-lab.jpg` is an unmodified map capture from the app, with the source credits visible. The portfolio publishes the story and screenshot, while the owner-only app remains private.

@@ -456,3 +456,9 @@ The Mist blue workspace uses white surfaces and restrained blue accents. No SCAN
 briefing-room-case-study.pdf and project-notes/briefing-room/evidence/
 Original case-study document and frozen project evaluation artifacts. All cases and records are fictional.
 AI-assisted assessment of 18 retained generations; not an independent clinical evaluation.
+
+
+oahu-flow-lab.jpg
+Actual Oʻahu Flow Lab application screenshot, captured October 11, 2026.
+Map credits are retained in the image: Roads: Honolulu / HOLIS; Schedules: OTS; © OpenStreetMap contributors; Outline: Hawaiʻi GIS.
+OpenStreetMap: https://www.openstreetmap.org/copyright

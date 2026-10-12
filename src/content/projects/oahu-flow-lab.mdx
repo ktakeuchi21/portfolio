@@ -1,0 +1,84 @@
+---
+title: Oʻahu Flow Lab
+slug: oahu-flow-lab
+category: personal
+ownership: independent
+status: private-app
+role: Product direction, design & development
+audience: People exploring how Oʻahu could be easier to get around
+summary: "I grew up in Kapolei, where getting around meant needing a car and still sitting in traffic. Oʻahu Flow Lab lets me explore how rail, buses, and ferries could work together to give people more of their day back."
+featured: false
+order: 2.5
+draft: false
+image:
+  src: /images/oahu-flow-lab.jpg
+  alt: "Oʻahu Flow Lab’s transit map, with proposed rail and ferry routes, bus icons, and colored car dots across the island."
+  width: 1265
+  height: 712
+  caption: "The transit designer combines car traffic, buses, trains, and ferries in one map."
+tags: [JavaScript, Leaflet, Three.js, Transit modeling]
+---
+
+import ArchitectureFlow from '../../components/ArchitectureFlow.astro';
+import TechnologyStack from '../../components/TechnologyStack.astro';
+
+## Why I built it
+
+I grew up in Kapolei. Getting almost anywhere meant needing a car. Even with one, getting around could be difficult because of traffic.
+
+I’ve been priced out of living in Hawaiʻi. But cost is only part of it. I also don’t want to live somewhere I could spend three hours a day in traffic. That is time I’d rather spend with people, doing things, or being home.
+
+I’ve also lived in Japan for a long time. Using its transit systems changed my expectations for how easy it could be to get around without a car. I wanted to explore what a more connected system could look like on Oʻahu.
+
+There are good reasons people oppose development in Hawaiʻi, and I respect that. This project gives me room to ask what might improve transportation while keeping those concerns visible. It won’t solve housing affordability or the cost of living. I wanted to make the transportation question easier to explore.
+
+## One journey, several ways to travel
+
+The app started with moving traffic on a map. It grew into a workspace for changing routes, station locations, train capacity, service intervals, and connections, then comparing the effect on travel and cost.
+
+The proposed network includes a Mākaha–Hawaiʻi Kai East–West rail service, a Haleʻiwa branch through Dole Plantation, and connections toward Kāneʻohe and Kailua. Ferry options connect ʻEwa and Iroquois Point with Honolulu and Hickam, with onward bus and rail connections.
+
+Beyond the Haleʻiwa rail connection, I focused on more frequent direct buses for the northern and northeastern coastal communities. That was a deliberate limit on the design, given the strong opposition to further development there.
+
+Buses remain important throughout the island. A useful journey might be home to bus, bus to rail, and a short walk at the other end. The designer compares keeping existing buses with adapting selected routes and adding neighborhood connections. It also keeps direct bus journeys available for people who would be poorly served by a transfer.
+
+## How it works
+
+<ArchitectureFlow label="Compare the whole journey" steps={[
+  { title: 'Start with the island', detail: 'Road geometry, transit schedules, and a time-of-day traffic model provide the starting view.' },
+  { title: 'Change the network', detail: 'Adjust rail services, bus connections, ferries, stations, frequency, and capacity.' },
+  { title: 'Compare the tradeoffs', detail: 'Watch traffic change and inspect travel time, waiting, crowding, fleet needs, and operating costs.' }
+]} />
+
+The map shows moving cars as colored dots, with small bus and train icons. A shared playback clock carries the day forward so the modes move together. The station atlas connects each proposed stop to aerial imagery and an interactive 3D view of the station and its surroundings.
+
+<TechnologyStack items={[
+  { layer: 'Application', tools: 'JavaScript · HTML · CSS', purpose: 'Run the scenario controls, playback, and results in the browser.' },
+  { layer: 'Maps and movement', tools: 'Leaflet · road geometry · transit schedules', purpose: 'Place routes on the island and animate travel through the day.' },
+  { layer: 'Station views', tools: 'Three.js · aerial imagery', purpose: 'Explore proposed station placement and the surrounding area in 3D.' },
+  { layer: 'Comparison models', tools: 'JavaScript modules · editable assumptions', purpose: 'Connect service choices to estimated travel, capacity, fleet, and cost changes.' }
+]} />
+
+## Decisions and design lessons
+
+**Model the transfer.** A fast train is less useful if someone waits half an hour for the connecting bus. Walking, waiting, frequency, and operating hours belong in the same comparison as train speed.
+
+**Separate tracks from services.** Several services can use the same tracks before branching toward different destinations. The designer checks train compatibility, platform length, and shared-track capacity when exploring trains that continue from one line onto another.
+
+**Count drivers who switch.** A bus passenger moving onto rail does not remove a car from the road. The model separates existing transit passengers from drivers who might switch modes.
+
+**Keep the movement visible.** Smaller station markers, thinner rail lines, and compact vehicle icons leave more room to see traffic. These changes came from using the map and noticing what obscured the comparison.
+
+## What would make the investment worthwhile?
+
+I want to understand whether the time people get back could justify the cost of building and running this network. The accounting needs to include construction, replacement equipment, maintenance, and everyday service. Savings need to include the full journey, including any extra walking and transfers.
+
+Some possible benefits go beyond the transport budget: less household spending on driving, better access to jobs, and more time with family. Those benefits need evidence and should not be counted twice. Fare revenue pays for part of the service, but it is also money paid by riders; it is not an extra societal gain by itself.
+
+There are substantial reasons a proposed route might fail. Land could be unavailable. Mountain crossings and harbor access could be too difficult or costly. Environmental and cultural impacts could rule out an alignment. Demand might be too low, transfers inconvenient, or operating costs higher than expected. Community support and reliable service would matter as much as the route on the map.
+
+## Current state and next step
+
+Oʻahu Flow Lab is a working private app with an island simulation, a transit designer, and a station atlas. This case study is publicly readable; the app remains private.
+
+The next step is to test the network against better local demand and cost evidence, then compare optimistic and conservative assumptions. I want to see which connections still help when the assumptions become less favorable, and which should be changed or dropped.

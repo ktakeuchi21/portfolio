@@ -132,7 +132,7 @@ const listing = await readFile(path.join(root, 'projects/index.html'), 'utf8');
 const professionalStart = listing.indexOf('id="professional"');
 const personalStart = listing.indexOf('id="personal"');
 assert(professionalStart >= 0 && personalStart > professionalStart, 'Project category sections are missing or out of order');
-for (const [category, slugs] of Object.entries({professional: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'pathway'], personal: ['next-chapter', 'what-i-made', 'interlude', 'table-for-one']})) {
+for (const [category, slugs] of Object.entries({professional: ['patient-access-orchestration', 'ai-evaluation-governance-lab', 'pathway'], personal: ['next-chapter', 'oahu-flow-lab', 'what-i-made', 'interlude', 'table-for-one']})) {
   const section = category === 'professional' ? listing.slice(professionalStart, personalStart) : listing.slice(personalStart);
   let previousCard = -1;
   for (const slug of slugs) {
@@ -145,7 +145,7 @@ for (const [category, slugs] of Object.entries({professional: ['patient-access-o
     assert(detail.includes('class="architecture-flow"') && detail.includes('class="technology-stack"'), `${slug}: missing architecture or stack`);
     assert(detail.includes('Decisions and design lessons') && detail.includes('Current state and next step'), `${slug}: missing decisions or status`);
     assert(!/Reflection in progress|Case study forthcoming|Project preview forthcoming/.test(detail), `${slug}: placeholder narrative`);
-    if (['interlude', 'table-for-one'].includes(slug)) {
+    if (['interlude', 'table-for-one', 'oahu-flow-lab'].includes(slug)) {
       assert(!detail.includes('aria-label="Explore this project"'), `${slug}: unverified public project action`);
     }
   }
