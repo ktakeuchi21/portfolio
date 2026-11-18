@@ -1,10 +1,22 @@
 ---
 import { navigation, withBase } from '../lib/site';
+import StudioModeControl from './StudioModeControl.astro';
+interface Props { studioTheme?: boolean; }
+const { studioTheme = false } = Astro.props;
 const current = Astro.url.pathname;
 ---
-<header class="site-header page-width">
+<header class:list={['site-header', 'page-width', { 'site-header--with-mode': studioTheme }]}>
   <a class="identity" href={withBase('/')} aria-label="Kai Takeuchi, home"><span class="identity-mark" aria-hidden="true">kt.</span><span>Kai Takeuchi</span></a>
   <nav aria-label="Main navigation">
     {navigation.map(({label, path}) => <a href={withBase(path)} aria-current={current.startsWith(withBase(path)) ? 'page' : undefined}>{label}</a>)}
   </nav>
+  {studioTheme && <StudioModeControl />}
 </header>
+
+<style>
+  .site-header--with-mode nav { margin-inline-start: auto; }
+  @media (max-width: 640px) {
+    .site-header--with-mode .identity { flex-basis: 100%; }
+    .site-header--with-mode nav { width: auto; margin-inline-start: 0; }
+  }
+</style>

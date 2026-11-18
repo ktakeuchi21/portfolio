@@ -9,6 +9,7 @@ A static Astro + TypeScript portfolio for healthcare and AI product building. Ta
 - **Home and Work:** selected experience at Syneos Health, Optum Match, UnitedHealthcare ACA, and Optum Virtual Care, in that order. Below the homepage hero, sticky section navigation tracks Experience, Projects, and About me. Healthcare and Everyday life are nested under Projects and jump to consecutive sections, each with two wider project cards. On mobile, both category links stay visible beneath the section links.
 - **Projects:** Healthcare and Everyday life tabs, with nine independent builds. Product (or Workflow) and Under the hood views pair screenshots or diagrams with compact architecture summaries. Case studies include the product question, architecture, stack, design decisions, and current state.
 - **About:** background, an interactive personal photo stack, a compact shelf of 21 favorite books organized by topic, a coverflow browser for 13 podcasts, and ten favorite episodes across Lenny’s Podcast and How I AI.
+- **Color and motion:** dark by default, with a light mode swatch that remembers your choice across pages. The homepage headline turns into place on load, and sections reveal in stages as you scroll.
 - **Accessible browsing:** keyboard navigation, visible focus, touch scrolling, reduced-motion support, and readable content with JavaScript disabled.
 
 Employer experience is separate from independent projects. Healthcare describes the subject of a project; case studies carry the ownership label **Independent build**. Listing cards omit the repeated label.

@@ -1,7 +1,12 @@
 ---
+import { getImage } from 'astro:assets';
+import hiking from '../assets/personal/hiking.jpeg';
 import LinkButton from './LinkButton.astro';
+interface Props { studioTheme?: boolean; }
+const { studioTheme = false } = Astro.props;
+const atmosphere = studioTheme ? await getImage({ src: hiking, width: 1000, format: 'webp', quality: 76 }) : undefined;
 ---
-<section class="home-hero page-width" aria-labelledby="hero-title">
+<section class="home-hero page-width" aria-labelledby="hero-title" style={atmosphere ? `--studio-hero-photo: url("${atmosphere.src}")` : undefined}>
   <h1 id="hero-title"><span class="hero-title-line"><span data-hero-line>Healthcare + AI</span></span><span class="hero-title-line"><em data-hero-line>Product Builder<svg class="hero-flourish" width="420" height="14" viewBox="0 0 420 14" fill="none" aria-hidden="true"><path data-hero-flourish d="M2 9C99 2 239 1 417 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg></em></span></h1>
   <div class="hero-bottom">
     <div class="hero-intro">

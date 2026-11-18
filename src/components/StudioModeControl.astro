@@ -1,0 +1,63 @@
+---
+const modes = [
+  { value: 'light', label: 'Light mode' },
+  { value: 'dark', label: 'Dark mode' },
+] as const;
+---
+<fieldset class="studio-mode-switch" data-studio-mode-switch hidden>
+  <legend class="sr-only">Color theme</legend>
+  {modes.map(({ value, label }) => (
+    <label class="mode-choice" data-swatch={value} title={label}>
+      <input class="sr-only" type="radio" name="studio-mode" value={value} checked={value === 'dark'} autocomplete="off" />
+      <span class="mode-swatch" aria-hidden="true"></span>
+      <span class="sr-only">{label}</span>
+    </label>
+  ))}
+</fieldset>
+
+<style>
+  .studio-mode-switch {
+    display: flex;
+    flex: none;
+    min-inline-size: 0;
+    padding-inline: 3px;
+    border: 1px solid #8b9486;
+    border-radius: 7px;
+    background: color-mix(in srgb, var(--color-paper) 72%, transparent);
+  }
+  .studio-mode-switch[hidden] { display: none; }
+  .mode-choice {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 44px;
+    block-size: 44px;
+    cursor: pointer;
+    --swatch: #f1eee6;
+    --swatch-mark: #26312e;
+  }
+  .mode-choice[data-swatch="dark"] { --swatch: #26312e; --swatch-mark: #f1eee6; }
+  .mode-swatch {
+    display: grid;
+    place-items: center;
+    inline-size: 38px;
+    block-size: 32px;
+    background: var(--swatch);
+    color: var(--swatch-mark);
+    border: 1px solid #8b9486;
+    border-radius: 4px;
+  }
+  input:checked + .mode-swatch::after {
+    content: '';
+    width: 7px;
+    height: 12px;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: translateY(-1px) rotate(45deg);
+  }
+  input:focus-visible + .mode-swatch { outline: 2px solid var(--color-ink); outline-offset: 3px; }
+  @media (forced-colors: active) {
+    .mode-swatch { forced-color-adjust: none; }
+    input:focus-visible + .mode-swatch { outline-color: Highlight; }
+  }
+</style>

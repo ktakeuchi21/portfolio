@@ -1,0 +1,159 @@
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const main = document.querySelector<HTMLElement>('html[data-portfolio-theme="studio"] main');
+
+  if (main) {
+    gsap.registerPlugin(ScrollTrigger);
+    const media = gsap.matchMedia();
+
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const chapters = [
+        { anchor: '.section-header', first: ':scope > .section-label', next: ':scope > a' },
+        { anchor: '.home-project-group', first: ':scope > .home-project-category' },
+        { anchor: '.work-card', first: '.work-name > .card-title', next: ':scope > .work-summary' },
+        { anchor: '.project-card', first: ':scope > .project-visual, :scope > .project-image', next: ':scope > .project-copy', visual: true },
+        { anchor: '.about-strip, .personal-section', first: ':scope > div:not(.photo-stack)', next: ':scope > .photo-stack' },
+        { anchor: '.about-layout', first: '.body-copy > h2:first-child', next: ':scope > .about-facts' },
+        { anchor: '.book-section', first: ':scope > .shelf-rail', visual: true },
+        { anchor: '.listening-section', first: ':scope > .crate', visual: true },
+        { anchor: '.favorite-episodes', first: ':scope > .episodes-heading', next: ':scope > .episode-panel:not([hidden]) .episode-list' },
+        { anchor: 'article.page-width > figure', first: ':scope > .project-visual, :scope > .case-cover', next: ':scope > .case-caption', visual: true },
+        { anchor: '.case-body .prose > h2' },
+      ];
+      const chapterElements = Array.from(main.querySelectorAll<HTMLElement>(chapters.map(chapter => chapter.anchor).join(', ')));
+      const settled = new WeakSet<HTMLElement>();
+      const pending = new Map<HTMLElement, { timeline: gsap.core.Timeline; trigger: ScrollTrigger }>();
+      let frame = 0;
+
+      const finish = (section: HTMLElement, remember = true) => {
+        if (remember) settled.add(section);
+        const entrance = pending.get(section);
+        if (!entrance) return;
+        pending.delete(section);
+        entrance.trigger.kill(false, true);
+        entrance.timeline.revert();
+      };
+
+      const showAround = (target: Element) => {
+        pending.forEach((_, section) => {
+          if (section.contains(target) || (target.contains(section) && section.getBoundingClientRect().top < innerHeight)) finish(section);
+        });
+      };
+
+      const showFragment = () => {
+        if (!location.hash) return;
+        const destination = document.getElementById(location.hash.slice(1));
+        if (destination) showAround(destination);
+      };
+
+      const sharedImage = () => {
+        const { projectTransition, projectTransitionState } = document.documentElement.dataset;
+        if (projectTransitionState !== 'running') return;
+        return Array.from(main.querySelectorAll<HTMLElement>('[data-project-image]'))
+          .find(image => image.dataset.projectImage === projectTransition && image.getClientRects().length);
+      };
+      const showSharedImage = () => {
+        const image = sharedImage();
+        if (image) showAround(image);
+      };
+
+      const scan = () => {
+        frame = 0;
+        pending.forEach((_, section) => {
+          if (!section.getClientRects().length) finish(section, false);
+        });
+
+        // Collect positions before adding any transforms. Content in the current
+        // viewport stays visible on reloads, restored scroll positions and tab changes.
+        const upcoming = chapterElements.filter(section => {
+          if (pending.has(section) || settled.has(section) || !section.getClientRects().length) return false;
+          if (section.getBoundingClientRect().top >= innerHeight + 12 && !section.contains(document.activeElement)) return true;
+          settled.add(section);
+          return false;
+        });
+
+        for (const section of upcoming) {
+          const chapter = chapters.find(({ anchor }) => section.matches(anchor))!;
+          const lead = chapter.first ? section.querySelectorAll(chapter.first) : [section];
+          const follow = chapter.next ? section.querySelectorAll(chapter.next) : [];
+          if (!lead.length && !follow.length) continue;
+
+          const timeline = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' }, onComplete: () => finish(section) });
+          const trigger = ScrollTrigger.create({
+            trigger: section,
+            start: 'top 92%',
+            end: 'top 46%',
+            onEnter: () => timeline.play(),
+            onLeave: () => finish(section),
+            onEnterBack: () => finish(section),
+            onLeaveBack: () => finish(section),
+          });
+          pending.set(section, { timeline, trigger });
+
+          timeline.fromTo(lead,
+            { y: chapter.visual ? 34 : 25, opacity: chapter.visual ? .12 : .2 },
+            { y: 0, opacity: 1, duration: chapter.visual ? .72 : .58, stagger: .06 }, 0);
+          if (follow.length) {
+            timeline.fromTo(follow,
+              { y: 19, opacity: .28 },
+              { y: 0, opacity: 1, duration: .55, stagger: .06 }, .15);
+          }
+        }
+        showFragment();
+        showSharedImage();
+        ScrollTrigger.refresh();
+      };
+      const scheduleScan = () => { if (!frame) frame = requestAnimationFrame(scan); };
+      const onFocus = (event: FocusEvent) => { if (event.target instanceof Element) showAround(event.target); };
+
+      // Project categories switch with hidden panels. Observe that state and
+      // remeasure the active category without touching its keyboard behavior.
+      const tabs = main.querySelector('[data-project-tabs]');
+      const observer = tabs ? new MutationObserver(records => {
+        if (records.some(record => (record.target as Element).matches('.project-group'))) scheduleScan();
+      }) : undefined;
+      if (tabs) observer?.observe(tabs, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
+      const layout = new ResizeObserver(scheduleScan);
+      layout.observe(main);
+
+      const finishVisible = () => {
+        pending.forEach((_, section) => {
+          if (section.getBoundingClientRect().top < innerHeight) finish(section);
+        });
+      };
+      const onPageShow = (event: PageTransitionEvent) => {
+        if (!event.persisted) return;
+        finishVisible();
+        scheduleScan();
+      };
+      const onVisibility = () => { if (document.hidden) finishVisible(); };
+
+      main.addEventListener('focusin', onFocus);
+      window.addEventListener('hashchange', showFragment);
+      window.addEventListener('pageshow', onPageShow);
+      window.addEventListener('pageswap', showSharedImage);
+      window.addEventListener('pagereveal', showSharedImage);
+      document.addEventListener('visibilitychange', onVisibility);
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scheduleScan, { once: true });
+      else scheduleScan();
+
+      return () => {
+        cancelAnimationFrame(frame);
+        observer?.disconnect();
+        layout.disconnect();
+        pending.forEach((_, section) => finish(section, false));
+        main.removeEventListener('focusin', onFocus);
+        window.removeEventListener('hashchange', showFragment);
+        window.removeEventListener('pageshow', onPageShow);
+        window.removeEventListener('pageswap', showSharedImage);
+        window.removeEventListener('pagereveal', showSharedImage);
+        document.removeEventListener('visibilitychange', onVisibility);
+        document.removeEventListener('DOMContentLoaded', scheduleScan);
+      };
+    });
+
+    window.addEventListener('pagehide', event => { if (!event.persisted) media.revert(); });
+  }
+</script>

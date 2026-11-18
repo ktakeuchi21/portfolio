@@ -54,6 +54,9 @@ for (const file of pages) {
   assert(html.includes('name="description"'), `${relative}: missing description`);
   assert(html.includes('property="og:title"'), `${relative}: missing sharing metadata`);
   const meta = (key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`))?.[1];
+  const isDesignStudy = relative.startsWith('design/');
+  assert.equal(/<html\b[^>]*\bdata-portfolio-theme="studio"/.test(html), !isDesignStudy, `${relative}: portfolio theme mismatch`);
+  assert.equal(meta('robots'), isDesignStudy || relative === '404.html' ? 'noindex' : undefined, `${relative}: incorrect search indexing setting`);
   const socialUrl = new URL(meta('og:image'));
   assert.equal(socialUrl.pathname, `${base}${socialImagePath}`, `${relative}: social image must respect the configured base`);
   assert(['http:', 'https:'].includes(socialUrl.protocol), `${relative}: social image must use an absolute HTTP URL`);

@@ -28,6 +28,7 @@ import { homeProjectGroups } from '../lib/content';
       return section ? [{ link, section }] : [];
     });
     const compact = window.matchMedia('(max-width: 1000px)');
+    const studioTheme = document.documentElement.dataset.portfolioTheme === 'studio';
     const categories = entries.filter(entry => entry.section.hasAttribute('data-home-project-group'));
     const projects = entries.find(entry => entry.section.id === 'projects')!;
     let frame = 0;
@@ -36,19 +37,22 @@ import { homeProjectGroups } from '../lib/content';
     const update = () => {
       frame = 0;
       // Read section positions together; leave the URL and keyboard focus alone while scrolling.
-      const threshold = compact.matches ? Math.max(128, nav.getBoundingClientRect().bottom + 48) : 128;
+      const threshold = studioTheme
+        ? Math.max(128, nav.offsetHeight + 60)
+        : compact.matches ? Math.max(128, nav.getBoundingClientRect().bottom + 48) : 128;
       const positions = entries.map(entry => entry.section.getBoundingClientRect().top);
-      let active = entries[0];
+      let active: (typeof entries)[number] | undefined = studioTheme ? undefined : entries[0];
       positions.forEach((top, index) => { if (top <= threshold) active = entries[index]; });
       // A short final section may never reach the threshold on a tall display.
       if (scrollY > 0 && Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2) active = entries[entries.length - 1];
-      if (active.section.id === current) return;
-      current = active.section.id;
+      const activeId = active?.section.id ?? '';
+      if (activeId === current) return;
+      current = activeId;
       entries.forEach(entry => {
         if (entry === active) entry.link.setAttribute('aria-current', 'location');
         else entry.link.removeAttribute('aria-current');
       });
-      projects.link.toggleAttribute('data-section-active', active === projects || categories.includes(active));
+      projects.link.toggleAttribute('data-section-active', !!active && (active === projects || categories.includes(active)));
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const scrollTo = (section: HTMLElement, smooth: boolean) => {
@@ -148,5 +152,86 @@ import { homeProjectGroups } from '../lib/content';
     .home-sections { margin-top: 32px; }
     .section-nav { margin-bottom: 24px; }
     .home-sections-body :global(.about-strip) { gap: 24px; }
+  }
+
+  :global(html[data-portfolio-theme='studio']) .home-sections {
+    --studio-rail-height: 56px;
+    display: block;
+    margin-top: -28px;
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav {
+    z-index: 10;
+    top: 12px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto clamp(36px, 5vw, 70px);
+    padding: 5px;
+    color: light-dark(var(--color-ink), #f5f2eb);
+    background: light-dark(#f6f4ec, #202526);
+    border: 1px solid light-dark(#79867b, #59605e);
+    border-radius: 999px;
+    box-shadow: 0 10px 28px light-dark(#27342b22, #1416144d);
+  }
+  @supports (backdrop-filter: blur(16px)) {
+    :global(html[data-portfolio-theme='studio']) .section-nav {
+      background: light-dark(#f6f4eceb, #202526eb);
+      backdrop-filter: blur(16px);
+    }
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav > p { display: none; }
+  :global(html[data-portfolio-theme='studio']) .section-nav-main,
+  :global(html[data-portfolio-theme='studio']) .section-nav-projects,
+  :global(html[data-portfolio-theme='studio']) .section-nav .section-nav-categories {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav .section-nav-categories {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: light-dark(#27342b0c, #ffffff0a);
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav a {
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 999px;
+    color: inherit;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav-categories a { color: light-dark(var(--color-muted), #d5d9d2); }
+  :global(html[data-portfolio-theme='studio']) .section-nav a:hover { background: light-dark(#27342b1c, #ffffff1c); }
+  :global(html[data-portfolio-theme='studio']) .section-nav a[aria-current='location'] {
+    background: light-dark(var(--color-button), #f5f2eb);
+    color: light-dark(var(--color-on-button), #202526);
+    text-decoration: none;
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav a[data-section-active]:not([aria-current]) {
+    background: light-dark(#27342b1c, #ffffff17);
+    font-weight: 650;
+  }
+  :global(html[data-portfolio-theme='studio']) .section-nav a:focus-visible { outline-offset: -3px; }
+  :global(html[data-portfolio-theme='studio']) .section-nav a[aria-current='location']:focus-visible { outline-color: currentColor; }
+  :global(html[data-portfolio-theme='studio']) .home-sections-body :global([data-home-section]),
+  :global(html[data-portfolio-theme='studio']) .home-sections-body :global(.section-header) {
+    scroll-margin-top: calc(var(--home-nav-height, var(--studio-rail-height)) + 4px);
+  }
+
+  @media (max-width: 620px) {
+    :global(html[data-portfolio-theme='studio']) .home-sections { --studio-rail-height: 102px; }
+    :global(html[data-portfolio-theme='studio']) .section-nav { border-radius: 24px; }
+    :global(html[data-portfolio-theme='studio']) .section-nav-main {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    :global(html[data-portfolio-theme='studio']) .section-nav a { padding-inline: clamp(6px, 3vw, 16px); }
+    :global(html[data-portfolio-theme='studio']) .section-nav-projects { display: contents; }
+    :global(html[data-portfolio-theme='studio']) .section-nav .section-nav-categories { gap: 2px; }
   }
 </style>

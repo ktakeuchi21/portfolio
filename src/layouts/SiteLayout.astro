@@ -1,27 +1,36 @@
 ---
 import '../styles/global.css';
 import '../styles/project-transitions.css';
+import studioStyles from '../styles/studio.css?url';
 import Header from '../components/Header.astro';
+import StudioHeroMotion from '../components/StudioHeroMotion.astro';
+import StudioModeScript from '../components/StudioModeScript.astro';
+import StudioScrollMotion from '../components/StudioScrollMotion.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import ProjectTransitions from '../components/ProjectTransitions.astro';
 import { profile, withBase } from '../lib/site';
 interface Props { title?: string; description?: string; noindex?: boolean; homePalette?: string; }
 const { title, description = 'Kai Takeuchi is a healthcare and AI product leader building 0-to-1 products around complex workflows, enterprise data, and human decision-making.', noindex = false, homePalette } = Astro.props;
+const studioTheme = !homePalette && !Astro.url.pathname.startsWith(withBase('/design/'));
+const studioHome = studioTheme && Astro.url.pathname === withBase('/');
 const pageTitle = title ? `${title} | ${profile.name}` : `${profile.name} | ${profile.positioning}`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const socialImage = new URL(withBase('/images/social-preview.png'), Astro.site ?? Astro.url.origin);
 const socialImageAlt = 'Kai Takeuchi. Healthcare + AI Product Leader. Product strategy & development.';
 ---
 <!doctype html>
-<html lang="en" data-home-palette={homePalette}>
+<html lang="en" data-home-palette={homePalette} data-portfolio-theme={studioTheme ? 'studio' : undefined} data-studio-home={studioHome ? '' : undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ProjectTransitions />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#faf8f0" />
+    <meta name="theme-color" content={studioTheme ? (studioHome ? '#273031' : '#f1eee6') : '#faf8f0'} />
+    {studioTheme && <StudioModeScript home={studioHome} />}
+    {studioHome && <StudioHeroMotion />}
+    {studioTheme && <link rel="stylesheet" href={studioStyles} />}
     {noindex && <meta name="robots" content="noindex" />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
@@ -44,8 +53,9 @@ const socialImageAlt = 'Kai Takeuchi. Healthcare + AI Product Leader. Product st
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+    <Header studioTheme={studioTheme} />
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
+    {studioTheme && <StudioScrollMotion />}
   </body>
 </html>

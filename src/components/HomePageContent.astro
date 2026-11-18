@@ -8,6 +8,7 @@ import PhotoStack from './PhotoStack.astro';
 import HomeMotion from './HomeMotion.astro';
 import HomeSections from './HomeSections.astro';
 import { getWork, getProjects, homeProjectGroups, homeProjectSummaries, homeProjectThumbnails } from '../lib/content';
+const { studioTheme = false } = Astro.props;
 const work = (await getWork()).filter(entry => entry.data.featured);
 const projects = await getProjects();
 const groups = homeProjectGroups.map(group => ({
@@ -20,7 +21,7 @@ const groups = homeProjectGroups.map(group => ({
 }));
 ---
   <div data-home-motion>
-  <Hero />
+  <Hero studioTheme={studioTheme} />
   <HomeSections>
   <section class="home-section" id="experience" data-home-section aria-label="Selected experience" tabindex="-1">
     <SectionHeader title="Selected experience"><LinkButton href="/work/">View work</LinkButton></SectionHeader>
@@ -36,7 +37,12 @@ const groups = homeProjectGroups.map(group => ({
   </section>
   <section class="about-strip" id="about" data-home-section aria-labelledby="about-title" tabindex="-1">
     <PhotoStack id="home-photos" />
-    <div><span class="eyebrow">A little about me</span><h2 id="about-title">Curiosity, made concrete.</h2><p>My background spans economics, healthcare administration, and product development. I’m interested in how better tools can make complex work easier for the people doing it.</p><p>Outside work, I keep building, whether it’s an AI prototype or a small app for the things I cook.</p><LinkButton href="/about/">More about me</LinkButton></div>
+    <div>
+      <h2 class="eyebrow" id="about-title">A little about me</h2>
+      <p>My background spans economics, healthcare administration, and product development. I’m interested in how better tools can make complex work easier for the people doing it.</p>
+      <p>Outside work, I keep building, whether it’s an AI prototype or a small app for the things I cook.</p>
+      <LinkButton href="/about/">More about me</LinkButton>
+    </div>
   </section>
   </HomeSections>
   </div>

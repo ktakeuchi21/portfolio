@@ -6,9 +6,10 @@
   if (overview) {
     gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
+    const studio = document.documentElement.dataset.portfolioTheme === 'studio';
     let introduced = false;
 
-    media.add('(prefers-reduced-motion: no-preference)', context => {
+    if (!studio) media.add('(prefers-reduced-motion: no-preference)', context => {
       const cleanups: Array<() => void> = [];
       const listen = (element: HTMLElement, event: string, handler: EventListener) => {
         element.addEventListener(event, handler);

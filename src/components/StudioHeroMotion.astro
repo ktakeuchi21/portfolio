@@ -1,0 +1,67 @@
+<!-- Arm the entrance before first paint so the headline never flashes in its final position. -->
+<script is:inline>
+  (() => {
+    const navigation = performance.getEntriesByType('navigation')[0];
+    const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+    if (navigation?.type === 'back_forward' || location.hash || scrollY > 50 || !motion.matches) return;
+
+    const root = document.documentElement;
+    root.setAttribute('data-studio-hero-intro', '');
+    const finish = () => {
+      root.removeAttribute('data-studio-hero-intro');
+      root.removeEventListener('focusin', skipOnFocus);
+      root.removeEventListener('animationend', finishAfterRole);
+      motion.removeEventListener('change', finish);
+    };
+    const skipOnFocus = event => {
+      if (event.target.closest('.home-hero')) finish();
+    };
+    const finishAfterRole = event => {
+      if (event.animationName === 'studio-hero-lift' && event.target.matches('.hero-note')) finish();
+    };
+
+    window.addEventListener('pageshow', event => {
+      if (event.persisted || scrollY > 50) finish();
+    });
+    window.addEventListener('hashchange', finish, { once: true });
+    root.addEventListener('focusin', skipOnFocus);
+    root.addEventListener('animationend', finishAfterRole);
+    motion.addEventListener('change', finish);
+  })();
+</script>
+
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-studio-hero-intro] .home-hero h1 {
+      transform-origin: 50% 65%;
+      animation: studio-hero-turn 960ms cubic-bezier(.2, .76, .23, 1) 45ms backwards;
+    }
+    [data-studio-hero-intro] .hero-intro > p {
+      animation: studio-hero-lift 620ms cubic-bezier(.2, .7, .25, 1) 240ms backwards;
+    }
+    [data-studio-hero-intro] .hero-actions {
+      animation: studio-hero-lift 620ms cubic-bezier(.2, .7, .25, 1) 350ms backwards;
+    }
+    [data-studio-hero-intro] .hero-note {
+      animation: studio-hero-lift 580ms cubic-bezier(.2, .7, .25, 1) 455ms backwards;
+    }
+    [data-studio-hero-intro] .home-hero:focus-within :is(h1, .hero-intro > p, .hero-actions, .hero-note) {
+      animation: none;
+    }
+    @keyframes studio-hero-turn {
+      from {
+        opacity: 0;
+        transform: perspective(1150px) translateY(22px) rotateY(-27deg) rotateX(7deg) rotateZ(-7deg);
+      }
+      45% { opacity: 1; }
+      to {
+        opacity: 1;
+        transform: perspective(1150px) translateY(0) rotateY(0) rotateX(0) rotateZ(0);
+      }
+    }
+    @keyframes studio-hero-lift {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>

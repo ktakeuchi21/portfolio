@@ -6,7 +6,7 @@ const projects = await getProjects();
 ---
 <SiteLayout title="Projects" description="Independent projects by Kai Takeuchi, exploring healthcare workflows and everyday life through concise case studies.">
   <div class="page-width">
-    <header class="page-intro"><p class="eyebrow">Projects</p><h1>Thinking through building.</h1><p>Independent projects I’ve built, exploring healthcare workflows and everyday needs.</p></header>
+    <header class="page-intro"><p class="eyebrow">Projects</p><h1>Learning through building</h1><p>Independent projects I’ve built, exploring healthcare workflows and everyday needs.</p></header>
     <div data-project-tabs>
       <nav class="project-jump-links" aria-label="Project categories" data-project-fallback>{projectCategories.map(category => <a href={`#${category.id}`}>{category.title}<span aria-hidden="true">↘</span></a>)}</nav>
       <div class="project-tabs" role="tablist" aria-label="Project categories" hidden>

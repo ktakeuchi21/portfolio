@@ -1,0 +1,53 @@
+---
+interface Props { home: boolean; }
+const { home } = Astro.props;
+const themeColors = { light: '#f1eee6', dark: home ? '#273031' : '#f1eee6' };
+---
+<meta name="color-scheme" content="dark" />
+<script is:inline define:vars={{ themeColors }}>
+  (() => {
+    const key = 'portfolio-studio-mode';
+    const root = document.documentElement;
+    const schemeMeta = document.querySelector('meta[name="color-scheme"]');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+
+    const readMode = () => {
+      try { return localStorage.getItem(key) === 'light' ? 'light' : 'dark'; }
+      catch { return root.dataset.studioMode === 'light' ? 'light' : 'dark'; }
+    };
+
+    const applyMode = mode => {
+      root.dataset.studioMode = mode;
+      schemeMeta.content = mode;
+      themeMeta.content = themeColors[mode];
+    };
+
+    // Apply a saved choice before styles render, including on direct links.
+    applyMode(readMode());
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const control = document.querySelector('[data-studio-mode-switch]');
+      const radios = control.querySelectorAll('input[type="radio"]');
+      const syncControl = () => radios.forEach(radio => {
+        radio.checked = radio.value === root.dataset.studioMode;
+      });
+      const syncFromStorage = () => { applyMode(readMode()); syncControl(); };
+
+      control.addEventListener('change', event => {
+        const mode = event.target.value;
+        if (mode !== 'dark' && mode !== 'light') return;
+        applyMode(mode);
+        try { localStorage.setItem(key, mode); }
+        catch { /* The current page still switches when storage is unavailable. */ }
+      });
+      window.addEventListener('storage', event => {
+        if (event.key === key || event.key === null) syncFromStorage();
+      });
+      window.addEventListener('pageshow', event => {
+        if (event.persisted) syncFromStorage();
+      });
+      syncControl();
+      control.hidden = false;
+    }, { once: true });
+  })();
+</script>
