@@ -1,6 +1,6 @@
 export const profile = {
   name: 'Kai Takeuchi',
-  positioning: 'Healthcare + AI Product Leader',
+  positioning: 'Healthcare + AI Product Builder',
   location: 'Salt Lake City, Utah',
   linkedin: 'https://www.linkedin.com/in/kai-takeuchi/',
   github: 'https://github.com/ktakeuchi21',

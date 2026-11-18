@@ -147,9 +147,11 @@ If a general public résumé is added later, restore a dedicated page or link, a
 
 ### Social preview
 
-All pages share `public/images/social-preview.png`, a 1200 × 630 typographic card using the site's fonts and colors. The editable artwork is `scripts/social-preview.html`. To refresh it, serve that template and its two local font files, render it in Chromium at 1200 × 630 with a device scale factor of 1, wait for `document.fonts.ready`, and capture the viewport to the PNG path. The template is not a public website route.
+All pages share `public/images/social-preview-studio.png`, a 1200 × 630 card using the homepage palette, typography, and hiking photo. The editable artwork is `scripts/social-preview.html`. To update it, render the template and its local font and photo in Chromium at 1200 × 630 with a device scale factor of 1. Wait for `document.fonts.ready` before capturing the viewport. Save the capture with a new filename and update the paths in `SiteLayout.astro` and `verify-build.mjs` so sharing platforms can fetch fresh artwork. The template lives outside the public website routes.
 
 `SiteLayout.astro` supplies Open Graph and Twitter image URLs, dimensions, and alt text. Production URLs follow `SITE_URL` and `BASE_PATH`; unconfigured local builds use Astro's local origin. The build verifier checks the PNG dimensions and sharing metadata, including deployments under a subpath.
+
+After publishing a preview update, inspect the exact production URL in [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) to refresh its preview for new shares.
 
 ### About bookshelf and podcast player
 

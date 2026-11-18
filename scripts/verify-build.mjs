@@ -14,7 +14,7 @@ async function walk(directory) {
 
 const files = await walk(root);
 const pages = files.filter(file => file.endsWith('.html'));
-const socialImagePath = '/images/social-preview.png';
+const socialImagePath = '/images/social-preview-studio.png';
 const socialImage = await readFile(path.join(root, socialImagePath));
 assert.equal(socialImage.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', 'Social preview must be a PNG');
 assert.equal(socialImage.readUInt32BE(16), 1200, 'Social preview width must match its metadata');
@@ -54,6 +54,10 @@ for (const file of pages) {
   assert(html.includes('name="description"'), `${relative}: missing description`);
   assert(html.includes('property="og:title"'), `${relative}: missing sharing metadata`);
   const meta = (key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`))?.[1];
+  if (relative === 'index.html') {
+    assert.equal(meta('og:title'), 'Kai Takeuchi | Healthcare + AI Product Builder', 'Homepage share title must match the hero');
+  }
+  assert.equal(meta('twitter:title'), meta('og:title'), `${relative}: share titles differ`);
   const isDesignStudy = relative.startsWith('design/');
   assert.equal(/<html\b[^>]*\bdata-portfolio-theme="studio"/.test(html), !isDesignStudy, `${relative}: portfolio theme mismatch`);
   assert.equal(meta('robots'), isDesignStudy || relative === '404.html' ? 'noindex' : undefined, `${relative}: incorrect search indexing setting`);
