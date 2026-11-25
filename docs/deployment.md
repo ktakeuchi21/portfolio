@@ -40,3 +40,8 @@ The repository variable `PUBLIC_UMAMI_WEBSITE_ID` points to the portfolio's dedi
 On September 22, 2026, the owner explicitly approved retiring Pathway's analytics and deleting its history to free the Hobby slot. The new portfolio entry uses a different ID so the old application tracker cannot contribute to the portfolio dashboard. The Pathway application itself was not changed. Dashboard access remains private; no sharing link, paid upgrade, replay, or heatmap feature was enabled.
 
 Reference: [GitHub Pages HTTPS setup](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
+
+
+## Applied AI in Healthcare
+
+The course lives at [kaitakeuchi.com/applied-ai-course/](https://kaitakeuchi.com/applied-ai-course/). Its public build is checked into `public/applied-ai-course/`. Refresh those files from the course project when publishing a new edition. The standard Pages workflow verifies the links and serves both course formats. Course traffic uses the course’s own PostHog project.

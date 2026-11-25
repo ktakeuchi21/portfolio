@@ -1,0 +1,8 @@
+Brand marks are used to identify the companies discussed in this educational reference. Trademarks remain the property of their respective owners. No affiliation or endorsement is implied.
+
+Adobe, Oracle, Salesforce, SAP: color SVG marks from Iconify's logos collection (SVG Logos by Gil Barbara), https://github.com/gilbarbara/logos, https://github.com/iconify/icon-sets/tree/master/json. Distribution license: CC0-1.0; trademark rights are separate. Source catalog: https://cdn.jsdelivr.net/npm/@iconify-json/logos@latest/icons.json . Retrieved 2026-09-25.
+
+CVS Health: official company website logo, https://www.cvshealth.com/content/dam/enterprise/cvs-enterprise/logos/CVS_Health_logo.svg .
+Intuit: official company website icon, https://www.intuit.com/oidam/intuit/ic/en_us/images/01-g/Intuit_FavIcon_192x192.png .
+
+athenahealth, Wolters Kluwer, ServiceNow, Workday: site icons for each official company domain, retrieved through Google's public favicon service at https://www.google.com/s2/favicons?domain=DOMAIN&sz=128 . Cached locally so the course does not call that service on page visits. Retrieved 2026-09-25.

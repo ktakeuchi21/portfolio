@@ -12,6 +12,7 @@ async function walk(directory) {
   return (await Promise.all(children.map(child => child.isDirectory() ? walk(path.join(directory, child.name)) : path.join(directory, child.name)))).flat();
 }
 
+const courseFolder = 'applied-ai-course/';
 const files = await walk(root);
 const pages = files.filter(file => file.endsWith('.html'));
 const socialImagePath = '/images/social-preview-studio.png';
@@ -21,6 +22,11 @@ assert.equal(socialImage.readUInt32BE(16), 1200, 'Social preview width must matc
 assert.equal(socialImage.readUInt32BE(20), 630, 'Social preview height must match its metadata');
 for (const route of ['index.html', 'work/index.html', 'projects/index.html', 'about/index.html', 'projects/pathway/index.html', 'projects/patient-access-orchestration/index.html', 'projects/what-i-made/index.html', 'projects/interlude/index.html', 'projects/table-for-one/index.html', '404.html']) {
   assert(files.includes(path.join(root, route)), `Missing required page: ${route}`);
+}
+
+for (const coursePage of ['', 'learners/', 'plan/', 'plan/five-weeks/', 'landscape/', 'instructor/']) {
+  const file = path.join(root, courseFolder, coursePage, 'index.html');
+  assert(files.includes(file), `Missing course page: ${coursePage || '/'}`);
 }
 
 async function checkLink(raw, source, sourceUrl) {
@@ -51,6 +57,26 @@ for (const file of pages) {
   const url = new URL(`${base}/${route}`, origin);
   assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, `${relative}: expected one h1`);
   assert(html.includes('lang="en"'), `${relative}: missing language`);
+  for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) await checkLink(match[1], relative, url);
+  for (const match of html.matchAll(/srcset="([^"]+)"/g)) {
+    for (const candidate of match[1].split(',')) await checkLink(candidate.trim().split(/\s+/)[0], relative, url);
+  }
+  assert(html.includes('id="main"'), `${relative}: missing main landmark target`);
+  assert(!/href="(?:javascript:|#")/.test(html), `${relative}: invalid action`);
+  assert(!/\b\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}\b/.test(html), `${relative}: possible private telephone number`);
+  if (relative.startsWith(courseFolder)) {
+    // This static course has its own layout and analytics. All its links are checked above.
+    const legacy = html.includes('data-curriculum-destination');
+    const publicRoute = legacy ? `${courseFolder}plan/` : route;
+    assert(html.includes(`rel="canonical" href="https://kaitakeuchi.com/${publicRoute}"`), `${relative}: incorrect course canonical`);
+    if (legacy) {
+      assert(html.includes('name="robots" content="noindex"'), `${relative}: legacy lesson should be unindexed`);
+    } else {
+      assert(html.includes('name="description"') && html.includes('property="og:title"'), `${relative}: missing course sharing metadata`);
+      assert(html.includes('analytics.js"') && !html.includes('umami-website-id'), `${relative}: incorrect course analytics`);
+    }
+    continue;
+  }
   assert(html.includes('name="description"'), `${relative}: missing description`);
   assert(html.includes('property="og:title"'), `${relative}: missing sharing metadata`);
   const meta = (key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]+)"`))?.[1];
@@ -72,9 +98,6 @@ for (const file of pages) {
   assert.equal(meta('twitter:card'), 'summary_large_image', `${relative}: expected large social card`);
   assert.equal(meta('twitter:image'), socialUrl.href, `${relative}: social image URLs differ`);
   assert.equal(meta('twitter:image:alt'), meta('og:image:alt'), `${relative}: social image descriptions differ`);
-  assert(html.includes('id="main"'), `${relative}: missing main landmark target`);
-  assert(!/href="(?:javascript:|#")/.test(html), `${relative}: invalid action`);
-  assert(!/\b\(?\d{3}\)?[ .-]\d{3}[ .-]\d{4}\b/.test(html), `${relative}: possible private telephone number`);
   if (!new URL(origin).hostname.endsWith('kaitakeuchi.com')) {
     // Client scripts can contain the analytics hostname allowlist even in a local build.
     const markup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
@@ -101,10 +124,6 @@ for (const file of pages) {
     } else {
       assert.notEqual(attribute('target'), '_blank', `${relative}: internal navigation must stay in the current tab: ${href}`);
     }
-  }
-  for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) await checkLink(match[1], relative, url);
-  for (const match of html.matchAll(/srcset="([^"]+)"/g)) {
-    for (const candidate of match[1].split(',')) await checkLink(candidate.trim().split(/\s+/)[0], relative, url);
   }
   if (process.env.SITE_URL && relative !== '404.html') {
     const canonical = html.match(/<link rel="canonical" href="([^"]+)"/);
