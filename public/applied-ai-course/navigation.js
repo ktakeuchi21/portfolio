@@ -12,6 +12,13 @@ if (curriculumLink) {
   location.replace(destination.href);
 }
 
+// Older overview cards linked to portraits on the audience page.
+if (/^#persona-[1-4]$/.test(location.hash) && document.getElementById('fit-questions')) {
+  const audienceUrl = new URL(location.href);
+  audienceUrl.hash = '';
+  history.replaceState(history.state, '', audienceUrl);
+}
+
 const lessons = document.querySelector('.curriculum-lessons');
 if (lessons) {
   function openLinkedLesson() {
