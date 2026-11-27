@@ -125,6 +125,10 @@ if (lessons) {
     });
   }
   window.addEventListener('hashchange', openLinkedLesson);
+  // Fragment navigation can reset focus after the first lesson reveal.
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted && document.activeElement === document.body) openLinkedLesson();
+  });
   openLinkedLesson();
 
   weeks.forEach((week, index) => {
