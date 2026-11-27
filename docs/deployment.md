@@ -12,20 +12,40 @@
 
 | Type | Name | Value | Proxy |
 | --- | --- | --- | --- |
-| A | `@` | `185.199.108.153` | DNS only |
-| A | `@` | `185.199.109.153` | DNS only |
-| A | `@` | `185.199.110.153` | DNS only |
-| A | `@` | `185.199.111.153` | DNS only |
-| CNAME | `www` | `ktakeuchi21.github.io` | DNS only |
+| A | `@` | `185.199.108.153` | Proxied |
+| A | `@` | `185.199.109.153` | Proxied |
+| A | `@` | `185.199.110.153` | Proxied |
+| A | `@` | `185.199.111.153` | Proxied |
+| CNAME | `www` | `ktakeuchi21.github.io` | Proxied |
 | TXT | `_github-pages-challenge-ktakeuchi21` | GitHub's verification value, retained in Cloudflare | DNS only |
 
-The website records have a five-minute TTL. Keep the verification TXT record to preserve GitHub's domain ownership protection. No email hosting or email-routing records were configured.
+The proxied website records use Cloudflare's automatic TTL. Public DNS answers contain Cloudflare edge addresses. Keep the verification TXT record to preserve GitHub's domain ownership protection. No email hosting or email-routing records were configured.
 
 ## Verification status
 
-The first GitHub Actions deployment succeeded. Cloudflare lists all five website DNS records and the existing verification TXT record. The authoritative DNS server returns the expected `www` CNAME, and the apex domain returns HTTP 200 from GitHub Pages.
+On November 27, 2026, all five website DNS records were switched to Cloudflare proxying. GitHub Pages continues to host the portfolio. Public DNS checks confirmed Cloudflare addresses for the apex and `www`. The apex returns HTTP 200 through Cloudflare, and `www` returns a 301 redirect to the apex. HTTP requests redirect to HTTPS.
 
-GitHub issued a certificate for both `kaitakeuchi.com` and `www.kaitakeuchi.com`, and HTTPS enforcement is enabled. The primary HTTPS address returns HTTP 200; the `www` HTTPS address returns a 301 redirect to `https://kaitakeuchi.com/`. Certificate validation succeeded without bypasses.
+GitHub issued a certificate for both `kaitakeuchi.com` and `www.kaitakeuchi.com`, and GitHub's HTTPS enforcement is enabled. Cloudflare's Universal SSL certificate is active, and Full (Strict) mode validates GitHub's origin certificate. Public HTTPS checks passed with certificate validation enabled.
+
+## Cloudflare security settings
+
+Configured and verified on November 27, 2026.
+
+| Setting | Value |
+| --- | --- |
+| SSL/TLS encryption | Full (Strict) |
+| Always Use HTTPS | On |
+| HSTS | On, `max-age=2592000` (one month) |
+| HSTS includeSubDomains | Off |
+| HSTS preload | Off |
+| X-Content-Type-Options | `nosniff` |
+| Bot Fight Mode | On |
+| AI Labyrinth | On |
+| Managed security.txt | On |
+
+Cloudflare serves `https://kaitakeuchi.com/.well-known/security.txt` with the public LinkedIn contact already used by the portfolio, preferred language `en`, and expiry `2027-11-20T12:00:00Z`. Refresh its expiry in Cloudflare Security Settings before that date. The managed file is served at the edge.
+
+Live checks covered the homepage, Work, Projects, About, the social preview image, the security.txt file, and both hostnames' redirects and HSTS headers. Maintain valid HTTPS when changing hosting or DNS so returning browsers can satisfy the cached HSTS policy.
 
 ## Updating the site
 

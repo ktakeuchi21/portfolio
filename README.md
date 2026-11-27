@@ -242,7 +242,7 @@ Use the same environment when starting preview as when building. `withBase()` ha
 
 ### Custom domain: kaitakeuchi.com
 
-The domain is registered and managed at Cloudflare, verified under Kai's GitHub account, and assigned in this repository's Pages settings. The apex A records and `www` CNAME point directly to GitHub Pages with Cloudflare proxying disabled. Keep the GitHub verification TXT record in place.
+The domain is registered and managed at Cloudflare, verified under Kai's GitHub account, and assigned in this repository's Pages settings. Cloudflare proxies the apex A records and `www` CNAME to GitHub Pages using Full (Strict) TLS. HTTPS redirects, one-month HSTS, Bot Fight Mode, AI Labyrinth, and a managed security.txt file are configured at Cloudflare. Keep the GitHub verification TXT record in place. The current settings and verification are recorded in `docs/deployment.md`.
 
 The Pages action reads the custom origin and empty base path from GitHub's settings. After a domain or HTTPS setting changes, rebuild and check canonical URLs, assets, nested pages, and the 404 link. Local development still omits canonical metadata unless `SITE_URL` is supplied.
 
